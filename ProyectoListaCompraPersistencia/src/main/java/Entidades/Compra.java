@@ -25,8 +25,7 @@ public class Compra implements Serializable {
     public Compra() {
     }
 
-    public Compra(String id, List<Producto> productos, Cliente cliente) {
-        this.id = id;
+    public Compra(List<Producto> productos, Cliente cliente) {
         this.productos = productos;
         this.cliente = cliente;
     }

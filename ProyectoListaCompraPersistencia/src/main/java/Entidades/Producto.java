@@ -22,8 +22,7 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-    public Producto(String id, String nombre, String categoria, boolean comprado, Compra compra) {
-        this.id = id;
+    public Producto(String nombre, String categoria, boolean comprado, Compra compra) {
         this.nombre = nombre;
         this.categoria = categoria;
         this.comprado = comprado;

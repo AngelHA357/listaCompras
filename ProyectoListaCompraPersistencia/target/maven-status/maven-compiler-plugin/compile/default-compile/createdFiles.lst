@@ -1,1 +1,13 @@
+DAOs\IClienteDAO.class
+Entidades\Producto.class
+DAOs\IProductoDAO.class
+Conexion\Conexion.class
+Conexion\IConexion.class
+Entidades\Cliente.class
 com\mycompany\proyectolistacomprapersistencia\ProyectoListaCompraPersistencia.class
+DAOs\CompraDAO.class
+DAOs\ProductoDAO.class
+Entidades\Compra.class
+DAOs\ICompraDAO.class
+Exceptions\PersistenciaException.class
+DAOs\ClienteDAO.class

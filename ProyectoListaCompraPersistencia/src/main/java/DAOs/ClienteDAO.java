@@ -16,12 +16,14 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public void agregarCliente(Cliente cliente) throws PersistenciaException {
+    public Cliente agregarCliente(Cliente cliente) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             em.getTransaction().begin();
             em.persist(cliente);
             em.getTransaction().commit();
+            
+            return em.find(Cliente.class, cliente.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -58,12 +60,14 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public void actualizarCliente(Cliente cliente) throws PersistenciaException {
+    public Cliente actualizarCliente(Cliente cliente) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             em.getTransaction().begin();
             em.merge(cliente);
             em.getTransaction().commit();
+            
+            return em.find(Cliente.class, cliente.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -75,13 +79,14 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public void eliminarCliente(String id) throws PersistenciaException {
+    public Cliente eliminarCliente(String id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
+        Cliente clienteEliminado = null; // Variable para almacenar el cliente a eliminar
         try {
             em.getTransaction().begin();
-            Cliente cliente = em.find(Cliente.class, id);
-            if (cliente != null) {
-                em.remove(cliente);
+            clienteEliminado = em.find(Cliente.class, id);
+            if (clienteEliminado != null) {
+                em.remove(clienteEliminado);
             }
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -92,5 +97,6 @@ public class ClienteDAO implements IClienteDAO {
         } finally {
             em.close();
         }
+        return clienteEliminado;
     }
 }

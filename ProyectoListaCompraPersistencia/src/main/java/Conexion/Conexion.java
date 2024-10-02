@@ -12,6 +12,7 @@ public class Conexion implements IConexion {
 
     // Atributo estático para la instancia Singleton de EntityManagerFactory
     private static EntityManagerFactory entityManagerFactory;
+    private static Conexion instance;
 
     // Constructor privado para evitar instanciación desde fuera
     private Conexion() {
@@ -27,6 +28,13 @@ public class Conexion implements IConexion {
             }
         }
         return entityManagerFactory;
+    }
+    
+    public static  Conexion getInstance() {
+        if (instance == null) {
+            instance = new Conexion();
+        }
+        return instance;
     }
 
     @Override

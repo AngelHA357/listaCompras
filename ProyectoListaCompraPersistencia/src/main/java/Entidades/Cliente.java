@@ -3,6 +3,8 @@ package Entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -10,7 +12,9 @@ import javax.persistence.OneToMany;
 public class Cliente implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; 
+
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -20,13 +24,11 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "cliente")
     private List<Compra> compras;
 
-    // Constructor, getters y setters
 
     public Cliente() {
     }
 
-    public Cliente(String id, String nombre, String apellidoPaterno, String apellidoMaterno, String usuario, String contrasenia) {
-        this.id = id;
+    public Cliente(String nombre, String apellidoPaterno, String apellidoMaterno, String usuario, String contrasenia) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -34,11 +36,11 @@ public class Cliente implements Serializable {
         this.contrasenia = contrasenia;
     }
 
-    public String getId() {
+    public Long getId() {  // El ID ahora es Long
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
