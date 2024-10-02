@@ -33,7 +33,7 @@ public class CompraDAO implements ICompraDAO {
     }
 
     @Override
-    public Compra obtenerCompraPorId(String id) throws PersistenciaException {
+    public Compra obtenerCompraPorId(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             return em.find(Compra.class, id);
@@ -75,7 +75,7 @@ public class CompraDAO implements ICompraDAO {
     }
 
     @Override
-    public void eliminarCompra(String id) throws PersistenciaException {
+    public void eliminarCompra(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             em.getTransaction().begin();

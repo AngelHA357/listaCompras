@@ -42,7 +42,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public Producto obtenerProductoPorId(String id) throws PersistenciaException {
+    public Producto obtenerProductoPorId(Long id) throws PersistenciaException {
         EntityManager em = null;
         try {
             em = conexion.crearConexion();
@@ -95,7 +95,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public void eliminarProducto(String id) throws PersistenciaException {
+    public void eliminarProducto(Long id) throws PersistenciaException {
         EntityManager em = null;
         EntityTransaction tx = null;
         try {

@@ -13,7 +13,7 @@ public interface IProductoDAO {
     void agregarProducto(Producto producto) throws PersistenciaException;
     
     // Método para obtener un producto por su ID
-    Producto obtenerProductoPorId(String id) throws PersistenciaException;
+    Producto obtenerProductoPorId(Long id) throws PersistenciaException;
     
     // Método para obtener todos los productos
     List<Producto> obtenerTodosLosProductos() throws PersistenciaException;
@@ -22,5 +22,5 @@ public interface IProductoDAO {
     void actualizarProducto(Producto producto) throws PersistenciaException;
     
     // Método para eliminar un producto por su ID
-    void eliminarProducto(String id) throws PersistenciaException;
+    void eliminarProducto(Long id) throws PersistenciaException;
 }
