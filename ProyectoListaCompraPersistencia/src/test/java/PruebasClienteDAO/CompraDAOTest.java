@@ -43,6 +43,11 @@ public class CompraDAOTest {
     @AfterEach
     public void tearDown() {
     }
+    
+    @Test
+    public void agregarCompra(){
+        
+    }
 
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

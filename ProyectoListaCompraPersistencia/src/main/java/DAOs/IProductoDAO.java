@@ -10,7 +10,7 @@ import java.util.List;
 public interface IProductoDAO {
     
     // Método para crear un producto
-    void agregarProducto(Producto producto) throws PersistenciaException;
+    Producto agregarProducto(Producto producto) throws PersistenciaException;
     
     // Método para obtener un producto por su ID
     Producto obtenerProductoPorId(Long id) throws PersistenciaException;
@@ -19,8 +19,8 @@ public interface IProductoDAO {
     List<Producto> obtenerTodosLosProductos() throws PersistenciaException;
     
     // Método para actualizar un producto existente
-    void actualizarProducto(Producto producto) throws PersistenciaException;
+    Producto actualizarProducto(Producto producto) throws PersistenciaException;
     
     // Método para eliminar un producto por su ID
-    void eliminarProducto(Long id) throws PersistenciaException;
+    Producto eliminarProducto(Long id) throws PersistenciaException;
 }

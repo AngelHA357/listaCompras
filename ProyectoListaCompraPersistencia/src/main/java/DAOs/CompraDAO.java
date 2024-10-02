@@ -16,12 +16,13 @@ public class CompraDAO implements ICompraDAO {
     }
 
     @Override
-    public void agregarCompra(Compra compra) throws PersistenciaException {
+    public Compra agregarCompra(Compra compra) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             em.getTransaction().begin();
             em.persist(compra);
             em.getTransaction().commit();
+            return em.find(Compra.class, compra.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -58,12 +59,13 @@ public class CompraDAO implements ICompraDAO {
     }
 
     @Override
-    public void actualizarCompra(Compra compra) throws PersistenciaException {
+    public Compra actualizarCompra(Compra compra) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             em.getTransaction().begin();
             em.merge(compra);
             em.getTransaction().commit();
+            return em.find(Compra.class, compra.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -75,13 +77,14 @@ public class CompraDAO implements ICompraDAO {
     }
 
     @Override
-    public void eliminarCompra(Long id) throws PersistenciaException {
+    public Compra eliminarCompra(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
+        Compra compraEliminada = null;
         try {
             em.getTransaction().begin();
-            Compra compra = em.find(Compra.class, id);
-            if (compra != null) {
-                em.remove(compra);
+            compraEliminada = em.find(Compra.class, id);
+            if (compraEliminada != null) {
+                em.remove(compraEliminada);
             }
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -92,5 +95,6 @@ public class CompraDAO implements ICompraDAO {
         } finally {
             em.close();
         }
+        return compraEliminada;
     }
 }

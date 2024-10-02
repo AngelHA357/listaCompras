@@ -20,7 +20,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public void agregarProducto(Producto producto) throws PersistenciaException {
+    public Producto agregarProducto(Producto producto) throws PersistenciaException {
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
@@ -29,6 +29,7 @@ public class ProductoDAO implements IProductoDAO {
             tx.begin();
             em.persist(producto); // Inserta el producto en la base de datos
             tx.commit();
+            return em.find(Producto.class, producto.getId());
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback(); // Deshacer la transacción en caso de error
@@ -73,7 +74,7 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public void actualizarProducto(Producto producto) throws PersistenciaException {
+    public Producto actualizarProducto(Producto producto) throws PersistenciaException {
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
@@ -82,6 +83,7 @@ public class ProductoDAO implements IProductoDAO {
             tx.begin();
             em.merge(producto); // Actualiza el producto
             tx.commit();
+            return em.find(Producto.class, producto.getId());
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback(); // Deshacer la transacción en caso de error
@@ -95,16 +97,17 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public void eliminarProducto(Long id) throws PersistenciaException {
+    public Producto eliminarProducto(Long id) throws PersistenciaException {
         EntityManager em = null;
         EntityTransaction tx = null;
+        Producto productoEliminado = null;
         try {
             em = conexion.crearConexion();
             tx = em.getTransaction();
             tx.begin();
-            Producto producto = em.find(Producto.class, id);
-            if (producto != null) {
-                em.remove(producto); // Elimina el producto si existe
+            productoEliminado = em.find(Producto.class, id);
+            if (productoEliminado != null) {
+                em.remove(productoEliminado); // Elimina el producto si existe
             }
             tx.commit();
         } catch (Exception e) {
@@ -117,5 +120,6 @@ public class ProductoDAO implements IProductoDAO {
                 em.close();
             }
         }
+        return productoEliminado;
     }
 }
