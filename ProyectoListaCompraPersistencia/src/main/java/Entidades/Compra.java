@@ -23,13 +23,21 @@ public class Compra implements Serializable {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+    
+    private String nombre;
 
     // Constructor, getters y setters
     public Compra() {
     }
 
-    public Compra(List<Producto> productos, Cliente cliente) {
+    public Compra(List<Producto> productos, Cliente cliente, String nombre) {
         this.productos = productos;
+        this.cliente = cliente;
+        this.nombre = nombre;
+    }
+    
+    public Compra(String nombre, Cliente cliente){
+        this.nombre = nombre;
         this.cliente = cliente;
     }
 
@@ -55,5 +63,17 @@ public class Compra implements Serializable {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+    
+    public void agregarProducto(Producto producto){
+        productos.add(producto);
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

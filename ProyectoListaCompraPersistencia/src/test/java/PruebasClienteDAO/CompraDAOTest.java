@@ -8,6 +8,8 @@ import Conexion.Conexion;
 import Conexion.IConexion;
 import DAOs.CompraDAO;
 import DAOs.ICompraDAO;
+import Entidades.Compra;
+import Exceptions.PersistenciaException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +47,15 @@ public class CompraDAOTest {
     }
     
     @Test
-    public void agregarCompra(){
+    public void agregarCompra() throws PersistenciaException{
+        Compra compra = new Compra("Cosas para el GYM", null);
+        
+        Compra resultado = compraDAO.agregarCompra(compra);
+        
+        
+        assertNotNull(resultado.getId()); 
+        assertEquals("Cosas para el GYM", resultado.getNombre());
+        
         
     }
 
