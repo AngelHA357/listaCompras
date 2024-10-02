@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -18,6 +19,7 @@ public class Producto implements Serializable {
     private boolean comprado;
 
     @ManyToOne
+    @JoinColumn(name = "compra_id")
     private Compra compra;
 
     // Constructor, getters y setters

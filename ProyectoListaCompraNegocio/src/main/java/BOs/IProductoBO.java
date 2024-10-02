@@ -16,6 +16,8 @@ public interface IProductoBO {
     public void actualizarProducto(ProductoDTO productoDTO);
 
     public void eliminarProducto(Long id);
-    
+
     public List<ProductoDTO> filtrarPorCategoría(String categoria);
+
+    public List<ProductoDTO> filtrarPorCompra(Long compraId);
 }

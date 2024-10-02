@@ -139,4 +139,21 @@ public class ProductoDAO implements IProductoDAO {
         }
         
     }
+    
+    public List<Producto> obtenerProductosPorCompraId(Long compraId) throws PersistenciaException {
+    EntityManager em = null;
+    try {
+        em = conexion.crearConexion();
+        Query query = em.createQuery("SELECT p FROM Producto p WHERE p.compra.id = :compraId");
+        query.setParameter("compraId", compraId);
+        return query.getResultList();
+    } catch (Exception e) {
+        throw new PersistenciaException("Error al obtener los productos por ID de compra: " + e.getMessage(), e);
+    } finally {
+        if (em != null) {
+            em.close();
+        }
+    }
+}
+
 }
