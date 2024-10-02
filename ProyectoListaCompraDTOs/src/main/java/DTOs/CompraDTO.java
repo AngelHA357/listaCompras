@@ -3,29 +3,41 @@ package DTOs;
 import java.util.List;
 
 public class CompraDTO {
-    private List<String> productoIds;
-    private String clienteId; // Asociación con Cliente
 
-    public CompraDTO() {}
+    private Long id;
+    private List<ProductoDTO> productos;
+    private ClienteDTO cliente;
 
-    public CompraDTO(List<String> productoIds, String clienteId) {
-        this.productoIds = productoIds;
-        this.clienteId = clienteId;
+    public CompraDTO() {
     }
 
-    public List<String> getProductoIds() {
-        return productoIds;
+    public CompraDTO(Long id, List<ProductoDTO> productos, ClienteDTO cliente) {
+        this.id = id;
+        this.productos = productos;
+        this.cliente = cliente;
     }
 
-    public void setProductoIds(List<String> productoIds) {
-        this.productoIds = productoIds;
+    public Long getId() {
+        return id;
     }
 
-    public String getClienteId() {
-        return clienteId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setClienteId(String clienteId) {
-        this.clienteId = clienteId;
+    public List<ProductoDTO> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<ProductoDTO> productos) {
+        this.productos = productos;
+    }
+
+    public ClienteDTO getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(ClienteDTO cliente) {
+        this.cliente = cliente;
     }
 }
