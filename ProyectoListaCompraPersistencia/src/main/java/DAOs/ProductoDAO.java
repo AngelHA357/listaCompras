@@ -122,4 +122,21 @@ public class ProductoDAO implements IProductoDAO {
         }
         return productoEliminado;
     }
+    
+    public List<Producto> filtrarPorCategoria(String categoria) throws PersistenciaException{
+        EntityManager em = null;
+        try {
+            em = conexion.crearConexion();
+            Query query = em.createQuery("SELECT p FROM Producto p WHERE p.categoria = :categoria");
+            query.setParameter("categoria", categoria);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener todos los productos: " + e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+    }
 }

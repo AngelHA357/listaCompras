@@ -77,4 +77,24 @@ public class ProductoBO implements IProductoBO {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    @Override
+    public List<ProductoDTO> filtrarPorCategoría(String categoria){
+        try {
+            List<Producto> productos = productoDAO.filtrarPorCategoria(categoria);
+            List<ProductoDTO> productosDTO = new ArrayList<>();
+            
+            for (Producto producto : productos) {
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
+                productosDTO.add(productoDTO);
+            }
+            
+            return productosDTO;
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
 }
