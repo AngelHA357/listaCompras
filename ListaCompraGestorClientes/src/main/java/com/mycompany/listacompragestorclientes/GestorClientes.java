@@ -4,6 +4,7 @@
  */
 package com.mycompany.listacompragestorclientes;
 
+import BOs.ClienteBO;
 import BOs.IClienteBO;
 import DTOs.ClienteDTO;
 
@@ -13,10 +14,10 @@ import DTOs.ClienteDTO;
  */
 public class GestorClientes implements IGestorClientes {
 
-    private IClienteBO clienteBO;
-
-    public GestorClientes(IClienteBO clienteBO) {
-        this.clienteBO = clienteBO;
+    IClienteBO clienteBO;
+    
+    public GestorClientes() {
+        this.clienteBO = new ClienteBO();
     }
 
     @Override

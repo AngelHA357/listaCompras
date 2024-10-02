@@ -4,6 +4,7 @@
  */
 package com.mycompany.listacompragestorcompras;
 
+import BOs.CompraBO;
 import BOs.ICompraBO;
 import DTOs.CompraDTO;
 import java.util.List;
@@ -16,8 +17,8 @@ public class GestorCompras implements IGestorCompras {
 
     private ICompraBO compraBO;
 
-    public GestorCompras(ICompraBO compraBO) {
-        this.compraBO = compraBO;
+    public GestorCompras() {
+        this.compraBO = new CompraBO();
     }
 
     @Override

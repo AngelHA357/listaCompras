@@ -4,7 +4,10 @@
  */
 package BOs;
 
+import Conexion.Conexion;
+import Conexion.IConexion;
 import Conversiones.ClientesConversiones;
+import DAOs.ClienteDAO;
 import DAOs.IClienteDAO;
 import DTOs.ClienteDTO;
 import Entidades.Cliente;
@@ -15,11 +18,13 @@ import java.util.logging.Logger;
 
 public class ClienteBO implements IClienteBO {
 
+    private IConexion conexion;
     private final IClienteDAO clienteDAO;
     private final ClientesConversiones conversiones;
 
-    public ClienteBO(IClienteDAO clienteDAO) {
-        this.clienteDAO = clienteDAO;
+    public ClienteBO() {
+        conexion = Conexion.getInstance();
+        this.clienteDAO = new ClienteDAO(conexion);
         this.conversiones = new ClientesConversiones();
     }
 
@@ -36,7 +41,7 @@ public class ClienteBO implements IClienteBO {
 
     
     @Override
-    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) {
+    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) throws {
         try {
             Cliente cliente = clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
             return conversiones.convertirEntidadADTO(cliente);

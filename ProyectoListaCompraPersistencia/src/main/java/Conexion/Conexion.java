@@ -30,7 +30,7 @@ public class Conexion implements IConexion {
         return entityManagerFactory;
     }
     
-    public static  Conexion getInstance() {
+    public static Conexion getInstance() {
         if (instance == null) {
             instance = new Conexion();
         }

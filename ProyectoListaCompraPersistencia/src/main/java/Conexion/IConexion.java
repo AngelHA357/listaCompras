@@ -15,4 +15,5 @@ public interface IConexion {
 
     public EntityManager crearConexion() throws PersistenciaException;
 
+
 }

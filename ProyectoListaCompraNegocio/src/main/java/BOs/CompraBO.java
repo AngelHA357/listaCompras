@@ -1,6 +1,9 @@
 package BOs;
 
+import Conexion.Conexion;
+import Conexion.IConexion;
 import Conversiones.CompraConversiones;
+import DAOs.CompraDAO;
 import DTOs.CompraDTO;
 import Entidades.Compra;
 import Exceptions.PersistenciaException;
@@ -12,11 +15,13 @@ import java.util.logging.Logger;
 
 public class CompraBO implements ICompraBO {
 
+    private IConexion conexion;
     private final ICompraDAO compraDAO;
     private final CompraConversiones compraConversiones;
 
-    public CompraBO(ICompraDAO compraDAO) {
-        this.compraDAO = compraDAO;
+    public CompraBO() {
+        conexion = Conexion.getInstance();
+        this.compraDAO = new CompraDAO(conexion);
         this.compraConversiones = new CompraConversiones();
     }
 

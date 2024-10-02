@@ -9,7 +9,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/lista_compra_db?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC "/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="CheemSITO357"/>
+      <property name="javax.persistence.jdbc.password" value="messi"/>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>
   </persistence-unit>
