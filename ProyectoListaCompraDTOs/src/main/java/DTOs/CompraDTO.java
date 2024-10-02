@@ -7,13 +7,13 @@ public class CompraDTO {
     private Long id;
     private List<ProductoDTO> productos;
     private ClienteDTO cliente;
+    private String nombreCompra;
 
     public CompraDTO() {
     }
 
-    public CompraDTO(Long id, List<ProductoDTO> productos, ClienteDTO cliente) {
-        this.id = id;
-        this.productos = productos;
+    public CompraDTO(String nombreCompra, ClienteDTO cliente) {
+        this.nombreCompra = nombreCompra;
         this.cliente = cliente;
     }
 
@@ -25,6 +25,14 @@ public class CompraDTO {
         this.id = id;
     }
 
+    public String getNombreCompra() {
+        return nombreCompra;
+    }
+
+    public void setNombreCompra(String nombreCompra) {
+        this.nombreCompra = nombreCompra;
+    }
+    
     public List<ProductoDTO> getProductos() {
         return productos;
     }

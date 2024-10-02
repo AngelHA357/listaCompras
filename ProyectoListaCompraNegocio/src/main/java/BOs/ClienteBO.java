@@ -11,6 +11,7 @@ import DAOs.ClienteDAO;
 import DAOs.IClienteDAO;
 import DTOs.ClienteDTO;
 import Entidades.Cliente;
+import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,13 +42,12 @@ public class ClienteBO implements IClienteBO {
 
     
     @Override
-    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) {
+    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) throws NegocioException {
         try {
             Cliente cliente = clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
             return conversiones.convertirEntidadADTO(cliente);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ClienteBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("No se encontró al usuario");
         }
-        return null;
     }
 }

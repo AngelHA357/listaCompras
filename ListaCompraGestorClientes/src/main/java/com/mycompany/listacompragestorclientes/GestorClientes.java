@@ -7,6 +7,9 @@ package com.mycompany.listacompragestorclientes;
 import BOs.ClienteBO;
 import BOs.IClienteBO;
 import DTOs.ClienteDTO;
+import Exceptions.NegocioException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,7 +30,12 @@ public class GestorClientes implements IGestorClientes {
 
     @Override
     public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasena) {
-        return clienteBO.encontrarClientePorUsuarioYContrasena(usuario, contrasena);
+        try {
+            return clienteBO.encontrarClientePorUsuarioYContrasena(usuario, contrasena);
+        } catch (NegocioException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return null;
     }
 
 }

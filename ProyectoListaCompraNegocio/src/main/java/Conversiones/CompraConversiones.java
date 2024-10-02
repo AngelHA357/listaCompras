@@ -13,7 +13,6 @@ public class CompraConversiones {
     private final ProductosConversiones productosConversiones;
     private final ClientesConversiones clientesConversiones;
 
-
     public CompraConversiones() {
         this.productosConversiones = new ProductosConversiones();
         this.clientesConversiones = new ClientesConversiones();
@@ -51,10 +50,11 @@ public class CompraConversiones {
             productosDTO.add(productoDTO);
         }
 
-        return new CompraDTO(
-                entidad.getId(),
-                productosDTO,
-                clientesConversiones.convertirEntidadADTO(entidad.getCliente() )
-        );
+        CompraDTO compra = new CompraDTO(entidad.getNombre(),clientesConversiones.convertirEntidadADTO(entidad.getCliente()));
+        compra.setId(entidad.getId());
+        compra.setProductos(productosDTO);
+        
+        return compra;
+    
     }
 }

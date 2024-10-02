@@ -20,8 +20,6 @@ public class GestorProductos implements IGestorProductos {
         this.productoBO = productoBO;
     }
     
-    
-
     @Override
     public void agregarProducto(ProductoDTO productoDTO) {
         productoBO.agregarProducto(productoDTO);
