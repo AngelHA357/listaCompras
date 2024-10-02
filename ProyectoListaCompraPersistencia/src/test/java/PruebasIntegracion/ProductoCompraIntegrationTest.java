@@ -10,6 +10,7 @@ import DAOs.CompraDAO;
 import DAOs.ICompraDAO;
 import DAOs.IProductoDAO;
 import DAOs.ProductoDAO;
+import Entidades.Cliente;
 import Entidades.Compra;
 import Entidades.Producto;
 import Exceptions.PersistenciaException;
@@ -104,6 +105,8 @@ public class ProductoCompraIntegrationTest {
         Compra resultado = compraDAO.obtenerCompraPorId(compra.getId());
         assertEquals("Jabón Nuevo", resultado.getProductos().get(0).getNombre());
     }
+    
+    
 }
 
 
