@@ -22,7 +22,7 @@ public class ClienteDAO implements IClienteDAO {
             em.getTransaction().begin();
             em.persist(cliente);
             em.getTransaction().commit();
-            
+
             return em.find(Cliente.class, cliente.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
@@ -66,7 +66,7 @@ public class ClienteDAO implements IClienteDAO {
             em.getTransaction().begin();
             em.merge(cliente);
             em.getTransaction().commit();
-            
+
             return em.find(Cliente.class, cliente.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
@@ -99,4 +99,20 @@ public class ClienteDAO implements IClienteDAO {
         }
         return clienteEliminado;
     }
+
+    @Override
+    public Cliente obtenerClientePorUsuarioYContrasena(String usuario, String contrasenia) throws PersistenciaException {
+        EntityManager em = conexion.crearConexion();
+        try {
+            Query query = em.createQuery("SELECT c FROM Cliente c WHERE c.usuario = :usuario AND c.contrasenia = :contrasenia");
+            query.setParameter("usuario", usuario);
+            query.setParameter("contrasenia", contrasenia);
+            return (Cliente) query.getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener cliente por usuario y contraseña", e);
+        } finally {
+            em.close();
+        }
+    }
+
 }

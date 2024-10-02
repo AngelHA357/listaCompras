@@ -15,4 +15,6 @@ public interface IClienteDAO {
     Cliente actualizarCliente(Cliente cliente) throws PersistenciaException;
 
     Cliente eliminarCliente(String id) throws PersistenciaException;
+
+    Cliente obtenerClientePorUsuarioYContrasena(String usuario, String contrasenia) throws PersistenciaException;
 }
