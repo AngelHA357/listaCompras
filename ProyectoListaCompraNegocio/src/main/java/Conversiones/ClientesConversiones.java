@@ -10,6 +10,7 @@ public class ClientesConversiones {
             return null;
         }
         ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setId(cliente.getId());
         clienteDTO.setNombre(cliente.getNombre());
         clienteDTO.setApellidoPaterno(cliente.getApellidoPaterno());
         clienteDTO.setApellidoMaterno(cliente.getApellidoMaterno());

@@ -2,6 +2,7 @@ package DTOs;
 
 public class ClienteDTO {
 
+    private Long id;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -19,6 +20,14 @@ public class ClienteDTO {
         this.contrasenia = contrasenia;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getNombre() {
         return nombre;
     }

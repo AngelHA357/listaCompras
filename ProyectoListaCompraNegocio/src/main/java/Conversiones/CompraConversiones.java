@@ -25,14 +25,20 @@ public class CompraConversiones {
 
         List<Producto> productos = new ArrayList<>();
 
-        for (ProductoDTO dto : compraDTO.getProductos()) {
-            Producto producto = productosConversiones.dtoAEntidad(dto);
-            productos.add(producto);
-        }
-
         Compra compra = new Compra();
         compra.setId(compraDTO.getId());
-        compra.setProductos(productos);
+        
+        if (!productos.isEmpty()) {
+            
+            for (ProductoDTO dto : compraDTO.getProductos()) {
+                Producto producto = productosConversiones.dtoAEntidad(dto);
+                productos.add(producto);
+            }
+            compra.setProductos(productos);
+        }
+
+        
+        
         compra.setCliente(clientesConversiones.convertirDTOAEntidad(compraDTO.getCliente()));
 
         return compra;

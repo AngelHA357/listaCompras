@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasComponentes.CompraTest" time="0.003" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasComponentes.CompraTest" time="0.005" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="22"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="user.country" value="MX"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-22\bin"/>
-    <property name="sun.java.command" value="C:\Users\victo\AppData\Local\Temp\surefire567967178028942607\surefirebooter-20241002091521749_3.jar C:\Users\victo\AppData\Local\Temp\surefire567967178028942607 2024-10-02T09-15-21_662-jvmRun1 surefire-20241002091521749_1tmp surefire_0-20241002091521749_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\victo\AppData\Local\Temp\surefire14584136783212820503\surefirebooter-20241002112015498_3.jar C:\Users\victo\AppData\Local\Temp\surefire14584136783212820503 2024-10-02T11-20-15_368-jvmRun1 surefire-20241002112015498_1tmp surefire_0-20241002112015498_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\victo\OneDrive\Documents\GitHub\listaCompras\ProyectoListaCompraPersistencia\target\test-classes;C:\Users\victo\OneDrive\Documents\GitHub\listaCompras\ProyectoListaCompraPersistencia\target\classes;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa\2.7.12\org.eclipse.persistence.jpa-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\jakarta.persistence\2.2.3\jakarta.persistence-2.2.3.jar;C:\Users\victo\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\victo\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.core\2.7.12\org.eclipse.persistence.core-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.asm\9.4.0\org.eclipse.persistence.asm-9.4.0.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.antlr\2.7.12\org.eclipse.persistence.antlr-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa.jpql\2.7.12\org.eclipse.persistence.jpa.jpql-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.moxy\2.7.12\org.eclipse.persistence.moxy-2.7.12.jar;C:\Users\victo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\victo\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\victo\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\victo\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\victo\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.0\junit-jupiter-params-5.6.0.jar;C:\Users\victo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\victo\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;C:\Users\victo\.m2\repository\org\mockito\mockito-core\5.14.1\mockito-core-5.14.1.jar;C:\Users\victo\.m2\repository\net\bytebuddy\byte-buddy\1.15.3\byte-buddy-1.15.3.jar;C:\Users\victo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.3\byte-buddy-agent-1.15.3.jar;C:\Users\victo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\victo\AppData\Local\Temp\surefire567967178028942607\surefirebooter-20241002091521749_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\victo\AppData\Local\Temp\surefire14584136783212820503\surefirebooter-20241002112015498_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="22+36-2370"/>
@@ -59,7 +59,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="66.0"/>
   </properties>
-  <testcase name="agregarMultiplesProductosACompra" classname="PruebasComponentes.CompraTest" time="0.001"/>
-  <testcase name="agregarProductoACompra" classname="PruebasComponentes.CompraTest" time="0.0"/>
-  <testcase name="agregarProductoACompraNula" classname="PruebasComponentes.CompraTest" time="0.001"/>
+  <testcase name="agregarMultiplesProductosACompra" classname="PruebasComponentes.CompraTest" time="0.0"/>
+  <testcase name="agregarProductoACompra" classname="PruebasComponentes.CompraTest" time="0.001"/>
+  <testcase name="agregarProductoACompraNula" classname="PruebasComponentes.CompraTest" time="0.002"/>
 </testsuite>
