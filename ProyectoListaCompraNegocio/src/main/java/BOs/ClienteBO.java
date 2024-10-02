@@ -41,7 +41,7 @@ public class ClienteBO implements IClienteBO {
 
     
     @Override
-    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) throws {
+    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) {
         try {
             Cliente cliente = clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
             return conversiones.convertirEntidadADTO(cliente);
