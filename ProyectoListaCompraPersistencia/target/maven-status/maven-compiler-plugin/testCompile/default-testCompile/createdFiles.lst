@@ -1,4 +1,6 @@
-PruebasClienteDAO\ProductoDAOTest.class
-PruebasClienteDAO\CompraDAOTest.class
-PruebasClienteDAO\ClienteDAOTest.class
-PruebasClienteDAO\CompraTest.class
+PruebasComponentes\CompraTest.class
+PruebasIntegracion\ClienteCompraIntegrationTest.class
+PruebasComponentes\ClienteDAOTest.class
+PruebasIntegracion\ProductoCompraIntegrationTest.class
+PruebasComponentes\CompraDAOTest.class
+PruebasComponentes\ProductoDAOTest.class

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
-package PruebasClienteDAO;
+package PruebasComponentes;
 
 import Conexion.Conexion;
 import Conexion.IConexion;
@@ -74,6 +74,17 @@ public class ClienteDAOTest {
         Cliente cliente = clienteDAO.obtenerClientePorId(Long.MAX_VALUE);
         assertNull(cliente);
 
+    }
+    
+    @Test
+    public void testObtenerTodosLosClientes() throws PersistenciaException {
+        clienteDAO.agregarCliente(new Cliente("Cliente 1", "Apellido 1", "Apellido 1", "usuario1", "pass1"));
+        clienteDAO.agregarCliente(new Cliente("Cliente 2", "Apellido 2", "Apellido 2", "usuario2", "pass2"));
+
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        
+        assertNotNull(clientes);
+        assertTrue(clientes.size() >= 2);
     }
    
 }
