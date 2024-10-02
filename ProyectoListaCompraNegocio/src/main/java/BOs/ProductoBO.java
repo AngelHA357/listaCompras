@@ -7,6 +7,8 @@ import Entidades.Producto;
 import Exceptions.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProductoBO implements IProductoBO {
 
@@ -19,38 +21,60 @@ public class ProductoBO implements IProductoBO {
     }
 
     @Override
-    public void agregarProducto(ProductoDTO productoDTO) throws PersistenciaException {
+    public void agregarProducto(ProductoDTO productoDTO){
         Producto producto = conversiones.dtoAEntidad(productoDTO);
-        productoDAO.agregarProducto(producto);
-    }
-
-    @Override
-    public ProductoDTO obtenerProductoPorId(Long id) throws PersistenciaException {
-        Producto producto = productoDAO.obtenerProductoPorId(id);
-        return conversiones.entidadADTO(producto);
-    }
-
-    @Override
-    public List<ProductoDTO> obtenerTodosLosProductos() throws PersistenciaException {
-        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
-        List<ProductoDTO> productosDTO = new ArrayList<>();
-
-        for (Producto producto : productos) {
-            ProductoDTO productoDTO = conversiones.entidadADTO(producto);
-            productosDTO.add(productoDTO);
+        try {
+            productoDAO.agregarProducto(producto);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return productosDTO;
     }
 
     @Override
-    public void actualizarProducto(ProductoDTO productoDTO) throws PersistenciaException {
+    public ProductoDTO obtenerProductoPorId(Long id) {
+        try {
+            Producto producto = productoDAO.obtenerProductoPorId(id);
+            return conversiones.entidadADTO(producto);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ProductoDTO> obtenerTodosLosProductos(){
+        try {
+            List<Producto> productos = productoDAO.obtenerTodosLosProductos();
+            List<ProductoDTO> productosDTO = new ArrayList<>();
+            
+            for (Producto producto : productos) {
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
+                productosDTO.add(productoDTO);
+            }
+            
+            return productosDTO;
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public void actualizarProducto(ProductoDTO productoDTO){
         Producto producto = conversiones.dtoAEntidad(productoDTO);
-        productoDAO.actualizarProducto(producto);
+        try {
+            productoDAO.actualizarProducto(producto);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public void eliminarProducto(Long id) throws PersistenciaException {
-        productoDAO.eliminarProducto(id);
+    public void eliminarProducto(Long id){
+        try {
+            productoDAO.eliminarProducto(id);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

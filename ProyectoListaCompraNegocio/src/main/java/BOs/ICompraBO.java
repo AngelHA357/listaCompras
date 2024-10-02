@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface ICompraBO {
 
-    void agregarCompra(CompraDTO compraDTO) throws PersistenciaException;
+    void agregarCompra(CompraDTO compraDTO);
 
-    CompraDTO obtenerCompraPorId(Long id) throws PersistenciaException;
+    CompraDTO obtenerCompraPorId(Long id);
 
-    List<CompraDTO> obtenerTodasLasCompras() throws PersistenciaException;
+    List<CompraDTO> obtenerTodasLasCompras();
 
-    void actualizarCompra(CompraDTO compraDTO) throws PersistenciaException;
+    void actualizarCompra(CompraDTO compraDTO);
 
-    void eliminarCompra(Long id) throws PersistenciaException;
+    void eliminarCompra(Long id);
 }

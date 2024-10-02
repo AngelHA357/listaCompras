@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface IProductoBO {
 
-    void agregarProducto(ProductoDTO productoDTO) throws PersistenciaException;
+    public void agregarProducto(ProductoDTO productoDTO);
 
-    ProductoDTO obtenerProductoPorId(Long id) throws PersistenciaException;
+    public ProductoDTO obtenerProductoPorId(Long id);
 
-    List<ProductoDTO> obtenerTodosLosProductos() throws PersistenciaException;
+    public List<ProductoDTO> obtenerTodosLosProductos();
 
-    void actualizarProducto(ProductoDTO productoDTO) throws PersistenciaException;
+    public void actualizarProducto(ProductoDTO productoDTO);
 
-    void eliminarProducto(Long id) throws PersistenciaException;
+    public void eliminarProducto(Long id);
 }

@@ -7,6 +7,8 @@ import Exceptions.PersistenciaException;
 import DAOs.ICompraDAO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CompraBO implements ICompraBO {
 
@@ -19,38 +21,60 @@ public class CompraBO implements ICompraBO {
     }
 
     @Override
-    public void agregarCompra(CompraDTO compraDTO) throws PersistenciaException {
+    public void agregarCompra(CompraDTO compraDTO) {
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
-        compraDAO.agregarCompra(compra);
-    }
-
-    @Override
-    public CompraDTO obtenerCompraPorId(Long id) throws PersistenciaException {
-        Compra compra = compraDAO.obtenerCompraPorId(id);
-        return compraConversiones.entidadADTO(compra);
-    }
-
-    @Override
-    public List<CompraDTO> obtenerTodasLasCompras() throws PersistenciaException {
-        List<Compra> compras = compraDAO.obtenerTodasLasCompras();
-        List<CompraDTO> comprasDTO = new ArrayList<>();
-
-        for (Compra compra : compras) {
-            CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
-            comprasDTO.add(compraDTO);
+        try {
+            compraDAO.agregarCompra(compra);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return comprasDTO;
     }
 
     @Override
-    public void actualizarCompra(CompraDTO compraDTO) throws PersistenciaException {
+    public CompraDTO obtenerCompraPorId(Long id) {
+        try {
+            Compra compra = compraDAO.obtenerCompraPorId(id);
+            return compraConversiones.entidadADTO(compra);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public List<CompraDTO> obtenerTodasLasCompras() {
+        try {
+            List<Compra> compras = compraDAO.obtenerTodasLasCompras();
+            List<CompraDTO> comprasDTO = new ArrayList<>();
+            
+            for (Compra compra : compras) {
+                CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
+                comprasDTO.add(compraDTO);
+            }
+            
+            return comprasDTO;
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public void actualizarCompra(CompraDTO compraDTO) {
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
-        compraDAO.actualizarCompra(compra);
+        try {
+            compraDAO.actualizarCompra(compra);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public void eliminarCompra(Long id) throws PersistenciaException {
-        compraDAO.eliminarCompra(id);
+    public void eliminarCompra(Long id) {
+        try {
+            compraDAO.eliminarCompra(id);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
