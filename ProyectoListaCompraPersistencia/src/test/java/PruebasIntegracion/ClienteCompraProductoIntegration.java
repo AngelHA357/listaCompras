@@ -65,7 +65,7 @@ public class ClienteCompraProductoIntegration {
         compraDAO.agregarCompra(compra);
         
         // Agregar un producto
-        Producto producto = new Producto("Mesa", "Mobiliario", compra);
+        Producto producto = new Producto("Mesa", "Mobiliario", compra, 6.0);
         Producto productoGuardado = productoDAO.agregarProducto(producto);
         
         // Verificar que el producto esté en la compra
@@ -84,8 +84,8 @@ public class ClienteCompraProductoIntegration {
         compraDAO.agregarCompra(compra);
 
         // Agregar múltiples productos
-        Producto producto1 = new Producto("Libro", "Educación", compra);
-        Producto producto2 = new Producto("Lápiz", "Escritura", compra);
+        Producto producto1 = new Producto("Libro", "Educación", compra, 6.0);
+        Producto producto2 = new Producto("Lápiz", "Escritura", compra, 6.0);
         productoDAO.agregarProducto(producto1);
         productoDAO.agregarProducto(producto2);
 
@@ -104,7 +104,7 @@ public class ClienteCompraProductoIntegration {
         compraDAO.agregarCompra(compra);
         
         // Agregar un producto
-        Producto producto = new Producto("Silla", "Mobiliario", compra);
+        Producto producto = new Producto("Silla", "Mobiliario", compra, 6.0);
         Producto productoGuardado = productoDAO.agregarProducto(producto);
         
         // Actualizar el producto

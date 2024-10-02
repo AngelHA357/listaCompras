@@ -44,7 +44,7 @@ public class CompraTest {
         Compra compra = new Compra();
 
         // Crear un nuevo producto y agregarlo a la compra
-        Producto producto = new Producto("Papel", "Higiene Personal", compra);
+        Producto producto = new Producto("Papel", "Higiene Personal", compra, 6.0);
         compra.agregarProducto(producto);
         
         // Verificar que el producto fue agregado correctamente
@@ -61,7 +61,7 @@ public class CompraTest {
 
         // Crear un producto con una compra nula
         assertThrows(NullPointerException.class, () -> {
-            Producto producto = new Producto("Papel", "Higiene Personal", compra);
+            Producto producto = new Producto("Papel", "Higiene Personal", compra, 6.0);
             compra.agregarProducto(producto);
         });
     }
@@ -70,8 +70,8 @@ public class CompraTest {
     public void agregarMultiplesProductosACompra() {
         Compra compra = new Compra();
 
-        Producto producto1 = new Producto("Papel", "Higiene Personal", compra);
-        Producto producto2 = new Producto("Jabón", "Higiene Personal", compra);
+        Producto producto1 = new Producto("Papel", "Higiene Personal", compra, 6.0);
+        Producto producto2 = new Producto("Jabón", "Higiene Personal", compra, 6.0);
 
         compra.agregarProducto(producto1);
         compra.agregarProducto(producto2);

@@ -6,15 +6,17 @@ public class ProductoDTO {
     private String categoria;
     private boolean comprado;
     private CompraDTO compraDTO;
+    private Double cantidad;
 
     public ProductoDTO() {
     }
 
-    public ProductoDTO(String nombre, String categoria, boolean comprado, CompraDTO compraDTO) {
+    public ProductoDTO(String nombre, String categoria, boolean comprado, CompraDTO compraDTO, Double cantidad) {
         this.nombre = nombre;
         this.categoria = categoria;
         this.comprado = comprado;
         this.compraDTO = compraDTO;
+        this.cantidad = cantidad;
     }
 
     public String getNombre() {
@@ -48,4 +50,22 @@ public class ProductoDTO {
     public void setCompra(CompraDTO compraDTO) {
         this.compraDTO = compraDTO;
     }
+
+    public CompraDTO getCompraDTO() {
+        return compraDTO;
+    }
+
+    public void setCompraDTO(CompraDTO compraDTO) {
+        this.compraDTO = compraDTO;
+    }
+
+    public Double getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Double cantidad) {
+        this.cantidad = cantidad;
+    }
+    
+    
 }

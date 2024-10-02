@@ -10,7 +10,7 @@ import java.util.List;
 public class ProductosConversiones {
 
     private final ClientesConversiones clientesConversiones;
-    
+
     public ProductosConversiones() {
         this.clientesConversiones = new ClientesConversiones();
     }
@@ -27,6 +27,7 @@ public class ProductosConversiones {
 
         Compra compra = compraDtoAEntidad(dto.getCompra());
         producto.setCompra(compra);
+        producto.setCantidad(dto.getCantidad());
 
         return producto;
     }
@@ -50,7 +51,7 @@ public class ProductosConversiones {
 
         return compra;
     }
-    
+
     public ProductoDTO entidadADTO(Producto entidad) {
         if (entidad == null) {
             return null;
@@ -60,10 +61,11 @@ public class ProductosConversiones {
                 entidad.getNombre(),
                 entidad.getCategoria(),
                 entidad.isComprado(),
-                compraEntidadADTO(entidad.getCompra())
+                compraEntidadADTO(entidad.getCompra()),
+                entidad.getCantidad()
         );
     }
-    
+
     public CompraDTO compraEntidadADTO(Compra entidad) {
         if (entidad == null) {
             return null;
@@ -76,12 +78,12 @@ public class ProductosConversiones {
             productosDTO.add(productoDTO);
         }
 
-        CompraDTO compra = new CompraDTO(entidad.getNombre(),clientesConversiones.convertirEntidadADTO(entidad.getCliente()));
+        CompraDTO compra = new CompraDTO(entidad.getNombre(), clientesConversiones.convertirEntidadADTO(entidad.getCliente()));
         compra.setId(entidad.getId());
         compra.setProductos(productosDTO);
-        
+
         return compra;
-    
+
     }
-    
+
 }

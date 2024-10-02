@@ -17,27 +17,29 @@ public class Producto implements Serializable {
     private String nombre;
     private String categoria;
     private boolean comprado;
+    private Double cantidad;
 
     @ManyToOne
     @JoinColumn(name = "compra_id")
     private Compra compra;
 
     // Constructor, getters y setters
-
     public Producto() {
     }
 
-    public Producto(String nombre, String categoria, boolean comprado, Compra compra) {
+    public Producto(String nombre, String categoria, boolean comprado, Compra compra, Double cantidad) {
         this.nombre = nombre;
         this.categoria = categoria;
         this.comprado = comprado;
         this.compra = compra;
+        this.cantidad = cantidad;
     }
-    
-    public Producto (String nombre, String categoría, Compra compra){
+
+    public Producto(String nombre, String categoría, Compra compra, Double cantidad) {
         this.nombre = nombre;
         this.categoria = categoria;
         this.compra = compra;
+        this.cantidad = cantidad;
     }
 
     public Long getId() {
@@ -79,4 +81,14 @@ public class Producto implements Serializable {
     public void setCompra(Compra compra) {
         this.compra = compra;
     }
+
+    public Double getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Double cantidad) {
+        this.cantidad = cantidad;
+    }
+    
+    
 }

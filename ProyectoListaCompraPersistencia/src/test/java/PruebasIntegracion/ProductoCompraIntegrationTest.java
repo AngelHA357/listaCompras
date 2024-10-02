@@ -57,7 +57,7 @@ public class ProductoCompraIntegrationTest {
     @Test
     public void testAgregarProductoYCompra() throws PersistenciaException {
         // Agregar un producto
-        Producto producto = new Producto("Papel", "Higiene Personal", null);
+        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
         Producto productoAgregado = productoDAO.agregarProducto(producto);
 
         // Crear una compra con el producto
@@ -74,7 +74,7 @@ public class ProductoCompraIntegrationTest {
     @Test
     public void testObtenerProductosPorCompra() throws PersistenciaException {
         // Crear un producto y agregarlo a una compra
-        Producto producto = new Producto("Jabón", "Higiene Personal", null);
+        Producto producto = new Producto("Jabón", "Higiene Personal", null, 6.0);
         Producto productoAgregado = productoDAO.agregarProducto(producto);
 
         Compra compra = new Compra("Compra de Jabones", null);
@@ -92,7 +92,7 @@ public class ProductoCompraIntegrationTest {
     
     @Test
     public void testActualizarProductoYVerificarEnCompras() throws PersistenciaException {
-        Producto producto = new Producto("Jabón de barra", "Higiene Personal", null);
+        Producto producto = new Producto("Jabón de barra", "Higiene Personal", null, 6.0);
         productoDAO.agregarProducto(producto);
 
         Compra compra = new Compra("Compra de Jabón", null);

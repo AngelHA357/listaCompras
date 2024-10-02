@@ -50,7 +50,7 @@ public class ProductoDAOTest {
     @Test
     public void testAgregarProducto() throws PersistenciaException {
         
-        Producto producto = new Producto("Papel", "Higiene Personal", null);
+        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
 
         Producto resultado = productoDAO.agregarProducto(producto);
 
@@ -59,7 +59,7 @@ public class ProductoDAOTest {
     }
     
     public void testObtenerProductoPorId() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null);
+        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
         productoDAO.agregarProducto(producto); // Asegurarse de que el producto está en la base de datos
 
         Producto resultado = productoDAO.obtenerProductoPorId(producto.getId());
@@ -70,8 +70,8 @@ public class ProductoDAOTest {
     
     @Test
     public void testObtenerTodosLosProductos() throws PersistenciaException {
-        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", null));
-        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", null));
+        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", null, 6.0));
+        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", null, 6.0));
 
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
 
@@ -81,7 +81,7 @@ public class ProductoDAOTest {
     
     @Test
     public void testActualizarProducto() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null);
+        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
         productoDAO.agregarProducto(producto);
 
         producto.setNombre("Papel Nuevo"); // Cambiar el nombre
@@ -93,7 +93,7 @@ public class ProductoDAOTest {
     
     @Test
     public void testEliminarProducto() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null);
+        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
         productoDAO.agregarProducto(producto);
 
         Producto eliminado = productoDAO.eliminarProducto(producto.getId());
