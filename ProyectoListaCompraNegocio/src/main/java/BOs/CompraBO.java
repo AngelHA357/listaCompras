@@ -77,4 +77,22 @@ public class CompraBO implements ICompraBO {
             Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId) {
+        try {
+            List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
+            List<CompraDTO> comprasDTO = new ArrayList<>();
+            
+            for (Compra compra : compras) {
+                CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
+                comprasDTO.add(compraDTO);
+            }
+            
+            return comprasDTO;
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

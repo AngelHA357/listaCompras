@@ -6,13 +6,15 @@ import java.util.List;
 
 public interface ICompraDAO {
 
-    Compra agregarCompra(Compra compra) throws PersistenciaException;
+    public Compra agregarCompra(Compra compra) throws PersistenciaException;
 
-    Compra obtenerCompraPorId(Long id) throws PersistenciaException;
+    public Compra obtenerCompraPorId(Long id) throws PersistenciaException;
 
-    List<Compra> obtenerTodasLasCompras() throws PersistenciaException;
+    public List<Compra> obtenerTodasLasCompras() throws PersistenciaException;
 
-    Compra actualizarCompra(Compra compra) throws PersistenciaException;
+    public Compra actualizarCompra(Compra compra) throws PersistenciaException;
 
-    Compra eliminarCompra(Long id) throws PersistenciaException;
+    public Compra eliminarCompra(Long id) throws PersistenciaException;
+    
+    public List<Compra> obtenerComprasPorCliente(Long clienteId) throws PersistenciaException;
 }

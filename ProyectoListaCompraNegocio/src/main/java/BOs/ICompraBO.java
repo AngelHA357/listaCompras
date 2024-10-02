@@ -7,13 +7,16 @@ import java.util.List;
 
 public interface ICompraBO {
 
-    void agregarCompra(CompraDTO compraDTO);
+    public void agregarCompra(CompraDTO compraDTO);
 
-    CompraDTO obtenerCompraPorId(Long id);
+    public CompraDTO obtenerCompraPorId(Long id);
 
-    List<CompraDTO> obtenerTodasLasCompras();
+    public List<CompraDTO> obtenerTodasLasCompras();
 
-    void actualizarCompra(CompraDTO compraDTO);
+    public void actualizarCompra(CompraDTO compraDTO);
 
-    void eliminarCompra(Long id);
+    public void eliminarCompra(Long id);
+
+    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId);
+
 }

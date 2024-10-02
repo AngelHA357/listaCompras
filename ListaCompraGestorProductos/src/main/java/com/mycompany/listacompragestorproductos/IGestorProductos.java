@@ -5,6 +5,7 @@
 package com.mycompany.listacompragestorproductos;
 
 import DTOs.ProductoDTO;
+import java.util.List;
 
 /**
  *
@@ -17,5 +18,9 @@ public interface IGestorProductos {
     public void eliminarProducto(Long id);
     
     public void actualizarProducto(ProductoDTO productoDTO);
+    
+    public ProductoDTO obtenerProductoPorId(Long id);
+
+    public List<ProductoDTO> obtenerTodosLosProductos();
 
 }

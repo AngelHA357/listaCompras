@@ -6,6 +6,7 @@ package com.mycompany.listacompragestorproductos;
 
 import BOs.IProductoBO;
 import DTOs.ProductoDTO;
+import java.util.List;
 
 /**
  *
@@ -34,6 +35,16 @@ public class GestorProductos implements IGestorProductos {
     @Override
     public void actualizarProducto(ProductoDTO productoDTO) {
         productoBO.actualizarProducto(productoDTO);
+    }
+
+    @Override
+    public ProductoDTO obtenerProductoPorId(Long id) {
+        return productoBO.obtenerProductoPorId(id);
+    }
+
+    @Override
+    public List<ProductoDTO> obtenerTodosLosProductos() {
+        return productoBO.obtenerTodosLosProductos();
     }
 
 }

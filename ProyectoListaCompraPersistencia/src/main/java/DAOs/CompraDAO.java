@@ -99,4 +99,19 @@ public class CompraDAO implements ICompraDAO {
         }
         return compraEliminada;
     }
+    
+    @Override
+    public List<Compra> obtenerComprasPorCliente(Long clienteId) throws PersistenciaException {
+    EntityManager em = conexion.crearConexion();
+    try {
+        Query query = em.createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId");
+        query.setParameter("clienteId", clienteId);
+        return query.getResultList();
+    } catch (Exception e) {
+        throw new PersistenciaException("Error al obtener compras por cliente", e);
+    } finally {
+        em.close();
+    }
+}
+
 }

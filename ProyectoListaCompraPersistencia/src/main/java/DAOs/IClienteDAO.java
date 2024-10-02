@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface IClienteDAO {
 
-    Cliente agregarCliente(Cliente cliente) throws PersistenciaException;
+    public Cliente agregarCliente(Cliente cliente) throws PersistenciaException;
 
-    Cliente obtenerClientePorId(Long id) throws PersistenciaException;
+    public Cliente obtenerClientePorId(Long id) throws PersistenciaException;
 
-    List<Cliente> obtenerTodosLosClientes() throws PersistenciaException;
+    public List<Cliente> obtenerTodosLosClientes() throws PersistenciaException;
 
-    Cliente actualizarCliente(Cliente cliente) throws PersistenciaException;
+    public Cliente actualizarCliente(Cliente cliente) throws PersistenciaException;
 
-    Cliente eliminarCliente(String id) throws PersistenciaException;
+    public Cliente eliminarCliente(String id) throws PersistenciaException;
 
-    Cliente obtenerClientePorUsuarioYContrasena(String usuario, String contrasenia) throws PersistenciaException;
+    public Cliente obtenerClientePorUsuarioYContrasena(String usuario, String contrasenia) throws PersistenciaException;
 }
