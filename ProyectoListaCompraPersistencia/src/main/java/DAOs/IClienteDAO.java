@@ -8,7 +8,7 @@ public interface IClienteDAO {
 
     Cliente agregarCliente(Cliente cliente) throws PersistenciaException;
 
-    Cliente obtenerClientePorId(String id) throws PersistenciaException;
+    Cliente obtenerClientePorId(Long id) throws PersistenciaException;
 
     List<Cliente> obtenerTodosLosClientes() throws PersistenciaException;
 

@@ -35,7 +35,7 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public Cliente obtenerClientePorId(String id) throws PersistenciaException {
+    public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         try {
             return em.find(Cliente.class, id);

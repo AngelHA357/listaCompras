@@ -63,18 +63,17 @@ public class ClienteDAOTest {
     
      @Test
     public void obtenerClienteExistente() throws PersistenciaException {
-        Cliente cliente = clienteDAO.obtenerClientePorId("1");
+        Cliente cliente = clienteDAO.obtenerClientePorId(1l);
 
         
         assertNotNull(cliente);
-        assertEquals("1", cliente.getId());
+        assertEquals(1L, cliente.getId());
     }
  
     @Test
     public void obtenerClienteInexistente() throws PersistenciaException {
-        PersistenciaException exception = assertThrows(PersistenciaException.class, () -> {
-            clienteDAO.obtenerClientePorId("3");
-        });
+        Cliente cliente = clienteDAO.obtenerClientePorId(10000l);
+        assertNull(cliente);
 
     }
    
