@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: PruebasClienteDAO.CompraDAOTest
+Test set: PruebasClienteDAO.ProductoDAOTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in PruebasClienteDAO.CompraDAOTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.287 s -- in PruebasClienteDAO.ProductoDAOTest

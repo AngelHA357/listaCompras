@@ -1,2 +1,4 @@
-PruebasClienteDAO\ClienteDAOTest.class
+PruebasClienteDAO\ProductoDAOTest.class
 PruebasClienteDAO\CompraDAOTest.class
+PruebasClienteDAO\ClienteDAOTest.class
+PruebasClienteDAO\CompraTest.class

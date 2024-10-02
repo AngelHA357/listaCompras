@@ -1,6 +1,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,17 +29,14 @@ public class Compra implements Serializable {
 
     // Constructor, getters y setters
     public Compra() {
-    }
-
-    public Compra(List<Producto> productos, Cliente cliente, String nombre) {
-        this.productos = productos;
-        this.cliente = cliente;
-        this.nombre = nombre;
+        productos = new ArrayList<Producto>();
+        
     }
     
     public Compra(String nombre, Cliente cliente){
         this.nombre = nombre;
         this.cliente = cliente;
+        productos = new ArrayList<Producto>();
     }
 
     public Long getId() {

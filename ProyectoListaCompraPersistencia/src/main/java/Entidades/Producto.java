@@ -31,6 +31,12 @@ public class Producto implements Serializable {
         this.comprado = comprado;
         this.compra = compra;
     }
+    
+    public Producto (String nombre, String categoría, Compra compra){
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.compra = compra;
+    }
 
     public Long getId() {
         return id;

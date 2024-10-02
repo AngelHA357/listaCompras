@@ -66,13 +66,12 @@ public class ClienteDAOTest {
         Cliente cliente = clienteDAO.obtenerClientePorId(1l);
 
         
-        assertNotNull(cliente);
         assertEquals(1L, cliente.getId());
     }
  
     @Test
     public void obtenerClienteInexistente() throws PersistenciaException {
-        Cliente cliente = clienteDAO.obtenerClientePorId(10000l);
+        Cliente cliente = clienteDAO.obtenerClientePorId(Long.MAX_VALUE);
         assertNull(cliente);
 
     }

@@ -82,9 +82,11 @@ public class CompraDAO implements ICompraDAO {
         Compra compraEliminada = null;
         try {
             em.getTransaction().begin();
-            compraEliminada = em.find(Compra.class, id);
-            if (compraEliminada != null) {
-                em.remove(compraEliminada);
+            Compra compra = em.find(Compra.class, id);
+            if (compra != null) {
+                // Crear una copia de la entidad antes de eliminarla
+                compraEliminada = new Compra(compra.getNombre(), compra.getCliente()); // Copiar todos los campos necesarios
+                em.remove(compra);
             }
             em.getTransaction().commit();
         } catch (Exception e) {
