@@ -36,9 +36,6 @@ public class CompraConversiones {
             }
             compra.setProductos(productos);
         }
-
-        
-        
         compra.setCliente(clientesConversiones.convertirDTOAEntidad(compraDTO.getCliente()));
 
         return compra;

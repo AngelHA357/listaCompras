@@ -64,6 +64,7 @@ public class Compra implements Serializable {
     }
     
     public void agregarProducto(Producto producto){
+        producto.setCompra(this);  
         productos.add(producto);
     }
 

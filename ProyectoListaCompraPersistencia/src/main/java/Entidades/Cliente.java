@@ -21,6 +21,7 @@ public class Cliente implements Serializable {
     private String usuario;
     private String contrasenia;
 
+    
     @OneToMany(mappedBy = "cliente")
     private List<Compra> compras;
 
