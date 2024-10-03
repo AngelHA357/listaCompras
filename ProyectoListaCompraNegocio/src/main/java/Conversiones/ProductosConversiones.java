@@ -39,43 +39,52 @@ public class ProductosConversiones {
 
         List<Producto> productos = new ArrayList<>();
 
-        for (ProductoDTO dto : compraDTO.getProductos()) {
-            Producto producto = dtoAEntidad(dto);
-            productos.add(producto);
-        }
-
         Compra compra = new Compra();
+        compra.setNombre(compraDTO.getNombreCompra());
         compra.setId(compraDTO.getId());
-        compra.setProductos(productos);
+        if (!productos.isEmpty()) {
+            for (ProductoDTO dto : compraDTO.getProductos()) {
+                Producto producto = dtoAEntidad(dto);
+                productos.add(producto);
+            }
+            compra.setProductos(productos);
+        }
         compra.setCliente(clientesConversiones.convertirDTOAEntidad(compraDTO.getCliente()));
 
         return compra;
     }
 
-    public ProductoDTO entidadADTO(Producto entidad) {
+    public ProductoDTO entidadADTO(Producto entidad, boolean incluirCompra) {
         if (entidad == null) {
             return null;
+        }
+
+        CompraDTO compraDTO = null;
+        if (incluirCompra) {
+            compraDTO = compraEntidadADTO(entidad.getCompra(), false);  // Aquí controlas la recursión
         }
 
         return new ProductoDTO(
                 entidad.getNombre(),
                 entidad.getCategoria(),
                 entidad.isComprado(),
-                compraEntidadADTO(entidad.getCompra()),
+                compraDTO,
                 entidad.getCantidad()
         );
     }
 
-    public CompraDTO compraEntidadADTO(Compra entidad) {
+    public CompraDTO compraEntidadADTO(Compra entidad, boolean incluirProductos) {
         if (entidad == null) {
             return null;
         }
 
         List<ProductoDTO> productosDTO = new ArrayList<>();
 
-        for (Producto producto : entidad.getProductos()) {
-            ProductoDTO productoDTO = entidadADTO(producto);
-            productosDTO.add(productoDTO);
+        if (incluirProductos) {
+            for (Producto producto : entidad.getProductos()) {
+                ProductoDTO productoDTO = entidadADTO(producto, false);  // No incluir la compra dentro del producto
+                productosDTO.add(productoDTO);
+            }
         }
 
         CompraDTO compra = new CompraDTO(entidad.getNombre(), clientesConversiones.convertirEntidadADTO(entidad.getCliente()));
@@ -83,7 +92,6 @@ public class ProductosConversiones {
         compra.setProductos(productosDTO);
 
         return compra;
-
     }
 
 }

@@ -38,7 +38,7 @@ public class ProductoBO implements IProductoBO {
     public ProductoDTO obtenerProductoPorId(Long id) {
         try {
             Producto producto = productoDAO.obtenerProductoPorId(id);
-            return conversiones.entidadADTO(producto);
+            return conversiones.entidadADTO(producto, false);
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -52,7 +52,7 @@ public class ProductoBO implements IProductoBO {
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
                 productosDTO.add(productoDTO);
             }
 
@@ -89,7 +89,7 @@ public class ProductoBO implements IProductoBO {
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
                 productosDTO.add(productoDTO);
             }
 
@@ -107,7 +107,7 @@ public class ProductoBO implements IProductoBO {
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
                 productosDTO.add(productoDTO);
             }
 

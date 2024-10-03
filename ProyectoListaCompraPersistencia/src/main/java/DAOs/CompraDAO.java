@@ -123,6 +123,9 @@ public class CompraDAO implements ICompraDAO {
             query.setParameter("clienteId", clienteId);
 
             return (Compra) query.getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            // Si no se encuentra ningún resultado, devolver null
+            return null;
         } catch (Exception e) {
             throw new PersistenciaException("Error al obtener compra por nombre y cliente", e);
         } finally {

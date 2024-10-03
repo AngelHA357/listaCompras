@@ -22,8 +22,8 @@ public class GestorCompras implements IGestorCompras {
     }
 
     @Override
-    public void agregarCompra(CompraDTO compraDTO) {
-        compraBO.agregarCompra(compraDTO);
+    public CompraDTO agregarCompra(CompraDTO compraDTO) {
+        return compraBO.agregarCompra(compraDTO);
     }
 
     @Override
