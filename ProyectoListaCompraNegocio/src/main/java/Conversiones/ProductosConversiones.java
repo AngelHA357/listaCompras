@@ -33,7 +33,7 @@ public class ProductosConversiones {
     }
 
     public Compra compraDtoAEntidad(CompraDTO compraDTO) {
-         if (compraDTO == null) {
+        if (compraDTO == null) {
             return null;
         }
 
@@ -54,30 +54,37 @@ public class ProductosConversiones {
         return compra;
     }
 
-    public ProductoDTO entidadADTO(Producto entidad) {
+    public ProductoDTO entidadADTO(Producto entidad, boolean incluirCompra) {
         if (entidad == null) {
             return null;
+        }
+
+        CompraDTO compraDTO = null;
+        if (incluirCompra) {
+            compraDTO = compraEntidadADTO(entidad.getCompra(), false);  // Aquí controlas la recursión
         }
 
         return new ProductoDTO(
                 entidad.getNombre(),
                 entidad.getCategoria(),
                 entidad.isComprado(),
-                compraEntidadADTO(entidad.getCompra()),
+                compraDTO,
                 entidad.getCantidad()
         );
     }
 
-    public CompraDTO compraEntidadADTO(Compra entidad) {
+    public CompraDTO compraEntidadADTO(Compra entidad, boolean incluirProductos) {
         if (entidad == null) {
             return null;
         }
 
         List<ProductoDTO> productosDTO = new ArrayList<>();
 
-        for (Producto producto : entidad.getProductos()) {
-            ProductoDTO productoDTO = entidadADTO(producto);
-            productosDTO.add(productoDTO);
+        if (incluirProductos) {
+            for (Producto producto : entidad.getProductos()) {
+                ProductoDTO productoDTO = entidadADTO(producto, false);  // No incluir la compra dentro del producto
+                productosDTO.add(productoDTO);
+            }
         }
 
         CompraDTO compra = new CompraDTO(entidad.getNombre(), clientesConversiones.convertirEntidadADTO(entidad.getCliente()));
@@ -85,7 +92,6 @@ public class ProductosConversiones {
         compra.setProductos(productosDTO);
 
         return compra;
-
     }
 
 }
