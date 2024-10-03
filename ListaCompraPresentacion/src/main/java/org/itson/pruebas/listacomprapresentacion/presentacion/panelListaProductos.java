@@ -5,6 +5,12 @@
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
+import DTOs.ProductoDTO;
+import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
+import com.mycompany.listacompragestorproductos.GestorProductos;
+import java.awt.Font;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,6 +20,8 @@ public class panelListaProductos extends javax.swing.JPanel {
 
     private frmMenuInicio menuInicio;
     private CompraDTO compra;
+    private GestorProductos gestorProductos;
+    private FiltroPorCompra filtroCompra;
     
     /**
      * Creates new form panelAgregarProducto
@@ -21,9 +29,22 @@ public class panelListaProductos extends javax.swing.JPanel {
     public panelListaProductos(frmMenuInicio menuInicio,CompraDTO compra) {
         this.menuInicio = menuInicio;
         this.compra = compra;
+        gestorProductos = new GestorProductos();
+        filtroCompra = new FiltroPorCompra();
         initComponents();
+        tblListaProductos.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 14));
+        mostrarListaProductos();
     }
 
+    private void mostrarListaProductos() {
+        DefaultTableModel modelo = (DefaultTableModel) tblListaProductos.getModel();
+
+        List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId()); 
+        if (listaProductoCliente != null) {
+            listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(),p.getCantidad(),p.getCategoria(), p.isComprado()?"Si":"No"}));
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,11 +70,11 @@ public class panelListaProductos extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Producto", "Categoria", "Comprado"
+                "Producto", "Cantidad", "Categoria", "Comprado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -7,6 +7,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import com.mycompany.listacompragestorcompras.GestorCompras;
+import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -28,14 +29,20 @@ public class panelListaCompras extends javax.swing.JPanel {
     public panelListaCompras(frmMenuInicio menuInicio, ClienteDTO cliente) {
         this.menuInicio = menuInicio;
         this.cliente = cliente;
+        this.compra = new CompraDTO();
         this.gestorCompras = new GestorCompras();
         initComponents();
+        
+        tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
+        
         mostrarListaCompras();
+        
     }
 
     private void mostrarListaCompras() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();
-
+        
+        
         List<CompraDTO> listaComprasCliente = gestorCompras.obtenerComprasPorCliente(cliente.getId());
         if (listaComprasCliente != null) {
             listaComprasCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombreCompra()}));
