@@ -8,6 +8,7 @@ import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import com.mycompany.listacompragestorclientes.GestorClientes;
 import com.mycompany.listacompragestorcompras.GestorCompras;
+import com.mycompany.listacompragestorcompras.IGestorCompras;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,7 +19,7 @@ public class panelNombreLista extends javax.swing.JPanel {
 
     private frmMenuInicio menuInicio;
     private ClienteDTO cliente;
-    private GestorCompras gestorCompras;
+    private IGestorCompras gestorCompras;
 
     /**
      * Creates new form panelNombreLista

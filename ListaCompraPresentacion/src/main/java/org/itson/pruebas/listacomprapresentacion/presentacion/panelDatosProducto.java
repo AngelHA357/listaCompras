@@ -6,8 +6,13 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
+import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
+import com.mycompany.listacomprafiltroporcompra.IFiltroPorCompra;
 import com.mycompany.listacompragestorcompras.GestorCompras;
+import com.mycompany.listacompragestorcompras.IGestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
+import com.mycompany.listacompragestorproductos.IGestorProductos;
+import java.util.List;
 import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
@@ -19,8 +24,9 @@ public class panelDatosProducto extends javax.swing.JPanel {
 
     private frmMenuInicio menuInicio;
     private CompraDTO compra;
-    private GestorProductos gestorProductos;
-    private GestorCompras gestorCompras;
+    private IGestorProductos gestorProductos;
+    private IGestorCompras gestorCompras;
+    private IFiltroPorCompra filtroCompra;
 
     /**
      * Creates new form panelAgregarDatosProducto
@@ -30,6 +36,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
         this.compra = compra;
         gestorProductos = new GestorProductos();
         gestorCompras = new GestorCompras();
+        filtroCompra = new FiltroPorCompra();
         initComponents();
 
     }
@@ -174,9 +181,13 @@ public class panelDatosProducto extends javax.swing.JPanel {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
         String categoria = txtCategoría.getText();
-
-        ProductoDTO producto = new ProductoDTO(nombre, categoria, false, compra, cantidad);
-        gestorProductos.agregarProducto(producto);
+        
+        if (existeProductoEnCompra(nombre)) {
+            JOptionPane.showMessageDialog(this, "Ya existe un producto con ese nombre en la compra.", "Producto existente", JOptionPane.WARNING_MESSAGE);
+        } else {
+            ProductoDTO producto = new ProductoDTO(nombre, categoria, false, compra, cantidad);
+            gestorProductos.agregarProducto(producto);
+        }
 
     }
 
@@ -188,6 +199,18 @@ public class panelDatosProducto extends javax.swing.JPanel {
         }
         return true;
     }
+
+    public boolean existeProductoEnCompra(String nombre) {
+        // Supongamos que tienes una lista de productos almacenados
+        List<ProductoDTO> productos = filtroCompra.obtenerProductosFiltrarPorCompra(this.compra.getId()); // Método que devuelve todos los productos
+        for (ProductoDTO producto : productos) {
+            if (producto.getNombre().equalsIgnoreCase(nombre)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JLabel jLabel1;

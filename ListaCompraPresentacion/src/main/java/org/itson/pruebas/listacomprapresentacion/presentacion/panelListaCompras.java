@@ -7,6 +7,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import com.mycompany.listacompragestorcompras.GestorCompras;
+import com.mycompany.listacompragestorcompras.IGestorCompras;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -21,7 +22,7 @@ public class panelListaCompras extends javax.swing.JPanel {
     private frmMenuInicio menuInicio;
     private ClienteDTO cliente;
     private CompraDTO compra;
-    private GestorCompras gestorCompras;
+    private IGestorCompras gestorCompras;
 
     /**
      * Creates new form panelListaCompras

@@ -7,6 +7,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 import BOs.ClienteBO;
 import DTOs.ClienteDTO;
 import com.mycompany.listacompragestorclientes.GestorClientes;
+import com.mycompany.listacompragestorclientes.IGestorClientes;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
@@ -21,7 +22,7 @@ import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 public class frmInicioSesion extends javax.swing.JFrame {
 
     private PantallaInicial pantallaInicial;
-    private GestorClientes gestorClientes;
+    private IGestorClientes gestorClientes;
 
     /**
      * Creates new form frmInicioSesion
