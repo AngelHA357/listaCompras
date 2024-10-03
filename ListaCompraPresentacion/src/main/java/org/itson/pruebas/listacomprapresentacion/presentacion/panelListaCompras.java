@@ -150,8 +150,9 @@ public class panelListaCompras extends javax.swing.JPanel {
                 datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);
             }
             compra.setNombreCompra(datosFila[0].toString());
+            CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
 
-            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraSelec);
             menuInicio.mostrarPanel(agregarProducto);
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione una lista de compras", "Atención", JOptionPane.INFORMATION_MESSAGE);

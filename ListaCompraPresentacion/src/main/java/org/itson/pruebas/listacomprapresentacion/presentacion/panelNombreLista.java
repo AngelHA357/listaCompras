@@ -8,6 +8,7 @@ import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import com.mycompany.listacompragestorclientes.GestorClientes;
 import com.mycompany.listacompragestorcompras.GestorCompras;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,14 +19,14 @@ public class panelNombreLista extends javax.swing.JPanel {
     private frmMenuInicio menuInicio;
     private ClienteDTO cliente;
     private GestorCompras gestorCompras;
-    
+
     /**
      * Creates new form panelNombreLista
      */
     public panelNombreLista(frmMenuInicio menuInicio, ClienteDTO cliente) {
         this.menuInicio = menuInicio;
         this.gestorCompras = new GestorCompras();
-        this.cliente=cliente;
+        this.cliente = cliente;
         initComponents();
     }
 
@@ -94,14 +95,20 @@ public class panelNombreLista extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
-        
+
         String compraS = txtNombreLista.getText();
         CompraDTO compra = new CompraDTO(compraS, cliente);
         
-        gestorCompras.agregarCompra(compra);
-        panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
-        menuInicio.mostrarPanel(agregarProducto);
+        CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
         
+        if (!compraS.equals(compraSelec.getNombreCompra())) {
+            gestorCompras.agregarCompra(compra);
+            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+            menuInicio.mostrarPanel(agregarProducto);
+        }else{
+            JOptionPane.showMessageDialog(this, "Este nombre ya existe", "Nombre existente", JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnContinuarActionPerformed
 
 
