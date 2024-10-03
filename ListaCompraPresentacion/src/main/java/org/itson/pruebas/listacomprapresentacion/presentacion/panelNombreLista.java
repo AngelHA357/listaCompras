@@ -98,14 +98,18 @@ public class panelNombreLista extends javax.swing.JPanel {
 
         String compraS = txtNombreLista.getText();
         CompraDTO compra = new CompraDTO(compraS, cliente);
-        
+        CompraDTO compraDTO;
+
         CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
-        
-        if (!compraS.equals(compraSelec.getNombreCompra())) {
-            gestorCompras.agregarCompra(compra);
-            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+        if (compraSelec == null) {
+            compraDTO = gestorCompras.agregarCompra(compra);
+            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
             menuInicio.mostrarPanel(agregarProducto);
-        }else{
+        } else if (!compraS.equals(compraSelec.getNombreCompra())) {
+            compraDTO = gestorCompras.agregarCompra(compra);
+            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
+            menuInicio.mostrarPanel(agregarProducto);
+        } else {
             JOptionPane.showMessageDialog(this, "Este nombre ya existe", "Nombre existente", JOptionPane.INFORMATION_MESSAGE);
         }
 

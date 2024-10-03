@@ -33,20 +33,22 @@ public class ProductosConversiones {
     }
 
     public Compra compraDtoAEntidad(CompraDTO compraDTO) {
-        if (compraDTO == null) {
+         if (compraDTO == null) {
             return null;
         }
 
         List<Producto> productos = new ArrayList<>();
 
-        for (ProductoDTO dto : compraDTO.getProductos()) {
-            Producto producto = dtoAEntidad(dto);
-            productos.add(producto);
-        }
-
         Compra compra = new Compra();
+        compra.setNombre(compraDTO.getNombreCompra());
         compra.setId(compraDTO.getId());
-        compra.setProductos(productos);
+        if (!productos.isEmpty()) {
+            for (ProductoDTO dto : compraDTO.getProductos()) {
+                Producto producto = dtoAEntidad(dto);
+                productos.add(producto);
+            }
+            compra.setProductos(productos);
+        }
         compra.setCliente(clientesConversiones.convertirDTOAEntidad(compraDTO.getCliente()));
 
         return compra;

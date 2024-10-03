@@ -26,13 +26,14 @@ public class CompraBO implements ICompraBO {
     }
 
     @Override
-    public void agregarCompra(CompraDTO compraDTO) {
+    public CompraDTO agregarCompra(CompraDTO compraDTO) {
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
         try {
-            compraDAO.agregarCompra(compra);
+            return compraConversiones.entidadADTO(compraDAO.agregarCompra(compra));
         } catch (PersistenciaException ex) {
             Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override
@@ -51,12 +52,12 @@ public class CompraBO implements ICompraBO {
         try {
             List<Compra> compras = compraDAO.obtenerTodasLasCompras();
             List<CompraDTO> comprasDTO = new ArrayList<>();
-            
+
             for (Compra compra : compras) {
                 CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
                 comprasDTO.add(compraDTO);
             }
-            
+
             return comprasDTO;
         } catch (PersistenciaException ex) {
             Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,12 +89,12 @@ public class CompraBO implements ICompraBO {
         try {
             List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
             List<CompraDTO> comprasDTO = new ArrayList<>();
-            
+
             for (Compra compra : compras) {
                 CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
                 comprasDTO.add(compraDTO);
             }
-            
+
             return comprasDTO;
         } catch (PersistenciaException ex) {
             Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +104,7 @@ public class CompraBO implements ICompraBO {
 
     @Override
     public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) {
-       try {
+        try {
             Compra compra = compraDAO.obtenerCompraPorNombreYCliente(nombre, clienteId);
             return compraConversiones.entidadADTO(compra);
         } catch (PersistenciaException ex) {

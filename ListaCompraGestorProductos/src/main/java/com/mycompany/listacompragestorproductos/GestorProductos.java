@@ -5,6 +5,7 @@
 package com.mycompany.listacompragestorproductos;
 
 import BOs.IProductoBO;
+import BOs.ProductoBO;
 import DTOs.ProductoDTO;
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class GestorProductos implements IGestorProductos {
 
     private IProductoBO productoBO;
 
-    public GestorProductos(IProductoBO productoBO) {
-        this.productoBO = productoBO;
+    public GestorProductos() {
+        this.productoBO = new ProductoBO();
     }
     
     @Override

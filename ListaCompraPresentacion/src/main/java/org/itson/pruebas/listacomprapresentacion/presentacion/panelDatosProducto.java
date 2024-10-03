@@ -26,8 +26,10 @@ public class panelDatosProducto extends javax.swing.JPanel {
     public panelDatosProducto(frmMenuInicio menuInicio, CompraDTO compra) {
         this.menuInicio = menuInicio;
         this.compra=compra;
+        gestorProductos = new GestorProductos();
+        gestorCompras = new GestorCompras();
         initComponents();
-        guardarProducto();
+        
     }
 
     /**
@@ -156,11 +158,12 @@ public class panelDatosProducto extends javax.swing.JPanel {
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
         menuInicio.mostrarPanel(agregarProducto);
+        guardarProducto();
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void guardarProducto(){
         String nombre = txtNombre.getText();
-        Double cantidad = Double.valueOf(txtNombre.getText());
+        Double cantidad = Double.valueOf(txtCantidad.getText());
         String categoria = txtCategoría.getText();
         
         ProductoDTO producto = new ProductoDTO(nombre, categoria, false, compra, cantidad);
