@@ -6,10 +6,13 @@ package PruebasComponentes;
 
 import Conexion.Conexion;
 import Conexion.IConexion;
+import DAOs.ClienteDAO;
 import DAOs.CompraDAO;
+import DAOs.IClienteDAO;
 import DAOs.ICompraDAO;
 import DAOs.IProductoDAO;
 import DAOs.ProductoDAO;
+import Entidades.Cliente;
 import Entidades.Compra;
 import Entidades.Producto;
 import Exceptions.PersistenciaException;
@@ -59,6 +62,12 @@ public class ProductoDAOTest {
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
         for (Producto producto : productos) {
             productoDAO.eliminarProducto(producto.getId());
+        }
+        
+        IClienteDAO clienteDAO = new ClienteDAO(conexion);
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        for(Cliente cliente : clientes){
+            clienteDAO.eliminarCliente(cliente.getId());
         }
         
         // Obtener todas las compras y eliminarlas

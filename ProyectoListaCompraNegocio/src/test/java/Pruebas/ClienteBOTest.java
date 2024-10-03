@@ -14,6 +14,7 @@ import DTOs.ClienteDTO;
 import Entidades.Cliente;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,17 +51,26 @@ public class ClienteBOTest {
         clienteBO = new ClienteBO();
         clienteDAO = new ClienteDAO(conexion);
     }
+    
+    @AfterEach
+    public void tearDown() throws PersistenciaException {
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        for(Cliente cliente : clientes){
+            clienteDAO.eliminarCliente(cliente.getId());
+        }
+    }
 
     @Test
     public void testAgregarCliente() throws PersistenciaException {
         ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
-        Cliente cliente = conversiones.convertirDTOAEntidad(clienteDTO);
 
+        
         clienteBO.agregarCliente(clienteDTO);
+        
+        Cliente clienteAgregado = clienteDAO.obtenerClientePorUsuarioYContrasena(clienteDTO.getUsuario(), clienteDTO.getContrasenia());
 
-        Cliente clienteAgregado = clienteDAO.obtenerClientePorId(cliente.getId());
 
-        assertNotNull(clienteAgregado);
+        assertNotNull(clienteAgregado);  
         assertEquals("Victor Humberto", clienteAgregado.getNombre());
         assertEquals("Encinas", clienteAgregado.getApellidoPaterno());
         assertEquals("Guzmán", clienteAgregado.getApellidoMaterno());

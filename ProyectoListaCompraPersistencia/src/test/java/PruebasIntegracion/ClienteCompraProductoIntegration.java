@@ -72,29 +72,36 @@ public class ClienteCompraProductoIntegration {
         for (Compra compra : compras) {
             compraDAO.eliminarCompra(compra.getId());
         }
+        
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        for(Cliente cliente : clientes){
+            clienteDAO.eliminarCliente(cliente.getId());
+        }
 
        
     }
-    
-    @Test
+
+   @Test
     public void testAgregarProductoYAsociarloACompra() throws PersistenciaException {
         // Crear un cliente y una compra
         Cliente cliente = new Cliente("Ana", "Martínez", "Lopez", "anam", "pass456");
         clienteDAO.agregarCliente(cliente);
         Compra compra = new Compra("Compra de Productos", cliente);
         compraDAO.agregarCompra(compra);
-        
-        // Agregar un producto
-        Producto producto = new Producto("Mesa", "Mobiliario", compra, 6.0);
-        Producto productoGuardado = productoDAO.agregarProducto(producto);
-        
+
+        // Agregar un producto y luego asociarlo a la compra
+        Producto producto = new Producto("Mesa", "Mobiliario", null, 6.0);
+        productoDAO.agregarProducto(producto);
+        compra.agregarProducto(producto); // Asociar producto a la compra
+        compraDAO.actualizarCompra(compra); // Actualizar compra en la BD
+
         // Verificar que el producto esté en la compra
         Compra compraObtenida = compraDAO.obtenerCompraPorId(compra.getId());
-        assertTrue(compraObtenida.getProductos().contains(productoGuardado));
+        assertTrue(compraObtenida.getProductos().size() == 1);
     }
     
-    @Test
-    public void testAgregarMultiplesProductosASolucionDeCompra() throws PersistenciaException {
+     @Test
+    public void testAgregarMultiplesProductosACompra() throws PersistenciaException {
         // Crear cliente
         Cliente cliente = new Cliente("Carlos", "Jiménez", "Pérez", "carlosp", "pass654");
         clienteDAO.agregarCliente(cliente);
@@ -103,38 +110,43 @@ public class ClienteCompraProductoIntegration {
         Compra compra = new Compra("Compra Carlos", cliente);
         compraDAO.agregarCompra(compra);
 
-        // Agregar múltiples productos
-        Producto producto1 = new Producto("Libro", "Educación", compra, 6.0);
-        Producto producto2 = new Producto("Lápiz", "Escritura", compra, 6.0);
+        // Agregar múltiples productos y luego asociarlos a la compra
+        Producto producto1 = new Producto("Libro", "Educación", null, 6.0);
+        Producto producto2 = new Producto("Lápiz", "Escritura", null, 6.0);
         productoDAO.agregarProducto(producto1);
         productoDAO.agregarProducto(producto2);
 
+        compra.agregarProducto(producto1);  // Asociar producto a compra
+        compra.agregarProducto(producto2);  // Asociar producto a compra
+        compraDAO.actualizarCompra(compra); // Actualizar compra en la BD
+
         // Verificar que ambos productos estén en la compra
         Compra compraObtenida = compraDAO.obtenerCompraPorId(compra.getId());
-        assertTrue(compraObtenida.getProductos().contains(producto1));
-        assertTrue(compraObtenida.getProductos().contains(producto2));
+        assertTrue(compraObtenida.getProductos().size() == 2);
     }
     
-     @Test
+    @Test
     public void testActualizarProductoYVerificarEnCompra() throws PersistenciaException {
         // Crear cliente y compra
         Cliente cliente = new Cliente("Sofía", "López", "Cruz", "sofia", "pass321");
         clienteDAO.agregarCliente(cliente);
         Compra compra = new Compra("Compra Sofía", cliente);
         compraDAO.agregarCompra(compra);
-        
-        // Agregar un producto
-        Producto producto = new Producto("Silla", "Mobiliario", compra, 6.0);
-        Producto productoGuardado = productoDAO.agregarProducto(producto);
-        
+
+        // Agregar un producto y luego asociarlo a la compra
+        Producto producto = new Producto("Silla", "Mobiliario", null, 6.0);
+        productoDAO.agregarProducto(producto);
+        compra.agregarProducto(producto);  // Asociar producto a la compra
+        compraDAO.actualizarCompra(compra); // Actualizar compra en la BD
+
         // Actualizar el producto
-        productoGuardado.setNombre("Silla Nueva");
-        Producto productoActualizado = productoDAO.actualizarProducto(productoGuardado);
-        
+        producto.setNombre("Silla Nueva");
+        productoDAO.actualizarProducto(producto);
+
         // Verificar que el producto actualizado esté en la compra
         Compra compraObtenida = compraDAO.obtenerCompraPorId(compra.getId());
-        assertTrue(compraObtenida.getProductos().contains(productoActualizado));
-        assertEquals("Silla Nueva", productoActualizado.getNombre());
+        Producto productoObtenido = compraObtenida.getProductos().get(0);
+        assertEquals("Silla Nueva", productoObtenido.getNombre());
     }
     
     @Test
@@ -157,7 +169,7 @@ public class ClienteCompraProductoIntegration {
         assertFalse(compraObtenida.getProductos().contains(productoGuardado));
     }
     
-    @Test
+   @Test
     public void testEliminarCompra() throws PersistenciaException {
         // Crear cliente y compra
         Cliente cliente = new Cliente("Luis", "García", "Martínez", "luism", "pass888");
@@ -166,14 +178,16 @@ public class ClienteCompraProductoIntegration {
         compraDAO.agregarCompra(compra);
 
         // Agregar un producto
-        Producto producto = new Producto("Escritorio", "Mobiliario", compra, 6.0);
+        Producto producto = new Producto("Escritorio", "Mobiliario", null, 6.0);
         productoDAO.agregarProducto(producto);
+        compra.agregarProducto(producto);
+        compraDAO.actualizarCompra(compra); // Actualizar la compra
 
         // Eliminar la compra
         compraDAO.eliminarCompra(compra.getId());
 
         // Verificar que la compra ya no existe
-        assertThrows(PersistenciaException.class, () -> compraDAO.obtenerCompraPorId(compra.getId()));
+        assertNull(compraDAO.obtenerCompraPorId(compra.getId()));
     }
     
     

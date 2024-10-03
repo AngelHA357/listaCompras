@@ -79,7 +79,7 @@ public class ClienteDAO implements IClienteDAO {
     }
 
     @Override
-    public Cliente eliminarCliente(String id) throws PersistenciaException {
+    public Cliente eliminarCliente(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
         Cliente clienteEliminado = null; // Variable para almacenar el cliente a eliminar
         try {

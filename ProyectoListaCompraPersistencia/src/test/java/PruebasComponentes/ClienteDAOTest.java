@@ -48,7 +48,11 @@ public class ClienteDAOTest {
     }
     
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws PersistenciaException {
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        for(Cliente cliente : clientes){
+            clienteDAO.eliminarCliente(cliente.getId());
+        }
     }
     
     @Test

@@ -72,6 +72,11 @@ public class ClienteCompraIntegrationTest {
         for (Compra compra : compras) {
             compraDAO.eliminarCompra(compra.getId());
         }
+        
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        for(Cliente cliente : clientes){
+            clienteDAO.eliminarCliente(cliente.getId());
+        }
 
        
     }

@@ -31,12 +31,14 @@ public class ClienteBO implements IClienteBO {
 
    
     @Override
-    public void agregarCliente(ClienteDTO clienteDTO) {
+    public ClienteDTO agregarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = conversiones.convertirDTOAEntidad(clienteDTO);
         try {
-            clienteDAO.agregarCliente(cliente);
+            Cliente clienteAgregado = clienteDAO.agregarCliente(cliente);
+            return conversiones.convertirEntidadADTO(clienteAgregado);
         } catch (PersistenciaException ex) {
             Logger.getLogger(ClienteBO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 
