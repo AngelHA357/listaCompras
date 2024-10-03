@@ -5,6 +5,7 @@ import Entidades.Compra;
 import Exceptions.PersistenciaException;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class CompraDAO implements ICompraDAO {
@@ -123,6 +124,8 @@ public class CompraDAO implements ICompraDAO {
             query.setParameter("clienteId", clienteId);
 
             return (Compra) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         } catch (Exception e) {
             throw new PersistenciaException("Error al obtener compra por nombre y cliente", e);
         } finally {

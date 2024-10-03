@@ -7,9 +7,11 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
 import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
+import com.mycompany.listacompragestorcompras.GestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
 import java.awt.Font;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +23,7 @@ public class panelListaProductos extends javax.swing.JPanel {
     private frmMenuInicio menuInicio;
     private CompraDTO compra;
     private GestorProductos gestorProductos;
+    private GestorCompras gestorCompras;
     private FiltroPorCompra filtroCompra;
     
     /**
@@ -146,7 +149,25 @@ public class panelListaProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
-        // TODO add your handling code here:
+//        int filaSeleccionada = tblListaProductos.getSelectedRow();
+//
+//        if (filaSeleccionada != -1) {
+//            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+//
+//            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+//                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+//            }
+//            
+//            int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar este producto?", "Atención", JOptionPane.YES_NO_OPTION);
+//            if (respuesta == JOptionPane.YES_OPTION) {
+//                compra.setNombreCompra(datosFila[0].toString());
+//                CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
+//                gestorCompras.eliminarCompra(compraSelec.getId());
+//            }
+//
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Seleccione una lista de compras", "Atención", JOptionPane.INFORMATION_MESSAGE);
+//        }
     }//GEN-LAST:event_btnEliminarProductoActionPerformed
 
 

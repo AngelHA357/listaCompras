@@ -32,17 +32,16 @@ public class panelListaCompras extends javax.swing.JPanel {
         this.compra = new CompraDTO();
         this.gestorCompras = new GestorCompras();
         initComponents();
-        
+
         tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
-        
+
         mostrarListaCompras();
-        
+        menuInicio.mostrarPanel(this);
     }
 
     private void mostrarListaCompras() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();
-        
-        
+
         List<CompraDTO> listaComprasCliente = gestorCompras.obtenerComprasPorCliente(cliente.getId());
         if (listaComprasCliente != null) {
             listaComprasCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombreCompra()}));
@@ -169,7 +168,25 @@ public class panelListaCompras extends javax.swing.JPanel {
     }//GEN-LAST:event_btnVerListaActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = tblListaCompras.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            Object[] datosFila = new Object[tblListaCompras.getColumnCount()];
+
+            for (int i = 0; i < tblListaCompras.getColumnCount(); i++) {
+                datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);
+            }
+            
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar esta lista?", "Atención", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                compra.setNombreCompra(datosFila[0].toString());
+                CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
+                gestorCompras.eliminarCompra(compraSelec.getId());
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione una lista de compras", "Atención", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
 

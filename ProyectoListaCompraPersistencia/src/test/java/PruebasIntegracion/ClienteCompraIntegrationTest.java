@@ -193,15 +193,13 @@ public class ClienteCompraIntegrationTest {
     }
 
     @Test
-    public void testObtenerCompraPorNombreYCliente_CompraInexistente() {
+    public void testObtenerCompraPorNombreYCliente_CompraInexistente() throws PersistenciaException {
         // Generar un ID dinámico para el cliente
         Long clienteId = clienteIdCounter++;
         String nombreCompra = "Compra Inexistente";
 
-        // Intentar obtener una compra que no existe y verificar la excepción
-        PersistenciaException exception = assertThrows(PersistenciaException.class, () -> {
-            compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
-        });
+        assertNull(compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId));
+        
     }
     
 }
