@@ -24,7 +24,13 @@ public class ClientesConversiones {
             return null;
         }
         
+        
         Cliente cliente = new Cliente();
+        
+        if (clienteDTO.getId()!=null) {
+            cliente.setId(clienteDTO.getId());
+        }
+        
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setApellidoPaterno(clienteDTO.getApellidoPaterno());
         cliente.setApellidoMaterno(clienteDTO.getApellidoMaterno());

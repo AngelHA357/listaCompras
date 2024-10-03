@@ -97,6 +97,7 @@ public class panelNombreLista extends javax.swing.JPanel {
         
         String compraS = txtNombreLista.getText();
         CompraDTO compra = new CompraDTO(compraS, cliente);
+        
         gestorCompras.agregarCompra(compra);
         panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
         menuInicio.mostrarPanel(agregarProducto);

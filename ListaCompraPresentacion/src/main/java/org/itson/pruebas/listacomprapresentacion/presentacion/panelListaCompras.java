@@ -69,7 +69,7 @@ public class panelListaCompras extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Title 1"
+                "Lista de compras creadas"
             }
         ) {
             boolean[] canEdit = new boolean [] {

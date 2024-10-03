@@ -27,6 +27,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
         this.menuInicio = menuInicio;
         this.compra=compra;
         initComponents();
+        guardarProducto();
     }
 
     /**
