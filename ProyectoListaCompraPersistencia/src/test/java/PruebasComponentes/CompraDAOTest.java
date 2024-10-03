@@ -8,6 +8,7 @@ import Conexion.Conexion;
 import Conexion.IConexion;
 import DAOs.CompraDAO;
 import DAOs.ICompraDAO;
+import Entidades.Cliente;
 import Entidades.Compra;
 import Exceptions.PersistenciaException;
 import java.util.List;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CompraDAOTest {
     ICompraDAO compraDAO;
     IConexion conexion;
+    private static Long clienteIdCounter = 1000L; 
     
     public CompraDAOTest() {
     }
@@ -94,5 +96,73 @@ public class CompraDAOTest {
         Compra resultado = compraDAO.eliminarCompra(999L); // ID que no existe
         assertNull(resultado); // Debería retornar null
     }
+    
+    @Test
+    public void testObtenerComprasPorCliente_ClienteExistente() throws PersistenciaException {
+        Long clienteId = clienteIdCounter++;
+        Cliente cliente = new Cliente();
+        cliente.setId(clienteId);
+        
+        Compra compra1 = new Compra("Compra 1", cliente);
+        Compra compra2 = new Compra("Compra 2", cliente);
+        
+        compraDAO.agregarCompra(compra1);
+        compraDAO.agregarCompra(compra2);
+
+        // Obtener las compras por cliente
+        List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
+
+        // Verificar las compras
+        assertNotNull(compras);
+        assertTrue(compras.size() >= 2);
+    }
+
+     @Test
+    public void testObtenerCompraPorNombreYCliente_CompraExistente() throws PersistenciaException {
+        // Generar un ID dinámico para el cliente
+        Long clienteId = clienteIdCounter++;
+        String nombreCompra = "Compra 1";
+
+        // Crear un cliente y una compra de prueba
+        Cliente cliente = new Cliente();
+        cliente.setId(clienteId);
+        
+        Compra compra = new Compra(nombreCompra, cliente);
+        compraDAO.agregarCompra(compra);
+
+        // Obtener la compra por nombre y cliente
+        Compra compraObtenida = compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+
+        // Verificar la compra
+        assertNotNull(compraObtenida);
+        assertEquals(nombreCompra, compraObtenida.getNombre());
+        assertEquals(clienteId, compraObtenida.getCliente().getId());
+    }
+
+    @Test
+    public void testObtenerComprasPorCliente_ClienteSinCompras() throws PersistenciaException {
+        // Generar un ID dinámico para el cliente sin compras
+        Long clienteId = clienteIdCounter++;
+
+        // Obtener las compras para este cliente (sin compras)
+        List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
+
+        // Verificar que no haya compras
+        assertNotNull(compras);
+        assertTrue(compras.isEmpty());
+    }
+
+    @Test
+    public void testObtenerCompraPorNombreYCliente_CompraInexistente() {
+        // Generar un ID dinámico para el cliente
+        Long clienteId = clienteIdCounter++;
+        String nombreCompra = "Compra Inexistente";
+
+        // Intentar obtener una compra que no existe y verificar la excepción
+        PersistenciaException exception = assertThrows(PersistenciaException.class, () -> {
+            compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+        });
+    }
+
     
 }
