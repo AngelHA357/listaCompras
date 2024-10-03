@@ -203,25 +203,34 @@ public class panelListaProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
-//        int filaSeleccionada = tblListaProductos.getSelectedRow();
-//
-//        if (filaSeleccionada != -1) {
-//            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
-//
-//            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
-//                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
-//            }
-//            
-//            int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar este producto?", "Atención", JOptionPane.YES_NO_OPTION);
-//            if (respuesta == JOptionPane.YES_OPTION) {
-//                compra.setNombreCompra(datosFila[0].toString());
-//                CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
-//                gestorCompras.eliminarCompra(compraSelec.getId());
-//            }
-//
-//        } else {
-//            JOptionPane.showMessageDialog(this, "Seleccione una lista de compras", "Atención", JOptionPane.INFORMATION_MESSAGE);
-//        }
+        int filaSeleccionada = tblListaProductos.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+
+            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+            }
+
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar este producto?", "Atención", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                ProductoDTO productoBuscar = new ProductoDTO();
+                productoBuscar.setNombre(datosFila[0].toString());
+                productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
+                productoBuscar.setCategoria(datosFila[2].toString());
+                if (datosFila[3].toString().equals("No")) {
+                    productoBuscar.setComprado(false);
+                } else {
+                    productoBuscar.setComprado(true);
+                }
+
+                ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+                gestorCompras.eliminarCompra(productoSelec.getId());
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto", "Atención", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnEliminarProductoActionPerformed
 
     private void btnFiltrarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarCategoriaActionPerformed
@@ -229,7 +238,7 @@ public class panelListaProductos extends javax.swing.JPanel {
 
         if (!txtCategoria.getText().isBlank() && txtCategoria.getText() != null) {
             modelo.setRowCount(0);
-            List<ProductoDTO> listaProductoCliente = filtroCategoria.filtrarPorCategoria(txtCategoria.getText().toString());
+            List<ProductoDTO> listaProductoCliente = filtroCategoria.filtrarPorCategoriaYCompraId(txtCategoria.getText(), compra.getId());
             if (listaProductoCliente != null) {
                 listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado() ? "Si" : "No"}));
             }

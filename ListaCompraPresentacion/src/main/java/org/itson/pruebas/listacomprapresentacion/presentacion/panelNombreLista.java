@@ -97,21 +97,26 @@ public class panelNombreLista extends javax.swing.JPanel {
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
 
         String compraS = txtNombreLista.getText();
-        CompraDTO compra = new CompraDTO(compraS, cliente);
-        CompraDTO compraDTO;
-
-        CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
-        if (compraSelec == null) {
-            compraDTO = gestorCompras.agregarCompra(compra);
-            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
-            menuInicio.mostrarPanel(agregarProducto);
-        } else if (!compraS.equals(compraSelec.getNombreCompra())) {
-            compraDTO = gestorCompras.agregarCompra(compra);
-            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
-            menuInicio.mostrarPanel(agregarProducto);
+        if (compraS.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un nombre para la lista.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Este nombre ya existe", "Nombre existente", JOptionPane.INFORMATION_MESSAGE);
+            CompraDTO compra = new CompraDTO(compraS, cliente);
+            CompraDTO compraDTO;
+
+            CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
+            if (compraSelec == null) {
+                compraDTO = gestorCompras.agregarCompra(compra);
+                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
+                menuInicio.mostrarPanel(agregarProducto);
+            } else if (!compraS.equals(compraSelec.getNombreCompra())) {
+                compraDTO = gestorCompras.agregarCompra(compra);
+                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
+                menuInicio.mostrarPanel(agregarProducto);
+            } else {
+                JOptionPane.showMessageDialog(this, "Este nombre ya existe", "Nombre existente", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
+
 
     }//GEN-LAST:event_btnContinuarActionPerformed
 

@@ -14,13 +14,15 @@ import java.util.List;
 public interface IGestorProductos {
 
     public void agregarProducto(ProductoDTO productoDTO);
-    
+
     public void eliminarProducto(Long id);
-    
+
     public void actualizarProducto(ProductoDTO productoDTO);
-    
+
     public ProductoDTO obtenerProductoPorId(Long id);
 
     public List<ProductoDTO> obtenerTodosLosProductos();
+
+    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId);
 
 }

@@ -46,4 +46,9 @@ public class GestorProductos implements IGestorProductos {
         return productoBO.obtenerTodosLosProductos();
     }
 
+    @Override
+    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) {
+        return productoBO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);
+    }
+
 }

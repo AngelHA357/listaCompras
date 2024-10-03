@@ -12,5 +12,5 @@ import java.util.List;
  * @author JoseH
  */
 public interface IFiltroPorCategoria {
-    public List<ProductoDTO> filtrarPorCategoria(String categoria);
+    public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId);
 }

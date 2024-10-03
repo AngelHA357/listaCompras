@@ -26,11 +26,12 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public ProductoDTO agregarProducto(ProductoDTO productoDTO) {
-        Producto producto = conversiones.dtoAEntidad(productoDTO); 
-        
+        Producto producto = conversiones.dtoAEntidad(productoDTO);
+
         try {
-            Producto productoAgregado = productoDAO.agregarProducto(producto); 
-            return conversiones.entidadADTO(productoAgregado, true);    
+            Producto productoAgregado = productoDAO.agregarProducto(producto);
+            return conversiones.entidadADTO(productoAgregado, false);
+
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
             return null; // Retornar null en caso de error
@@ -68,11 +69,10 @@ public class ProductoBO implements IProductoBO {
 
     @Override
     public ProductoDTO actualizarProducto(ProductoDTO productoDTO) {
-        Producto producto = conversiones.dtoAEntidad(productoDTO); 
-
+        Producto producto = conversiones.dtoAEntidad(productoDTO);
         try {
-            Producto productoActualizado = productoDAO.actualizarProducto(producto); 
-            return conversiones.entidadADTO(productoActualizado, false); 
+            Producto productoActualizado = productoDAO.actualizarProducto(producto);
+            return conversiones.entidadADTO(productoActualizado, false);
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
             return null; // Retornar null en caso de error
@@ -89,9 +89,9 @@ public class ProductoBO implements IProductoBO {
     }
 
     @Override
-    public List<ProductoDTO> filtrarPorCategoría(String categoria) {
+    public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId) {
         try {
-            List<Producto> productos = productoDAO.filtrarPorCategoria(categoria);
+            List<Producto> productos = productoDAO.filtrarPorCategoriaYCompraId(categoria, compraId);
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
@@ -118,6 +118,16 @@ public class ProductoBO implements IProductoBO {
             }
 
             return productosDTO;
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) {
+        try {
+            Producto producto = productoDAO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);
+            return conversiones.entidadADTO(producto, false);
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
         }

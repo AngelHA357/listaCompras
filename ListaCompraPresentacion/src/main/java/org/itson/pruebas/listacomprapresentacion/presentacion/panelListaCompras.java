@@ -182,6 +182,7 @@ public class panelListaCompras extends javax.swing.JPanel {
                 compra.setNombreCompra(datosFila[0].toString());
                 CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
                 gestorCompras.eliminarCompra(compraSelec.getId());
+                mostrarListaCompras();
             }
 
         } else {

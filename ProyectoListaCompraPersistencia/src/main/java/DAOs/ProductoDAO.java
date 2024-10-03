@@ -124,21 +124,21 @@ public class ProductoDAO implements IProductoDAO {
     }
 
     @Override
-    public List<Producto> filtrarPorCategoria(String categoria) throws PersistenciaException {
+    public List<Producto> filtrarPorCategoriaYCompraId(String categoria, Long compraId) throws PersistenciaException {
         EntityManager em = null;
         try {
             em = conexion.crearConexion();
-            Query query = em.createQuery("SELECT p FROM Producto p WHERE p.categoria = :categoria");
+            Query query = em.createQuery("SELECT p FROM Producto p WHERE p.categoria = :categoria AND p.compra.id = :compraId");
             query.setParameter("categoria", categoria);
+            query.setParameter("compraId", compraId);
             return query.getResultList();
         } catch (Exception e) {
-            throw new PersistenciaException("Error al obtener todos los productos: " + e.getMessage(), e);
+            throw new PersistenciaException("Error al filtrar productos por categoría y compra: " + e.getMessage(), e);
         } finally {
             if (em != null) {
                 em.close();
             }
         }
-
     }
 
     @Override
@@ -151,6 +151,31 @@ public class ProductoDAO implements IProductoDAO {
             return query.getResultList();
         } catch (Exception e) {
             throw new PersistenciaException("Error al obtener los productos por ID de compra: " + e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    @Override
+    public Producto obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws PersistenciaException {
+        EntityManager em = null;
+        try {
+            em = conexion.crearConexion();
+            Query query = em.createQuery("SELECT p FROM Producto p WHERE p.nombre = :nombre AND p.categoria = :categoria "
+                    + "AND p.comprado = :comprado AND p.cantidad = :cantidad AND p.compra.id = :compraId");
+            query.setParameter("nombre", nombre);
+            query.setParameter("categoria", categoria);
+            query.setParameter("comprado", comprado);
+            query.setParameter("cantidad", cantidad);
+            query.setParameter("compraId", compraId);
+            List<Producto> resultados = query.getResultList();
+
+            // Retornamos el primer producto encontrado o null si no hay coincidencias
+            return resultados.isEmpty() ? null : resultados.get(0);
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener el producto por características: " + e.getMessage(), e);
         } finally {
             if (em != null) {
                 em.close();

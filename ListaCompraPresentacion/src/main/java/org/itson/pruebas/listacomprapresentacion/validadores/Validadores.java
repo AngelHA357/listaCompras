@@ -64,4 +64,10 @@ public class Validadores {
         return matcher.matches();
     }
 
+    public boolean validarCantidad(String cantidad) {
+        Pattern patron = Pattern.compile("\\d+(\\.\\d+)?");
+        Matcher matcher = patron.matcher(cantidad);
+
+        return matcher.matches();
+    }
 }

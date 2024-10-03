@@ -8,6 +8,8 @@ import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
 import com.mycompany.listacompragestorcompras.GestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
+import javax.swing.JOptionPane;
+import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
 /**
  *
@@ -156,9 +158,16 @@ public class panelDatosProducto extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
-        guardarProducto();
-        panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
-        menuInicio.mostrarPanel(agregarProducto);
+        Validadores validador = new Validadores();
+        if (validarCamposLlenos()) {
+            if (validador.validarCantidad(txtCantidad.getText())) {
+                guardarProducto();
+                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+                menuInicio.mostrarPanel(agregarProducto);
+            } else {
+                JOptionPane.showMessageDialog(this, "Ingrese un valor numérico válido en la cantidad.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void guardarProducto() {
@@ -171,6 +180,14 @@ public class panelDatosProducto extends javax.swing.JPanel {
 
     }
 
+    // Método para validar que todos los campos estén llenos
+    private boolean validarCamposLlenos() {
+        if (txtNombre.getText().isBlank() || txtCantidad.getText().isBlank() || txtCategoría.getText().isBlank()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JLabel jLabel1;

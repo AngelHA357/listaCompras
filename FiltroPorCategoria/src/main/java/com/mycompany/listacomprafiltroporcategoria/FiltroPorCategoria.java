@@ -21,7 +21,7 @@ public class FiltroPorCategoria implements IFiltroPorCategoria {
     }
 
     @Override
-    public List<ProductoDTO> filtrarPorCategoria(String categoria) {
-        return productoBO.filtrarPorCategoría(categoria);
+     public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId){
+        return productoBO.filtrarPorCategoriaYCompraId(categoria, compraId);
     }
 }
