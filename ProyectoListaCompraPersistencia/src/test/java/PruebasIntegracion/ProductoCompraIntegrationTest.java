@@ -37,10 +37,12 @@ public class ProductoCompraIntegrationTest {
 
     @BeforeAll
     public static void setUpClass() {
+        System.setProperty("modoPrueba", "true");
     }
 
     @AfterAll
     public static void tearDownClass() {
+        System.clearProperty("modoPrueba");
     }
 
     @BeforeEach
@@ -51,6 +53,7 @@ public class ProductoCompraIntegrationTest {
     }
 
     @AfterEach
+    @Test
     public void tearDown() throws PersistenciaException {
         limpiarBaseDeDatos();
     }

@@ -39,10 +39,12 @@ public class ClienteCompraProductoIntegration {
     
     @BeforeAll
     public static void setUpClass() {
+        System.setProperty("modoPrueba", "true");
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
+        System.clearProperty("modoPrueba");
     }
     
     @BeforeEach
