@@ -6,7 +6,9 @@ package PruebasComponentes;
 
 import Conexion.Conexion;
 import Conexion.IConexion;
+import DAOs.ClienteDAO;
 import DAOs.CompraDAO;
+import DAOs.IClienteDAO;
 import DAOs.ICompraDAO;
 import Entidades.Cliente;
 import Entidades.Compra;
@@ -99,13 +101,18 @@ public class CompraDAOTest {
     
     @Test
     public void testObtenerComprasPorCliente_ClienteExistente() throws PersistenciaException {
-        Long clienteId = clienteIdCounter++;
+        // Crear un cliente y agregarlo a la base de datos
         Cliente cliente = new Cliente();
-        cliente.setId(clienteId);
-        
+        IClienteDAO clienteDAO = new ClienteDAO(conexion);
+        clienteDAO.agregarCliente(cliente); // Se guarda el cliente en la base de datos
+
+        // Obtener el ID del cliente generado automáticamente
+        Long clienteId = cliente.getId(); // Asegúrate de que el método getId() obtenga el ID correcto
+
+        // Crear y agregar compras asociadas al cliente
         Compra compra1 = new Compra("Compra 1", cliente);
         Compra compra2 = new Compra("Compra 2", cliente);
-        
+
         compraDAO.agregarCompra(compra1);
         compraDAO.agregarCompra(compra2);
 
@@ -117,18 +124,23 @@ public class CompraDAOTest {
         assertTrue(compras.size() >= 2);
     }
 
-     @Test
+    @Test
     public void testObtenerCompraPorNombreYCliente_CompraExistente() throws PersistenciaException {
-        // Generar un ID dinámico para el cliente
-        Long clienteId = clienteIdCounter++;
-        String nombreCompra = "Compra 1";
-
         // Crear un cliente y una compra de prueba
         Cliente cliente = new Cliente();
-        cliente.setId(clienteId);
-        
-        Compra compra = new Compra(nombreCompra, cliente);
-        compraDAO.agregarCompra(compra);
+        // No establecer manualmente el ID del cliente, ya que es autogenerado
+        IClienteDAO clienteDAO = new ClienteDAO(conexion);
+        clienteDAO.agregarCliente(cliente); // Se guarda el cliente en la base de datos
+
+        // Obtener el ID del cliente generado automáticamente
+        Long clienteId = cliente.getId(); // Asegúrate de que el método getId() obtenga el ID correcto
+
+        String nombreCompra = "Compra 1" + System.currentTimeMillis();
+
+        Compra compra = new Compra();
+        compra.setNombre(nombreCompra);
+        compra.setCliente(cliente);
+        compraDAO.agregarCompra(compra); // Guardar la compra en la base de datos
 
         // Obtener la compra por nombre y cliente
         Compra compraObtenida = compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);

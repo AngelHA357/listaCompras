@@ -23,4 +23,10 @@ public interface IProductoDAO {
     
     // Método para eliminar un producto por su ID
     public Producto eliminarProducto(Long id) throws PersistenciaException;
+    
+    //Método para obtener los productos de una categoría determinada
+    public List<Producto> filtrarPorCategoria(String categoria) throws PersistenciaException;
+    
+    //Método para obtener los productos de una compra según su id
+    public List<Producto> obtenerProductosPorCompraId(Long compraId) throws PersistenciaException;
 }
