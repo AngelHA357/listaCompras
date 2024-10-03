@@ -41,6 +41,7 @@ public class panelListaCompras extends javax.swing.JPanel {
 
     private void mostrarListaCompras() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();
+        modelo.setRowCount(0);
 
         List<CompraDTO> listaComprasCliente = gestorCompras.obtenerComprasPorCliente(cliente.getId());
         if (listaComprasCliente != null) {

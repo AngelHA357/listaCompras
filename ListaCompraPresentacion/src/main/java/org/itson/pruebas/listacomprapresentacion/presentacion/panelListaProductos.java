@@ -48,7 +48,7 @@ public class panelListaProductos extends javax.swing.JPanel {
 
     private void mostrarListaProductos() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaProductos.getModel();
-
+        modelo.setRowCount(0);
         List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId());
         if (listaProductoCliente != null) {
             listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado() ? "Si" : "No"}));
@@ -225,7 +225,8 @@ public class panelListaProductos extends javax.swing.JPanel {
                 }
 
                 ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
-                gestorCompras.eliminarCompra(productoSelec.getId());
+                gestorProductos.eliminarProducto(productoSelec.getId());
+                mostrarListaProductos();
             }
 
         } else {
@@ -254,8 +255,7 @@ public class panelListaProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCategoriaActionPerformed
 
     private void btnMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodoActionPerformed
-        DefaultTableModel modelo = (DefaultTableModel) tblListaProductos.getModel();
-        modelo.setRowCount(0);
+
         mostrarListaProductos();
 
     }//GEN-LAST:event_btnMostrarTodoActionPerformed
