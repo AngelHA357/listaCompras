@@ -1,6 +1,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,13 +15,21 @@ public class Producto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "nombre")
     private String nombre;
+    
+    @Column(name = "categoria")
     private String categoria;
+    
+    @Column(name = "comprado")
     private boolean comprado;
+    
+    @Column(name = "cantidad")
     private Double cantidad;
 
     @ManyToOne
-    @JoinColumn(name = "compra_id")
+    @JoinColumn(name = "compra_id", referencedColumnName  = "id")
     private Compra compra;
 
     // Constructor, getters y setters

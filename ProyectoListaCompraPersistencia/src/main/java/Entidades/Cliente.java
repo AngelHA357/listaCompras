@@ -2,6 +2,7 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,10 +16,19 @@ public class Cliente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; 
 
+    @Column(name = "nombre")
     private String nombre;
+    
+    @Column(name = "apellido_paterno")
     private String apellidoPaterno;
+    
+    @Column(name = "apellido_materno")
     private String apellidoMaterno;
+    
+    @Column(name = "usuario")
     private String usuario;
+    
+    @Column(name = "contrasenia")
     private String contrasenia;
 
     

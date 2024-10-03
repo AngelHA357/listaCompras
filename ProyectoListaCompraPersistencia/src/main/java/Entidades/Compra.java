@@ -3,6 +3,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,21 +23,20 @@ public class Compra implements Serializable {
     private List<Producto> productos;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     private Cliente cliente;
-    
+
+    @Column(name = "nombre")
     private String nombre;
 
     // Constructor, getters y setters
     public Compra() {
-        productos = new ArrayList<Producto>();
-        
+
     }
-    
-    public Compra(String nombre, Cliente cliente){
+
+    public Compra(String nombre, Cliente cliente) {
         this.nombre = nombre;
         this.cliente = cliente;
-        productos = new ArrayList<Producto>();
     }
 
     public Long getId() {
@@ -62,9 +62,11 @@ public class Compra implements Serializable {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
-    public void agregarProducto(Producto producto){
-        producto.setCompra(this);  
+
+    public void agregarProducto(Producto producto) {
+        if (productos == null) {
+            productos = new ArrayList<>();
+        }
         productos.add(producto);
     }
 
@@ -74,5 +76,6 @@ public class Compra implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+
     }
 }
