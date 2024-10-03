@@ -99,19 +99,35 @@ public class CompraDAO implements ICompraDAO {
         }
         return compraEliminada;
     }
-    
+
     @Override
     public List<Compra> obtenerComprasPorCliente(Long clienteId) throws PersistenciaException {
-    EntityManager em = conexion.crearConexion();
-    try {
-        Query query = em.createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId");
-        query.setParameter("clienteId", clienteId);
-        return query.getResultList();
-    } catch (Exception e) {
-        throw new PersistenciaException("Error al obtener compras por cliente", e);
-    } finally {
-        em.close();
+        EntityManager em = conexion.crearConexion();
+        try {
+            Query query = em.createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId");
+            query.setParameter("clienteId", clienteId);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener compras por cliente", e);
+        } finally {
+            em.close();
+        }
     }
-}
+
+    @Override
+    public Compra obtenerCompraPorNombreYCliente(String nombre, Long clienteId) throws PersistenciaException {
+        EntityManager em = conexion.crearConexion();
+        try {
+            Query query = em.createQuery("SELECT c FROM Compra c WHERE c.nombre = :nombre AND c.cliente.id = :clienteId");
+            query.setParameter("nombre", nombre);
+            query.setParameter("clienteId", clienteId);
+
+            return (Compra) query.getSingleResult();
+        } catch (Exception e) {
+            throw new PersistenciaException("Error al obtener compra por nombre y cliente", e);
+        } finally {
+            em.close();
+        }
+    }
 
 }

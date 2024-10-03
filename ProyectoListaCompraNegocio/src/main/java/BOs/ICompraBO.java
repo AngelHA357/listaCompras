@@ -18,5 +18,7 @@ public interface ICompraBO {
     public void eliminarCompra(Long id);
 
     public List<CompraDTO> obtenerComprasPorCliente(Long clienteId);
+    
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId);
 
 }

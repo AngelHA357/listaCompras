@@ -23,4 +23,5 @@ public interface IGestorCompras {
 
     public List<CompraDTO> obtenerTodasLasCompras();
 
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId);
 }

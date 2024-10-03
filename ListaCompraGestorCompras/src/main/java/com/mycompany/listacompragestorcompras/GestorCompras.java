@@ -46,4 +46,9 @@ public class GestorCompras implements IGestorCompras {
         return compraBO.obtenerTodasLasCompras();
     }
 
+    @Override
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) {
+        return compraBO.obtenerCompraPorNombreYCliente(nombre, clienteId);
+    }
+
 }

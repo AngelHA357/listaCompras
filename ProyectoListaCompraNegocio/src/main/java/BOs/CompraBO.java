@@ -100,4 +100,15 @@ public class CompraBO implements ICompraBO {
         }
         return null;
     }
+
+    @Override
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) {
+       try {
+            Compra compra = compraDAO.obtenerCompraPorNombreYCliente(nombre, clienteId);
+            return compraConversiones.entidadADTO(compra);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
