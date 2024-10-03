@@ -3,6 +3,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ public class Compra implements Serializable {
     @OneToMany(mappedBy = "compra")
     private List<Producto> productos;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     private Cliente cliente;
 
