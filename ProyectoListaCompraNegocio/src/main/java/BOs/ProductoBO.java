@@ -30,7 +30,7 @@ public class ProductoBO implements IProductoBO {
         
         try {
             Producto productoAgregado = productoDAO.agregarProducto(producto); 
-            return conversiones.entidadADTO(productoAgregado, true); 
+            return conversiones.entidadADTO(productoAgregado, true);    
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
             return null; // Retornar null en caso de error
@@ -71,8 +71,8 @@ public class ProductoBO implements IProductoBO {
         Producto producto = conversiones.dtoAEntidad(productoDTO); 
 
         try {
-            productoDAO.actualizarProducto(producto); 
-            return conversiones.entidadADTO(producto, true); 
+            Producto productoActualizado = productoDAO.actualizarProducto(producto); 
+            return conversiones.entidadADTO(productoActualizado, true); 
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
             return null; // Retornar null en caso de error

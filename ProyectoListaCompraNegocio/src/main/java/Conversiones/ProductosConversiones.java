@@ -63,14 +63,11 @@ public class ProductosConversiones {
         if (incluirCompra) {
             compraDTO = compraEntidadADTO(entidad.getCompra(), false);  
         }
-
-        return new ProductoDTO(
-                entidad.getNombre(),
-                entidad.getCategoria(),
-                entidad.isComprado(),
-                compraDTO,
-                entidad.getCantidad()
-        );
+        
+        ProductoDTO productoDTO = new ProductoDTO(entidad.getNombre(), entidad.getCategoria(), entidad.isComprado(),compraDTO, entidad.getCantidad());
+        productoDTO.setId(entidad.getId());
+        
+        return productoDTO;
     }
 
     public CompraDTO compraEntidadADTO(Compra entidad, boolean incluirProductos) {

@@ -96,17 +96,34 @@ public class ProductoBOTest {
         assertTrue(resultado.stream().anyMatch(producto -> producto.getNombre().equals("Producto de Prueba")));
     }
     
-//    @Test
-//    public void testObtenerProductoPorId() {
-//        ProductoDTO productoDTO = new ProductoDTO("Producto de Prueba", "Categoria A", false, null, 5.0);
-//        productoDTO = productoBO.agregarProducto(productoDTO);
-//
-//        List<ProductoDTO> productos = productoBO.obtenerTodosLosProductos();
-//        Long id = productos.get(0).getId(); // Obtener el ID del producto agregado
-//
-//        ProductoDTO resultado = productoBO.obtenerProductoPorId(id);
-//
-//        assertNotNull(resultado);
-//        assertEquals(id, resultado.getId());
-//    }
+    @Test
+    public void testActualizarProducto() {
+        ProductoDTO productoDTO = new ProductoDTO("Producto Original", "Categoria A", false, null, 5.0);
+        productoDTO = productoBO.agregarProducto(productoDTO);
+
+        assertNotNull(productoDTO);
+        assertNotNull(productoDTO.getId()); 
+
+        productoDTO = productoBO.obtenerProductoPorId(productoDTO.getId());
+
+        productoDTO.setNombre("Producto Actualizado");
+
+        ProductoDTO resultado = productoBO.actualizarProducto(productoDTO);
+
+        assertNotNull(resultado); 
+        assertEquals(productoDTO.getId(), resultado.getId());
+        assertEquals("Producto Actualizado", resultado.getNombre()); 
+        assertEquals(productoDTO.getCategoria(), resultado.getCategoria()); 
+    }
+    
+    @Test
+    public void testObtenerProductoPorId() {
+        ProductoDTO productoDTO = new ProductoDTO("Producto de Prueba", "Categoria A", false, null, 5.0);
+        productoDTO = productoBO.agregarProducto(productoDTO);
+
+        ProductoDTO resultado = productoBO.obtenerProductoPorId(productoDTO.getId());
+
+        assertNotNull(resultado);
+        assertEquals(productoDTO.getId(), resultado.getId());
+    }
 }
