@@ -72,7 +72,7 @@ public class ProductoBO implements IProductoBO {
 
         try {
             Producto productoActualizado = productoDAO.actualizarProducto(producto); 
-            return conversiones.entidadADTO(productoActualizado, true); 
+            return conversiones.entidadADTO(productoActualizado, false); 
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
             return null; // Retornar null en caso de error
