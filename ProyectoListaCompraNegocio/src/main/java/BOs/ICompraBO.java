@@ -13,7 +13,7 @@ public interface ICompraBO {
 
     public List<CompraDTO> obtenerTodasLasCompras();
 
-    public void actualizarCompra(CompraDTO compraDTO);
+    public CompraDTO actualizarCompra(CompraDTO compraDTO);
 
     public void eliminarCompra(Long id);
 

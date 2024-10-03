@@ -64,9 +64,9 @@ public class CompraDAO implements ICompraDAO {
         EntityManager em = conexion.crearConexion();
         try {
             em.getTransaction().begin();
-            em.merge(compra);
+            Compra compraActualizada = em.merge(compra);
             em.getTransaction().commit();
-            return em.find(Compra.class, compra.getId());
+            return compraActualizada;
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -86,7 +86,7 @@ public class CompraDAO implements ICompraDAO {
             Compra compra = em.find(Compra.class, id);
             if (compra != null) {
                 // Crear una copia de la entidad antes de eliminarla
-                compraEliminada = new Compra(compra.getNombre(), compra.getCliente()); 
+                compraEliminada = new Compra(compra.getNombre(), compra.getCliente());
                 em.remove(compra);
             }
             em.getTransaction().commit();
@@ -132,7 +132,5 @@ public class CompraDAO implements ICompraDAO {
             em.close();
         }
     }
-    
-    
 
 }

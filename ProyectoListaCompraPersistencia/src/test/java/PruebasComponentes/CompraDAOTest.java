@@ -29,13 +29,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author JoseH
  */
 public class CompraDAOTest {
+
     ICompraDAO compraDAO;
     IConexion conexion;
-    private static Long clienteIdCounter = 1000L; 
-    
+    private static Long clienteIdCounter = 1000L;
+
     public CompraDAOTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
         System.setProperty("modoPrueba", "true");
@@ -45,62 +46,60 @@ public class CompraDAOTest {
     public static void tearDownClass() {
         System.clearProperty("modoPrueba");
     }
-    
+
     @BeforeEach
     public void setUp() {
         conexion = Conexion.getInstance();
         compraDAO = new CompraDAO(conexion);
     }
-    
+
     @AfterEach
     public void tearDown() throws PersistenciaException {
         limpiarBaseDeDatos();
     }
-    
+
     private void limpiarBaseDeDatos() throws PersistenciaException {
-         // Obtener todos los productos y eliminarlos
+        // Obtener todos los productos y eliminarlos
         IProductoDAO productoDAO = new ProductoDAO(conexion);
         IClienteDAO clienteDAO = new ClienteDAO(conexion);
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
         for (Producto producto : productos) {
             productoDAO.eliminarProducto(producto.getId());
         }
-        
+
         List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
-        for(Cliente cliente : clientes){
+        for (Cliente cliente : clientes) {
             clienteDAO.eliminarCliente(cliente.getId());
         }
-        
+
         // Obtener todas las compras y eliminarlas
         List<Compra> compras = compraDAO.obtenerTodasLasCompras();
         for (Compra compra : compras) {
             compraDAO.eliminarCompra(compra.getId());
         }
 
-       
     }
-    
+
     @Test
-    public void agregarCompra() throws PersistenciaException{
+    public void agregarCompra() throws PersistenciaException {
         Compra compra = new Compra("Cosas para el GYM", null);
-        
+
         Compra resultado = compraDAO.agregarCompra(compra);
-        
-        
-        assertNotNull(resultado.getId()); 
+
+        assertNotNull(resultado.getId());
         assertEquals("Cosas para el GYM", resultado.getNombre());
-        
+
     }
-    
+
     @Test
-    public void eliminarCompra() throws PersistenciaException{
+    public void eliminarCompra() throws PersistenciaException {
         Compra compra = new Compra("EjemploCompra", null);
         compraDAO.agregarCompra(compra);
         Compra resultado = compraDAO.eliminarCompra(compra.getId());
-        
+
         assertEquals("EjemploCompra", resultado.getNombre());
     }
-    
+
     @Test
     public void testObtenerCompraPorId() throws PersistenciaException {
         Compra compra = new Compra("Compra Test", null);
@@ -111,7 +110,7 @@ public class CompraDAOTest {
         assertNotNull(resultado);
         assertEquals(compra.getId(), resultado.getId());
     }
-    
+
     public void testObtenerTodasLasCompras() throws PersistenciaException {
         compraDAO.agregarCompra(new Compra("Compra 1", null));
         compraDAO.agregarCompra(new Compra("Compra 2", null));
@@ -121,14 +120,25 @@ public class CompraDAOTest {
         assertNotNull(compras);
         assertTrue(compras.size() >= 2); // Verificar que al menos hay dos compras
     }
-    
+
     @Test
     public void testEliminarCompraInexistente() throws PersistenciaException {
         Compra resultado = compraDAO.eliminarCompra(999L); // ID que no existe
         assertNull(resultado); // Debería retornar null
     }
-    
-   
 
-    
+    @Test
+    public void testActualizarCompra() throws PersistenciaException {
+        Compra compraOriginal = new Compra("Compra Inicial", null);
+        compraDAO.agregarCompra(compraOriginal);
+
+        compraOriginal.setNombre("Compra Actualizada");
+
+        Compra compraActualizada = compraDAO.actualizarCompra(compraOriginal);
+
+        assertNotNull(compraActualizada);
+        assertEquals(compraOriginal.getId(), compraActualizada.getId());
+        assertEquals("Compra Actualizada", compraActualizada.getNombre());
+    }
+
 }

@@ -4,10 +4,13 @@
  */
 package com.mycompany.listacomprafiltroporcategoria;
 
+import DTOs.ProductoDTO;
+import java.util.List;
+
 /**
  *
  * @author JoseH
  */
 public interface IFiltroPorCategoria {
-    public void filtrarPorCategoria(String categoria);
+    public List<ProductoDTO> filtrarPorCategoria(String categoria);
 }

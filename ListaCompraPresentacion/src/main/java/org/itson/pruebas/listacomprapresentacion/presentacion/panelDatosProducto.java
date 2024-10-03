@@ -19,17 +19,17 @@ public class panelDatosProducto extends javax.swing.JPanel {
     private CompraDTO compra;
     private GestorProductos gestorProductos;
     private GestorCompras gestorCompras;
-    
+
     /**
      * Creates new form panelAgregarDatosProducto
      */
     public panelDatosProducto(frmMenuInicio menuInicio, CompraDTO compra) {
         this.menuInicio = menuInicio;
-        this.compra=compra;
+        this.compra = compra;
         gestorProductos = new GestorProductos();
         gestorCompras = new GestorCompras();
         initComponents();
-        
+
     }
 
     /**
@@ -156,19 +156,19 @@ public class panelDatosProducto extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
+        guardarProducto();
         panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
         menuInicio.mostrarPanel(agregarProducto);
-        guardarProducto();
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
-    private void guardarProducto(){
+    private void guardarProducto() {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
         String categoria = txtCategoría.getText();
-        
+
         ProductoDTO producto = new ProductoDTO(nombre, categoria, false, compra, cantidad);
         gestorProductos.agregarProducto(producto);
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

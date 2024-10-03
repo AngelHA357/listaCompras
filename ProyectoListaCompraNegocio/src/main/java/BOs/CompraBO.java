@@ -66,13 +66,15 @@ public class CompraBO implements ICompraBO {
     }
 
     @Override
-    public void actualizarCompra(CompraDTO compraDTO) {
+    public CompraDTO actualizarCompra(CompraDTO compraDTO) {
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
+        CompraDTO compraActualizada;
         try {
-            compraDAO.actualizarCompra(compra);
+            return compraActualizada = compraConversiones.entidadADTO(compraDAO.actualizarCompra(compra));
         } catch (PersistenciaException ex) {
             Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
     @Override

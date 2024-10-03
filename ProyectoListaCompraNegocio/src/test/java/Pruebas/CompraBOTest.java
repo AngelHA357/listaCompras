@@ -66,22 +66,22 @@ public class CompraBOTest {
         IClienteDAO clienteDAO = new ClienteDAO(conexion);
         ICompraDAO compraDAO = new CompraDAO(conexion);
 
-        if (!productoDAO.obtenerTodosLosProductos().isEmpty()){
-        for (Producto producto : productoDAO.obtenerTodosLosProductos()) {
-            productoDAO.eliminarProducto(producto.getId());
-        }
-        }
-
-        if (!clienteDAO.obtenerTodosLosClientes().isEmpty()){
-        for (Cliente cliente : clienteDAO.obtenerTodosLosClientes()) {
-            clienteDAO.eliminarCliente(cliente.getId());
-        }
+        if (!productoDAO.obtenerTodosLosProductos().isEmpty()) {
+            for (Producto producto : productoDAO.obtenerTodosLosProductos()) {
+                productoDAO.eliminarProducto(producto.getId());
+            }
         }
 
-        if (!compraDAO.obtenerTodasLasCompras().isEmpty()){
-        for (Compra compra : compraDAO.obtenerTodasLasCompras()) {
-            compraDAO.eliminarCompra(compra.getId());
+        if (!clienteDAO.obtenerTodosLosClientes().isEmpty()) {
+            for (Cliente cliente : clienteDAO.obtenerTodosLosClientes()) {
+                clienteDAO.eliminarCliente(cliente.getId());
+            }
         }
+
+        if (!compraDAO.obtenerTodasLasCompras().isEmpty()) {
+            for (Compra compra : compraDAO.obtenerTodasLasCompras()) {
+                compraDAO.eliminarCompra(compra.getId());
+            }
         }
     }
 
@@ -124,12 +124,14 @@ public class CompraBOTest {
     public void testActualizarCompra() {
         CompraDTO compraDTO = new CompraDTO("Compra Original", null);
         compraDTO = compraBO.agregarCompra(compraDTO);
+        
+        compraDTO = compraBO.obtenerCompraPorId(compraDTO.getId());
 
         compraDTO.setNombreCompra("Compra Actualizada");
-        compraBO.actualizarCompra(compraDTO);
+        CompraDTO resultado = compraBO.actualizarCompra(compraDTO);
 
-        CompraDTO resultado = compraBO.obtenerCompraPorId(compraDTO.getId());
-
+        assertNotNull(resultado);
+        assertEquals(compraDTO.getId(), resultado.getId());
         assertEquals("Compra Actualizada", resultado.getNombreCompra());
     }
 
