@@ -61,7 +61,7 @@ public class ProductosConversiones {
 
         CompraDTO compraDTO = null;
         if (incluirCompra) {
-            compraDTO = compraEntidadADTO(entidad.getCompra(), false);  // Aquí controlas la recursión
+            compraDTO = compraEntidadADTO(entidad.getCompra(), false);  
         }
 
         return new ProductoDTO(
@@ -82,7 +82,7 @@ public class ProductosConversiones {
 
         if (incluirProductos) {
             for (Producto producto : entidad.getProductos()) {
-                ProductoDTO productoDTO = entidadADTO(producto, false);  // No incluir la compra dentro del producto
+                ProductoDTO productoDTO = entidadADTO(producto, false);  
                 productosDTO.add(productoDTO);
             }
         }
