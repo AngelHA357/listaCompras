@@ -16,6 +16,7 @@ import Entidades.Cliente;
 import Entidades.Compra;
 import Entidades.Producto;
 import Exceptions.PersistenciaException;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,24 @@ public class ClienteCompraProductoIntegration {
     }
     
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws PersistenciaException {
+        limpiarBaseDeDatos();
+    }
+    
+    private void limpiarBaseDeDatos() throws PersistenciaException {
+         // Obtener todos los productos y eliminarlos
+        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
+        for (Producto producto : productos) {
+            productoDAO.eliminarProducto(producto.getId());
+        }
+        
+        // Obtener todas las compras y eliminarlas
+        List<Compra> compras = compraDAO.obtenerTodasLasCompras();
+        for (Compra compra : compras) {
+            compraDAO.eliminarCompra(compra.getId());
+        }
+
+       
     }
     
     @Test
@@ -115,6 +133,45 @@ public class ClienteCompraProductoIntegration {
         Compra compraObtenida = compraDAO.obtenerCompraPorId(compra.getId());
         assertTrue(compraObtenida.getProductos().contains(productoActualizado));
         assertEquals("Silla Nueva", productoActualizado.getNombre());
+    }
+    
+    @Test
+    public void testEliminarProductoDeCompra() throws PersistenciaException {
+        // Crear un cliente y una compra
+        Cliente cliente = new Cliente("Laura", "Fernández", "Gómez", "lauraf", "pass789");
+        clienteDAO.agregarCliente(cliente);
+        Compra compra = new Compra("Compra de Laura", cliente);
+        compraDAO.agregarCompra(compra);
+
+        // Agregar un producto
+        Producto producto = new Producto("Cama", "Mobiliario", compra, 6.0);
+        Producto productoGuardado = productoDAO.agregarProducto(producto);
+
+        // Eliminar el producto
+        productoDAO.eliminarProducto(productoGuardado.getId());
+
+        // Verificar que el producto no esté en la compra
+        Compra compraObtenida = compraDAO.obtenerCompraPorId(compra.getId());
+        assertFalse(compraObtenida.getProductos().contains(productoGuardado));
+    }
+    
+    @Test
+    public void testEliminarCompra() throws PersistenciaException {
+        // Crear cliente y compra
+        Cliente cliente = new Cliente("Luis", "García", "Martínez", "luism", "pass888");
+        clienteDAO.agregarCliente(cliente);
+        Compra compra = new Compra("Compra de Luis", cliente);
+        compraDAO.agregarCompra(compra);
+
+        // Agregar un producto
+        Producto producto = new Producto("Escritorio", "Mobiliario", compra, 6.0);
+        productoDAO.agregarProducto(producto);
+
+        // Eliminar la compra
+        compraDAO.eliminarCompra(compra.getId());
+
+        // Verificar que la compra ya no existe
+        assertThrows(PersistenciaException.class, () -> compraDAO.obtenerCompraPorId(compra.getId()));
     }
     
     

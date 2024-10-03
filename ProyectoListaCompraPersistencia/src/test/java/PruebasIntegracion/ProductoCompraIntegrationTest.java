@@ -51,7 +51,24 @@ public class ProductoCompraIntegrationTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws PersistenciaException {
+        limpiarBaseDeDatos();
+    }
+    
+    private void limpiarBaseDeDatos() throws PersistenciaException {
+         // Obtener todos los productos y eliminarlos
+        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
+        for (Producto producto : productos) {
+            productoDAO.eliminarProducto(producto.getId());
+        }
+        
+        // Obtener todas las compras y eliminarlas
+        List<Compra> compras = compraDAO.obtenerTodasLasCompras();
+        for (Compra compra : compras) {
+            compraDAO.eliminarCompra(compra.getId());
+        }
+
+       
     }
 
     @Test
@@ -70,6 +87,8 @@ public class ProductoCompraIntegrationTest {
         assertNotNull(compraAgregada.getId());
         assertTrue(compraAgregada.getProductos().contains(productoAgregado));
     }
+    
+    
 
     @Test
     public void testObtenerProductosPorCompra() throws PersistenciaException {
@@ -105,6 +124,75 @@ public class ProductoCompraIntegrationTest {
         Compra resultado = compraDAO.obtenerCompraPorId(compra.getId());
         assertEquals("Jabón Nuevo", resultado.getProductos().get(0).getNombre());
     }
+    
+    @Test
+    public void testEliminarProductoYVerificarEnCompras() throws PersistenciaException {
+        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
+        Producto productoAgregado = productoDAO.agregarProducto(producto);
+
+        Compra compra = new Compra("Compra de Papeles", null);
+        compra.agregarProducto(productoAgregado);
+        compraDAO.agregarCompra(compra);
+
+        productoDAO.eliminarProducto(productoAgregado.getId());
+
+        // Verificar que el producto no esté en la compra
+        Compra compraResultado = compraDAO.obtenerCompraPorId(compra.getId());
+        assertFalse(compraResultado.getProductos().contains(productoAgregado));
+    }
+    
+     @Test
+    public void testObtenerProductosPorCompraId() throws PersistenciaException {
+        // Primero se necesita crear una compra y asociarle productos.
+        // Supongamos que ya tienes una clase Compra y métodos adecuados para manejarlo.
+
+        Compra compra = new Compra(); // Aquí se crearían los atributos necesarios
+        ICompraDAO compraDAO = new CompraDAO(conexion);
+        compraDAO.agregarCompra(compra);
+
+        // Crear y asociar productos a la compra
+        Producto producto1 = new Producto("Papel", "Higiene Personal", compra, 6.0);
+        Producto producto2 = new Producto("Jabón", "Higiene Personal", compra, 6.0);
+        productoDAO.agregarProducto(producto1);
+        productoDAO.agregarProducto(producto2);
+
+        List<Producto> productosPorCompra = productoDAO.obtenerProductosPorCompraId(compra.getId());
+
+        assertNotNull(productosPorCompra); // Asegurarse de que la lista no sea nula
+        assertEquals(2, productosPorCompra.size()); // Debería devolver los 2 productos asociados
+        for (Producto p : productosPorCompra) {
+            assertEquals(compra.getId(), p.getCompra().getId()); // Verificar que todos los productos sean de la misma compra
+        }
+    }
+    
+    @Test
+    public void testConsistenciaDeEstado() throws PersistenciaException {
+        // Agregar productos
+        Producto producto1 = new Producto("Papel", "Higiene Personal", null, 6.0);
+        Producto producto2 = new Producto("Jabón", "Higiene Personal", null, 6.0);
+        productoDAO.agregarProducto(producto1);
+        productoDAO.agregarProducto(producto2);
+
+        // Crear compra
+        Compra compra = new Compra("Compra Variada", null);
+        compra.agregarProducto(producto1);
+        compra.agregarProducto(producto2);
+        compraDAO.agregarCompra(compra);
+
+        // Actualizar producto
+        producto1.setNombre("Papel Nuevo");
+        productoDAO.actualizarProducto(producto1);
+
+        // Eliminar un producto
+        productoDAO.eliminarProducto(producto2.getId());
+
+        // Verificar el estado final
+        List<Compra> compras = compraDAO.obtenerTodasLasCompras();
+        assertEquals(1, compras.size()); // Debe haber solo una compra
+        assertEquals("Papel Nuevo", compras.get(0).getProductos().get(0).getNombre());
+        assertFalse(compras.get(0).getProductos().contains(producto2));
+    }
+    
     
     
 }

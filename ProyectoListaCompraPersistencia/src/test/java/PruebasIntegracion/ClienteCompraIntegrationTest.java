@@ -10,8 +10,11 @@ import DAOs.ClienteDAO;
 import DAOs.CompraDAO;
 import DAOs.IClienteDAO;
 import DAOs.ICompraDAO;
+import DAOs.IProductoDAO;
+import DAOs.ProductoDAO;
 import Entidades.Cliente;
 import Entidades.Compra;
+import Entidades.Producto;
 import Exceptions.PersistenciaException;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +32,7 @@ public class ClienteCompraIntegrationTest {
     IClienteDAO clienteDAO;
     ICompraDAO compraDAO;
     IConexion conexion;
+    private static Long clienteIdCounter = 1000L; 
     
     public ClienteCompraIntegrationTest() {
     }
@@ -49,7 +53,25 @@ public class ClienteCompraIntegrationTest {
     }
     
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws PersistenciaException {
+        limpiarBaseDeDatos();
+    }
+    
+    private void limpiarBaseDeDatos() throws PersistenciaException {
+         // Obtener todos los productos y eliminarlos
+        IProductoDAO productoDAO = new ProductoDAO(conexion);
+        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
+        for (Producto producto : productos) {
+            productoDAO.eliminarProducto(producto.getId());
+        }
+        
+        // Obtener todas las compras y eliminarlas
+        List<Compra> compras = compraDAO.obtenerTodasLasCompras();
+        for (Compra compra : compras) {
+            compraDAO.eliminarCompra(compra.getId());
+        }
+
+       
     }
     
     @Test
@@ -103,5 +125,81 @@ public class ClienteCompraIntegrationTest {
         assertTrue(compras.size() >= 5); // Asegúrate de que hay al menos 5 compras
     }
     
+     @Test
+    public void testObtenerComprasPorCliente_ClienteExistente() throws PersistenciaException {
+        // Crear un cliente y agregarlo a la base de datos
+        Cliente cliente = new Cliente();
+        IClienteDAO clienteDAO = new ClienteDAO(conexion);
+        clienteDAO.agregarCliente(cliente); // Se guarda el cliente en la base de datos
+
+        // Obtener el ID del cliente generado automáticamente
+        Long clienteId = cliente.getId(); // Asegúrate de que el método getId() obtenga el ID correcto
+
+        // Crear y agregar compras asociadas al cliente
+        Compra compra1 = new Compra("Compra 1", cliente);
+        Compra compra2 = new Compra("Compra 2", cliente);
+
+        compraDAO.agregarCompra(compra1);
+        compraDAO.agregarCompra(compra2);
+
+        // Obtener las compras por cliente
+        List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
+
+        // Verificar las compras
+        assertNotNull(compras);
+        assertTrue(compras.size() >= 2);
+    }
+
+    @Test
+    public void testObtenerCompraPorNombreYCliente_CompraExistente() throws PersistenciaException {
+        // Crear un cliente y una compra de prueba
+        Cliente cliente = new Cliente();
+        // No establecer manualmente el ID del cliente, ya que es autogenerado
+        IClienteDAO clienteDAO = new ClienteDAO(conexion);
+        clienteDAO.agregarCliente(cliente); // Se guarda el cliente en la base de datos
+
+        // Obtener el ID del cliente generado automáticamente
+        Long clienteId = cliente.getId(); // Asegúrate de que el método getId() obtenga el ID correcto
+
+        String nombreCompra = "Compra 1" + System.currentTimeMillis();
+
+        Compra compra = new Compra();
+        compra.setNombre(nombreCompra);
+        compra.setCliente(cliente);
+        compraDAO.agregarCompra(compra); // Guardar la compra en la base de datos
+
+        // Obtener la compra por nombre y cliente
+        Compra compraObtenida = compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+
+        // Verificar la compra
+        assertNotNull(compraObtenida);
+        assertEquals(nombreCompra, compraObtenida.getNombre());
+        assertEquals(clienteId, compraObtenida.getCliente().getId());
+    }
+
+    @Test
+    public void testObtenerComprasPorCliente_ClienteSinCompras() throws PersistenciaException {
+        // Generar un ID dinámico para el cliente sin compras
+        Long clienteId = clienteIdCounter++;
+
+        // Obtener las compras para este cliente (sin compras)
+        List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
+
+        // Verificar que no haya compras
+        assertNotNull(compras);
+        assertTrue(compras.isEmpty());
+    }
+
+    @Test
+    public void testObtenerCompraPorNombreYCliente_CompraInexistente() {
+        // Generar un ID dinámico para el cliente
+        Long clienteId = clienteIdCounter++;
+        String nombreCompra = "Compra Inexistente";
+
+        // Intentar obtener una compra que no existe y verificar la excepción
+        PersistenciaException exception = assertThrows(PersistenciaException.class, () -> {
+            compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+        });
+    }
     
 }

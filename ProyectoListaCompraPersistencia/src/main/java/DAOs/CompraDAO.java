@@ -85,7 +85,7 @@ public class CompraDAO implements ICompraDAO {
             Compra compra = em.find(Compra.class, id);
             if (compra != null) {
                 // Crear una copia de la entidad antes de eliminarla
-                compraEliminada = new Compra(compra.getNombre(), compra.getCliente()); // Copiar todos los campos necesarios
+                compraEliminada = new Compra(compra.getNombre(), compra.getCliente()); 
                 em.remove(compra);
             }
             em.getTransaction().commit();
@@ -123,9 +123,6 @@ public class CompraDAO implements ICompraDAO {
             query.setParameter("clienteId", clienteId);
 
             return (Compra) query.getSingleResult();
-        } catch (javax.persistence.NoResultException e) {
-            // Si no se encuentra ningún resultado, devolver null
-            return null;
         } catch (Exception e) {
             throw new PersistenciaException("Error al obtener compra por nombre y cliente", e);
         } finally {
