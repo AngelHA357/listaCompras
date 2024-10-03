@@ -23,7 +23,7 @@ public class Compra implements Serializable {
     @OneToMany(mappedBy = "compra")
     private List<Producto> productos;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     private Cliente cliente;
 
