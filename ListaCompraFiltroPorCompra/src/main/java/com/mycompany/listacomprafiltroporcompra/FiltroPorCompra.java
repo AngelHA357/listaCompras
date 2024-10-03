@@ -5,6 +5,7 @@
 package com.mycompany.listacomprafiltroporcompra;
 
 import BOs.IProductoBO;
+import BOs.ProductoBO;
 import DTOs.ProductoDTO;
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class FiltroPorCompra implements IFiltroPorCompra {
 
     private IProductoBO productoBO;
 
-    public FiltroPorCompra(IProductoBO productoBO) {
-        this.productoBO = productoBO;
+    public FiltroPorCompra() {
+        this.productoBO = new ProductoBO();
     }
 
     @Override

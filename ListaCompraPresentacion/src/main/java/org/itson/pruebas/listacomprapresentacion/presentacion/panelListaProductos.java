@@ -6,6 +6,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
+import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
 import com.mycompany.listacompragestorproductos.GestorProductos;
 import java.awt.Font;
 import java.util.List;
@@ -20,6 +21,7 @@ public class panelListaProductos extends javax.swing.JPanel {
     private frmMenuInicio menuInicio;
     private CompraDTO compra;
     private GestorProductos gestorProductos;
+    private FiltroPorCompra filtroCompra;
     
     /**
      * Creates new form panelAgregarProducto
@@ -28,6 +30,7 @@ public class panelListaProductos extends javax.swing.JPanel {
         this.menuInicio = menuInicio;
         this.compra = compra;
         gestorProductos = new GestorProductos();
+        filtroCompra = new FiltroPorCompra();
         initComponents();
         tblListaProductos.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 14));
         mostrarListaProductos();
@@ -36,7 +39,7 @@ public class panelListaProductos extends javax.swing.JPanel {
     private void mostrarListaProductos() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaProductos.getModel();
 
-        List<ProductoDTO> listaProductoCliente = gestorProductos.obtenerTodosLosProductos(); 
+        List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId()); 
         if (listaProductoCliente != null) {
             listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(),p.getCantidad(),p.getCategoria(), p.isComprado()?"Si":"No"}));
         }
