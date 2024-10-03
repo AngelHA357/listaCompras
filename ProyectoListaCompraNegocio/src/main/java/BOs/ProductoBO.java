@@ -25,12 +25,15 @@ public class ProductoBO implements IProductoBO {
     }
 
     @Override
-    public void agregarProducto(ProductoDTO productoDTO) {
-        Producto producto = conversiones.dtoAEntidad(productoDTO);
+    public ProductoDTO agregarProducto(ProductoDTO productoDTO) {
+        Producto producto = conversiones.dtoAEntidad(productoDTO); 
+        
         try {
-            productoDAO.agregarProducto(producto);
+            Producto productoAgregado = productoDAO.agregarProducto(producto); 
+            return conversiones.entidadADTO(productoAgregado, true); 
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            return null; // Retornar null en caso de error
         }
     }
 
@@ -64,12 +67,15 @@ public class ProductoBO implements IProductoBO {
     }
 
     @Override
-    public void actualizarProducto(ProductoDTO productoDTO) {
-        Producto producto = conversiones.dtoAEntidad(productoDTO);
+    public ProductoDTO actualizarProducto(ProductoDTO productoDTO) {
+        Producto producto = conversiones.dtoAEntidad(productoDTO); 
+
         try {
-            productoDAO.actualizarProducto(producto);
+            productoDAO.actualizarProducto(producto); 
+            return conversiones.entidadADTO(producto, true); 
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            return null; // Retornar null en caso de error
         }
     }
 

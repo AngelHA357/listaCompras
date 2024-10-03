@@ -117,7 +117,7 @@ public class CompraBOTest {
         List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
 
         assertNotNull(compras);
-        assertTrue(compras.size() >= 2); // Verificar que al menos hay dos compras
+        assertTrue(compras.size() == 2); 
     }
 
     @Test
@@ -146,4 +146,41 @@ public class CompraBOTest {
 
         assertNull(resultado); // Verificar que la compra fue eliminada correctamente
     }
+    
+    public void testObtenerComprasPorCliente() {
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setNombre(("Cliente Prueba"));
+        ClienteBO clienteBO = new ClienteBO();
+        clienteBO.agregarCliente(clienteDTO); 
+
+        CompraDTO compraDTO1 = new CompraDTO("Compra Cliente 1", clienteDTO);
+        compraBO.agregarCompra(compraDTO1);
+
+        CompraDTO compraDTO2 = new CompraDTO("Compra Cliente 2", clienteDTO);
+        compraBO.agregarCompra(compraDTO2);
+
+        List<CompraDTO> comprasCliente = compraBO.obtenerComprasPorCliente(clienteDTO.getId());
+
+        assertNotNull(comprasCliente);
+        assertFalse(comprasCliente.isEmpty());
+        assertTrue(comprasCliente.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra Cliente 1")));
+    }
+    
+    public void testObtenerCompraPorNombreYCliente() {
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setNombre("Cliente Prueba");
+        ClienteBO clienteBO = new ClienteBO();
+        clienteDTO = clienteBO.agregarCliente(clienteDTO); 
+
+        // Crear y asociar una compra con el cliente
+        CompraDTO compraDTO = new CompraDTO("Compra Especial", clienteDTO);
+        compraDTO = compraBO.agregarCompra(compraDTO); 
+
+        CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente("Compra Especial", clienteDTO.getId());
+
+        assertNotNull(resultado);
+        assertEquals("Compra Especial", resultado.getNombreCompra());
+        assertEquals(clienteDTO.getId(), resultado.getCliente().getId());
+    }
+
 }

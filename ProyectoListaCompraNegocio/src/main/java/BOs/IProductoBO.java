@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface IProductoBO {
 
-    public void agregarProducto(ProductoDTO productoDTO);
+    public ProductoDTO agregarProducto(ProductoDTO productoDTO);
 
     public ProductoDTO obtenerProductoPorId(Long id);
 
     public List<ProductoDTO> obtenerTodosLosProductos();
 
-    public void actualizarProducto(ProductoDTO productoDTO);
+    public ProductoDTO actualizarProducto(ProductoDTO productoDTO);
 
     public void eliminarProducto(Long id);
 
