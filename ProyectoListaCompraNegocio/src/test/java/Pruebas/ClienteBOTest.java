@@ -60,13 +60,13 @@ public class ClienteBOTest {
     }
 
     @Test
-    public void testAgregarCliente() throws PersistenciaException {
+    public void testAgregarCliente() throws NegocioException {
         ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
 
         
         clienteBO.agregarCliente(clienteDTO);
         
-        Cliente clienteAgregado = clienteDAO.obtenerClientePorUsuarioYContrasena(clienteDTO.getUsuario(), clienteDTO.getContrasenia());
+        ClienteDTO clienteAgregado = clienteBO.encontrarClientePorUsuarioYContrasena(clienteDTO.getUsuario(), clienteDTO.getContrasenia());
 
 
         assertNotNull(clienteAgregado);  
@@ -76,12 +76,30 @@ public class ClienteBOTest {
         assertEquals("toribio", clienteAgregado.getUsuario());
         assertEquals("ABCD1234", clienteAgregado.getContrasenia());
     }
+    
+//    @Test
+//    public void testAgregarCliente_UsuarioNulo() {
+//        ClienteDTO clienteDTO = new ClienteDTO(null, "Encinas", "Guzmán", null, "ABCD1234");
+//
+//        assertThrows(NegocioException.class, () -> {
+//            clienteBO.agregarCliente(clienteDTO);
+//        });
+//    }
+    
+//    @Test
+//    public void testAgregarCliente_UsuarioVacio() {
+//        ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", "", "ABCD1234");
+//
+//        assertThrows(NegocioException.class, () -> {
+//            clienteBO.agregarCliente(clienteDTO);
+//        });
+//    }
 
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_ClienteExistente() throws PersistenciaException, NegocioException {
         String usuario = "toribio" + System.currentTimeMillis();  // Para evitar duplicados
         String contrasenia = "ABCD1234";
-        
+
         ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
         clienteBO.agregarCliente(clienteDTO);
 
@@ -92,7 +110,7 @@ public class ClienteBOTest {
         assertEquals(contrasenia, clienteObtenido.getContrasenia());
     }
 
-     @Test
+    @Test
     public void testEncontrarClientePorUsuarioYContrasena_ClienteInexistente() {
         String usuario = "usuarioInexistente";
         String contrasenia = "contraseniaErronea";
@@ -102,5 +120,25 @@ public class ClienteBOTest {
         });
 
         assertEquals("No se encontró al usuario", exception.getMessage());
+    }
+
+    @Test
+    public void testEncontrarClientePorUsuarioYContrasena_UsuarioNulo() {
+        String usuario = null;
+        String contrasenia = "ABCD1234";
+
+        assertThrows(NegocioException.class, () -> {
+            clienteBO.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
+        });
+    }
+
+    @Test
+    public void testEncontrarClientePorUsuarioYContrasena_UsuarioVacio() {
+        String usuario = "";
+        String contrasenia = "ABCD1234";
+
+        assertThrows(NegocioException.class, () -> {
+            clienteBO.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
+        });
     }
 }

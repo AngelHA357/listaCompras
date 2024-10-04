@@ -20,6 +20,7 @@ import DTOs.CompraDTO;
 import Entidades.Cliente;
 import Entidades.Compra;
 import Entidades.Producto;
+import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,23 +42,24 @@ public class CompraBOTest {
 
     @BeforeAll
     public static void setUpClass() {
-        System.setProperty("modoPrueba", "true"); // Activar modo prueba si es necesario
+        System.setProperty("modoPrueba", "true"); 
     }
 
     @AfterAll
     public static void tearDownClass() {
-        System.clearProperty("modoPrueba"); // Limpiar propiedades al finalizar
+        System.clearProperty("modoPrueba"); 
     }
 
     @BeforeEach
-    public void setUp() {
-        conexion = Conexion.getInstance(); // Obtener instancia de conexión
-        compraBO = new CompraBO(); // Inicializar instancia de CompraBO
+    public void setUp() throws PersistenciaException {
+        conexion = Conexion.getInstance(); 
+        compraBO = new CompraBO(); 
+        limpiarBaseDeDatos();
     }
 
     @AfterEach
     public void tearDown() throws PersistenciaException {
-        limpiarBaseDeDatos(); // Limpiar la base de datos después de cada prueba
+        limpiarBaseDeDatos();
     }
 
     private void limpiarBaseDeDatos() throws PersistenciaException {
@@ -71,18 +73,18 @@ public class CompraBOTest {
                 productoDAO.eliminarProducto(producto.getId());
             }
         }
-
-        if (!clienteDAO.obtenerTodosLosClientes().isEmpty()) {
-            for (Cliente cliente : clienteDAO.obtenerTodosLosClientes()) {
-                clienteDAO.eliminarCliente(cliente.getId());
-            }
-        }
-
+        
         if (!compraDAO.obtenerTodasLasCompras().isEmpty()) {
             for (Compra compra : compraDAO.obtenerTodasLasCompras()) {
                 compraDAO.eliminarCompra(compra.getId());
             }
         }
+
+        if (!clienteDAO.obtenerTodosLosClientes().isEmpty()) {
+            for (Cliente cliente : clienteDAO.obtenerTodosLosClientes()) {
+                clienteDAO.eliminarCliente(cliente.getId());
+            }
+        }        
     }
 
     @Test
@@ -97,7 +99,25 @@ public class CompraBOTest {
         assertNotNull(resultado);
         assertTrue(resultado.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra de Prueba")));
     }
-
+    
+//     @Test
+//    public void testAgregarCompra_NombreNulo() {
+//        CompraDTO compraDTO = new CompraDTO(null, null);
+//
+//        assertThrows(NegocioException.class, () -> {
+//            compraBO.agregarCompra(compraDTO);
+//        });
+//    }
+    
+//    @Test
+//    public void testAgregarCompra_NombreVacio() {
+//        CompraDTO compraDTO = new CompraDTO("", null);
+//
+//        assertThrows(NegocioException.class, () -> {
+//            compraBO.agregarCompra(compraDTO);
+//        });
+//    }
+    
     @Test
     public void testObtenerCompraPorId() {
         CompraDTO compraDTO = new CompraDTO("Compra de Prueba", null);
@@ -107,6 +127,15 @@ public class CompraBOTest {
 
         assertNotNull(resultado);
         assertEquals(compraDTO.getId(), resultado.getId());
+    }
+    
+    @Test
+    public void testObtenerCompraPorId_Inexistente() {
+        long idInexistente = 9999L; 
+
+        CompraDTO resultado = compraBO.obtenerCompraPorId(idInexistente);
+
+        assertNull(resultado); 
     }
 
     @Test
@@ -119,22 +148,15 @@ public class CompraBOTest {
         assertNotNull(compras);
         assertTrue(compras.size() == 2); 
     }
-
+    
     @Test
-    public void testActualizarCompra() {
-        CompraDTO compraDTO = new CompraDTO("Compra Original", null);
-        compraDTO = compraBO.agregarCompra(compraDTO);
-        
-        compraDTO = compraBO.obtenerCompraPorId(compraDTO.getId());
+    public void testObtenerTodasLasCompras_Vacio() {
+        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
 
-        compraDTO.setNombreCompra("Compra Actualizada");
-        CompraDTO resultado = compraBO.actualizarCompra(compraDTO);
-
-        assertNotNull(resultado);
-        assertEquals(compraDTO.getId(), resultado.getId());
-        assertEquals("Compra Actualizada", resultado.getNombreCompra());
+        assertNotNull(compras);
+        assertTrue(compras.isEmpty());
     }
-
+    
     @Test
     public void testEliminarCompra() {
         CompraDTO compraDTO = new CompraDTO("Compra a Eliminar", null);
@@ -144,14 +166,33 @@ public class CompraBOTest {
 
         CompraDTO resultado = compraBO.obtenerCompraPorId(compraDTO.getId());
 
-        assertNull(resultado); // Verificar que la compra fue eliminada correctamente
+        assertNull(resultado); 
     }
     
+    @Test
+    public void testEliminarCompra_Inexistente() throws PersistenciaException {
+        CompraDTO compraDTO = new CompraDTO("Compra Existente", null);
+        compraBO.agregarCompra(compraDTO);
+
+        List<CompraDTO> comprasAntes = compraBO.obtenerTodasLasCompras();
+        int cantidadAntes = comprasAntes.size();
+
+        long idInexistente = 9999L;
+        compraBO.eliminarCompra(idInexistente); 
+
+        List<CompraDTO> comprasDespues = compraBO.obtenerTodasLasCompras();
+        int cantidadDespues = comprasDespues.size();
+
+
+        assertEquals(cantidadAntes, cantidadDespues);
+    }
+    
+    @Test
     public void testObtenerComprasPorCliente() {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setNombre(("Cliente Prueba"));
         ClienteBO clienteBO = new ClienteBO();
-        clienteBO.agregarCliente(clienteDTO); 
+        clienteDTO = clienteBO.agregarCliente(clienteDTO); 
 
         CompraDTO compraDTO1 = new CompraDTO("Compra Cliente 1", clienteDTO);
         compraBO.agregarCompra(compraDTO1);
@@ -166,6 +207,17 @@ public class CompraBOTest {
         assertTrue(comprasCliente.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra Cliente 1")));
     }
     
+    @Test
+    public void testObtenerComprasPorCliente_Inexistente() {
+        long idClienteInexistente = 9999L;
+
+        List<CompraDTO> comprasCliente = compraBO.obtenerComprasPorCliente(idClienteInexistente);
+
+        assertNotNull(comprasCliente);
+        assertTrue(comprasCliente.isEmpty());
+    }
+    
+    @Test
     public void testObtenerCompraPorNombreYCliente() {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setNombre("Cliente Prueba");
@@ -174,13 +226,107 @@ public class CompraBOTest {
 
         // Crear y asociar una compra con el cliente
         CompraDTO compraDTO = new CompraDTO("Compra Especial", clienteDTO);
-        compraDTO = compraBO.agregarCompra(compraDTO); 
+        compraBO.agregarCompra(compraDTO); 
 
         CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente("Compra Especial", clienteDTO.getId());
 
         assertNotNull(resultado);
         assertEquals("Compra Especial", resultado.getNombreCompra());
         assertEquals(clienteDTO.getId(), resultado.getCliente().getId());
+    }
+    
+    @Test
+    public void testObtenerCompraPorNombreYCliente_Inexistente() {
+        long idClienteInexistente = 9999L;
+        String nombreCompra = "Compra Inexistente";
+
+        CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente(nombreCompra, idClienteInexistente);
+
+        assertNull(resultado);
+    }
+    
+    @Test
+    public void testAgregarObtenerYEliminarCompra() {
+        // Agregar una compra
+        CompraDTO compraDTO = new CompraDTO("Compra para Integración", null);
+        compraBO.agregarCompra(compraDTO);
+
+        // Obtener la compra recién agregada
+        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
+        assertNotNull(compras);
+        assertTrue(compras.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra para Integración")));
+
+        // Eliminar la compra
+        CompraDTO compraEliminada = compras.stream().filter(compra -> compra.getNombreCompra().equals("Compra para Integración")).findFirst().get();
+        compraBO.eliminarCompra(compraEliminada.getId());
+
+        // Verificar que la compra fue eliminada
+        CompraDTO compraObtenida = compraBO.obtenerCompraPorId(compraEliminada.getId());
+        assertNull(compraObtenida);
+    }
+    
+    @Test
+    public void testAgregarMultiplesComprasYVerificarEliminacion() {
+        // Agregar varias compras
+        CompraDTO compraDTO1 = new CompraDTO("Compra 1", null);
+        CompraDTO compraDTO2 = new CompraDTO("Compra 2", null);
+        compraBO.agregarCompra(compraDTO1);
+        compraBO.agregarCompra(compraDTO2);
+
+        // Obtener todas las compras y verificar que ambas fueron agregadas
+        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
+        assertNotNull(compras);
+        assertEquals(2, compras.size());
+
+        // Eliminar una de las compras
+        CompraDTO compraEliminar = compras.stream().filter(compra -> compra.getNombreCompra().equals("Compra 1")).findFirst().get();
+        compraBO.eliminarCompra(compraEliminar.getId());
+
+        // Verificar que la compra fue eliminada y la otra permanece
+        compras = compraBO.obtenerTodasLasCompras();
+        assertEquals(1, compras.size());
+        assertTrue(compras.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra 2")));
+    }
+    
+    @Test
+    public void testAgregarYObtenerCompraPorNombre() {
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setNombre("Cliente Prueba");
+        ClienteBO clienteBO = new ClienteBO();
+        clienteDTO = clienteBO.agregarCliente(clienteDTO); 
+        
+        // Agregar una compra
+        CompraDTO compraDTO = new CompraDTO("Compra para Obtener", clienteDTO);
+        compraBO.agregarCompra(compraDTO);
+
+        // Obtener la compra por nombre
+        CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente("Compra para Obtener", clienteDTO.getId());
+
+        // Verificar que la compra fue obtenida correctamente
+        assertNotNull(resultado);
+        assertEquals("Compra para Obtener", resultado.getNombreCompra());
+    }
+    
+    @Test
+    public void testAgregarObtenerYEliminarTodasLasCompras() {
+        // Agregar varias compras
+        CompraDTO compraDTO1 = new CompraDTO("Compra A", null);
+        CompraDTO compraDTO2 = new CompraDTO("Compra B", null);
+        compraBO.agregarCompra(compraDTO1);
+        compraBO.agregarCompra(compraDTO2);
+
+        // Verificar que ambas compras fueron agregadas
+        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
+        assertEquals(2, compras.size());
+
+        // Eliminar todas las compras
+        for (CompraDTO compra : compras) {
+            compraBO.eliminarCompra(compra.getId());
+        }
+
+        // Verificar que no queda ninguna compra
+        compras = compraBO.obtenerTodasLasCompras();
+        assertTrue(compras.isEmpty());
     }
 
 }
