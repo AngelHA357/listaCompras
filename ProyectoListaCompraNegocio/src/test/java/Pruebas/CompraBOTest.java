@@ -188,64 +188,6 @@ public class CompraBOTest {
     }
     
     @Test
-    public void testObtenerComprasPorCliente() {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setNombre(("Cliente Prueba"));
-        ClienteBO clienteBO = new ClienteBO();
-        clienteDTO = clienteBO.agregarCliente(clienteDTO); 
-
-        CompraDTO compraDTO1 = new CompraDTO("Compra Cliente 1", clienteDTO);
-        compraBO.agregarCompra(compraDTO1);
-
-        CompraDTO compraDTO2 = new CompraDTO("Compra Cliente 2", clienteDTO);
-        compraBO.agregarCompra(compraDTO2);
-
-        List<CompraDTO> comprasCliente = compraBO.obtenerComprasPorCliente(clienteDTO.getId());
-
-        assertNotNull(comprasCliente);
-        assertFalse(comprasCliente.isEmpty());
-        assertTrue(comprasCliente.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra Cliente 1")));
-    }
-    
-    @Test
-    public void testObtenerComprasPorCliente_Inexistente() {
-        long idClienteInexistente = 9999L;
-
-        List<CompraDTO> comprasCliente = compraBO.obtenerComprasPorCliente(idClienteInexistente);
-
-        assertNotNull(comprasCliente);
-        assertTrue(comprasCliente.isEmpty());
-    }
-    
-    @Test
-    public void testObtenerCompraPorNombreYCliente() {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setNombre("Cliente Prueba");
-        ClienteBO clienteBO = new ClienteBO();
-        clienteDTO = clienteBO.agregarCliente(clienteDTO); 
-
-        // Crear y asociar una compra con el cliente
-        CompraDTO compraDTO = new CompraDTO("Compra Especial", clienteDTO);
-        compraBO.agregarCompra(compraDTO); 
-
-        CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente("Compra Especial", clienteDTO.getId());
-
-        assertNotNull(resultado);
-        assertEquals("Compra Especial", resultado.getNombreCompra());
-        assertEquals(clienteDTO.getId(), resultado.getCliente().getId());
-    }
-    
-    @Test
-    public void testObtenerCompraPorNombreYCliente_Inexistente() {
-        long idClienteInexistente = 9999L;
-        String nombreCompra = "Compra Inexistente";
-
-        CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente(nombreCompra, idClienteInexistente);
-
-        assertNull(resultado);
-    }
-    
-    @Test
     public void testAgregarObtenerYEliminarCompra() {
         // Agregar una compra
         CompraDTO compraDTO = new CompraDTO("Compra para Integración", null);

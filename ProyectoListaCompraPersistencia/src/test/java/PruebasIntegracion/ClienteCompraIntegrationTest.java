@@ -32,7 +32,6 @@ public class ClienteCompraIntegrationTest {
     IClienteDAO clienteDAO;
     ICompraDAO compraDAO;
     IConexion conexion;
-    private static Long clienteIdCounter = 1000L; 
     
     public ClienteCompraIntegrationTest() {
     }
@@ -187,7 +186,7 @@ public class ClienteCompraIntegrationTest {
     @Test
     public void testObtenerComprasPorCliente_ClienteSinCompras() throws PersistenciaException {
         // Generar un ID dinámico para el cliente sin compras
-        Long clienteId = clienteIdCounter++;
+        Long clienteId = 999L;
 
         // Obtener las compras para este cliente (sin compras)
         List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
@@ -200,7 +199,7 @@ public class ClienteCompraIntegrationTest {
     @Test
     public void testObtenerCompraPorNombreYCliente_CompraInexistente() throws PersistenciaException {
         // Generar un ID dinámico para el cliente
-        Long clienteId = clienteIdCounter++;
+        Long clienteId = 999L;
         String nombreCompra = "Compra Inexistente";
 
         assertNull(compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId));
