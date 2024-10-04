@@ -125,7 +125,7 @@
                               <Component id="btnRegistrarse" min="-2" pref="150" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
                               <Component id="lblIniciarSesion" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>

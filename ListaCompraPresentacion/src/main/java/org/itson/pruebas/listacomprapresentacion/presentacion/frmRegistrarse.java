@@ -176,7 +176,7 @@ public class frmRegistrarse extends javax.swing.JFrame {
                         .addGap(124, 124, 124)
                         .addComponent(btnRegistrarse, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelCentralLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
+                        .addGap(145, 145, 145)
                         .addComponent(lblIniciarSesion)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
