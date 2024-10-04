@@ -7,6 +7,8 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
+import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
+import com.mycompany.listacomprafiltroporcompra.IFiltroPorCompra;
 import com.mycompany.listacompragestorcompras.GestorCompras;
 import com.mycompany.listacompragestorcompras.IGestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
@@ -27,6 +29,7 @@ public class panelListaCompras extends javax.swing.JPanel {
     private CompraDTO compra;
     private IGestorCompras gestorCompras;
     private IGestorProductos gestorProductos;
+    private IFiltroPorCompra filtroCompra;
 
     /**
      * Creates new form panelListaCompras
@@ -37,6 +40,7 @@ public class panelListaCompras extends javax.swing.JPanel {
         this.compra = new CompraDTO();
         this.gestorCompras = new GestorCompras();
         this.gestorProductos = new GestorProductos();
+        this.filtroCompra = new FiltroPorCompra();
         initComponents();
 
         tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
@@ -188,6 +192,12 @@ public class panelListaCompras extends javax.swing.JPanel {
             if (respuesta == JOptionPane.YES_OPTION) {    
                 compra.setNombreCompra(datosFila[0].toString());
                 CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
+                List<ProductoDTO> productosAsociados = filtroCompra.obtenerProductosFiltrarPorCompra(compraSelec.getId());
+                for (ProductoDTO productoAsociado : productosAsociados) {
+                    productoAsociado = gestorProductos.obtenerProductoPorCaracteristicas(productoAsociado.getNombre(), productoAsociado.getCategoria(), productoAsociado.isComprado(),
+                            productoAsociado.getCantidad(), compraSelec.getId());
+                    gestorProductos.eliminarProducto(productoAsociado.getId());
+                }
                 gestorCompras.eliminarCompra(compraSelec.getId());
                 mostrarListaCompras();
             }
