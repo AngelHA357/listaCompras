@@ -20,7 +20,7 @@ public class Compra implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "compra")
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Producto> productos;
 
     @ManyToOne

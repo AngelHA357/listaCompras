@@ -83,19 +83,17 @@ public class ClienteCompraProductoIntegration {
 
    @Test
     public void testAgregarProductoYAsociarloACompra() throws PersistenciaException {
-        // Crear un cliente y una compra
+    
         Cliente cliente = new Cliente("Ana", "Martínez", "Lopez", "anam", "pass456");
         clienteDAO.agregarCliente(cliente);
         Compra compra = new Compra("Compra de Productos", cliente);
         compraDAO.agregarCompra(compra);
 
-        // Agregar un producto y luego asociarlo a la compra
         Producto producto = new Producto("Mesa", "Mobiliario", null, 6.0);
         productoDAO.agregarProducto(producto);
-        compra.agregarProducto(producto); // Asociar producto a la compra
-        compraDAO.actualizarCompra(compra); // Actualizar compra en la BD
+        compra.agregarProducto(producto); 
+        compraDAO.actualizarCompra(compra);
 
-        // Verificar que el producto esté en la compra
         Compra compraObtenida = compraDAO.obtenerCompraPorId(compra.getId());
         assertTrue(compraObtenida.getProductos().size() == 1);
     }

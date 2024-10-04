@@ -34,7 +34,7 @@ public class ProductoBO implements IProductoBO {
 
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
-            return null; // Retornar null en caso de error
+            return null; 
         }
     }
 
@@ -75,7 +75,7 @@ public class ProductoBO implements IProductoBO {
             return conversiones.entidadADTO(productoActualizado, false);
         } catch (PersistenciaException ex) {
             Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
-            return null; // Retornar null en caso de error
+            return null; 
         }
     }
 
@@ -124,6 +124,7 @@ public class ProductoBO implements IProductoBO {
         return null;
     }
 
+    @Override
     public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) {
         try {
             Producto producto = productoDAO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);

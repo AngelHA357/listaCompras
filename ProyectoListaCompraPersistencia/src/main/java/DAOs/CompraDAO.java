@@ -85,7 +85,6 @@ public class CompraDAO implements ICompraDAO {
             em.getTransaction().begin();
             Compra compra = em.find(Compra.class, id);
             if (compra != null) {
-                // Crear una copia de la entidad antes de eliminarla
                 compraEliminada = new Compra(compra.getNombre(), compra.getCliente());
                 em.remove(compra);
             }

@@ -6,8 +6,11 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
+import DTOs.ProductoDTO;
 import com.mycompany.listacompragestorcompras.GestorCompras;
 import com.mycompany.listacompragestorcompras.IGestorCompras;
+import com.mycompany.listacompragestorproductos.GestorProductos;
+import com.mycompany.listacompragestorproductos.IGestorProductos;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -23,6 +26,7 @@ public class panelListaCompras extends javax.swing.JPanel {
     private ClienteDTO cliente;
     private CompraDTO compra;
     private IGestorCompras gestorCompras;
+    private IGestorProductos gestorProductos;
 
     /**
      * Creates new form panelListaCompras
@@ -32,6 +36,7 @@ public class panelListaCompras extends javax.swing.JPanel {
         this.cliente = cliente;
         this.compra = new CompraDTO();
         this.gestorCompras = new GestorCompras();
+        this.gestorProductos = new GestorProductos();
         initComponents();
 
         tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
@@ -180,7 +185,7 @@ public class panelListaCompras extends javax.swing.JPanel {
             }
             
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar esta lista?", "Atención", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
+            if (respuesta == JOptionPane.YES_OPTION) {    
                 compra.setNombreCompra(datosFila[0].toString());
                 CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
                 gestorCompras.eliminarCompra(compraSelec.getId());
