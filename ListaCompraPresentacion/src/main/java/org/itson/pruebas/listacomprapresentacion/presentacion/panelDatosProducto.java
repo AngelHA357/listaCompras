@@ -54,8 +54,6 @@ public class panelDatosProducto extends javax.swing.JPanel {
         initComponents();
         cargarDatos();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -198,13 +196,13 @@ public class panelDatosProducto extends javax.swing.JPanel {
         Validadores validador = new Validadores();
         if (validarCamposLlenos()) {
             if (validador.validarCantidad(txtCantidad.getText())) {
-                
+
                 if (isUpdating) {
                     actualizarDatos();
                 } else {
                     guardarProducto();
                 }
-                
+
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
                 menuInicio.mostrarPanel(agregarProducto);
             } else {
@@ -232,15 +230,19 @@ public class panelDatosProducto extends javax.swing.JPanel {
 
     }
 
-    private void actualizarDatos(){
+    private void actualizarDatos() {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
         String categoria = txtCategoría.getText();
-
-        if (existeProductoEnCompra(nombre)) {
+        if (nombre.equals(producto.getNombre())) {
+            ProductoDTO productoAct = new ProductoDTO(nombre, categoria, producto.isComprado(), compra, cantidad);
+            productoAct.setId(producto.getId());
+            gestorProductos.actualizarProducto(productoAct);
+        } else if (existeProductoEnCompra(nombre)) {
             JOptionPane.showMessageDialog(this, "Ya existe un producto con ese nombre en la compra.", "Producto existente", JOptionPane.WARNING_MESSAGE);
         } else {
             ProductoDTO productoAct = new ProductoDTO(nombre, categoria, producto.isComprado(), compra, cantidad);
+            productoAct.setId(producto.getId());
             gestorProductos.actualizarProducto(productoAct);
         }
     }

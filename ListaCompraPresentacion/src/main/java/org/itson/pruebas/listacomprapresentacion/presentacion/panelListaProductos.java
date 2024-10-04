@@ -89,7 +89,7 @@ public class panelListaProductos extends javax.swing.JPanel {
         @Override
         public boolean isCellEditable(int row, int column) {
             if (column >= 0 && column <= 2) {
-                return false; 
+                return false;
             }
             if (column == 3) {
                 Boolean value = (Boolean) getValueAt(row, column);
@@ -130,7 +130,6 @@ public class panelListaProductos extends javax.swing.JPanel {
                         productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
                         ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
                         productoSelec.setCompra(compra);
-
 
                         panelDatosProducto actualizarDatosProducto = new panelDatosProducto(menuInicio, compra, productoSelec, true);
                         menuInicio.mostrarPanel(actualizarDatosProducto);
