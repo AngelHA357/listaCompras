@@ -23,8 +23,6 @@ public class CompraConversiones {
             return null;
         }
 
-        List<Producto> productos = new ArrayList<>();
-
         Compra compra = new Compra();
 
         if (compraDTO.getId() != null) {
@@ -33,7 +31,8 @@ public class CompraConversiones {
         
         compra.setNombre(compraDTO.getNombreCompra());
 
-        if (!productos.isEmpty()) {
+        if (compraDTO.getProductos() != null) {
+            List<Producto> productos = new ArrayList<>();
             for (ProductoDTO dto : compraDTO.getProductos()) {
                 Producto producto = productosConversiones.dtoAEntidad(dto);
                 productos.add(producto);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasIntegracion.ClienteCompraIntegration" time="2.301" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasIntegracion.ClienteCompraIntegration" time="1.893" tests="7" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="user.country" value="ES"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\JoseH\AppData\Local\Temp\surefire9117898941351143912\surefirebooter-20241004013225455_3.jar C:\Users\JoseH\AppData\Local\Temp\surefire9117898941351143912 2024-10-04T01-32-25_214-jvmRun1 surefire-20241004013225455_1tmp surefire_0-20241004013225455_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\JoseH\AppData\Local\Temp\surefire3781057027444455397\surefirebooter-20241004024722858_3.jar C:\Users\JoseH\AppData\Local\Temp\surefire3781057027444455397 2024-10-04T02-47-22_605-jvmRun1 surefire-20241004024722858_1tmp surefire_0-20241004024722858_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="test" value="PruebasIntegracion.ClienteCompraIntegration"/>
     <property name="surefire.test.class.path" value="C:\Users\JoseH\OneDrive\Documentos\GitHub\listaCompras\ListaCompraPresentacion\target\test-classes;C:\Users\JoseH\OneDrive\Documentos\GitHub\listaCompras\ListaCompraPresentacion\target\classes;C:\Users\JoseH\.m2\repository\com\mycompany\ListaCompraGestorClientes\1.0-SNAPSHOT\ListaCompraGestorClientes-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ListaCompraGestorCompras\1.0-SNAPSHOT\ListaCompraGestorCompras-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ListaCompraGestorProductos\1.0-SNAPSHOT\ListaCompraGestorProductos-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraNegocio\1.0-SNAPSHOT\ProyectoListaCompraNegocio-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraPersistencia\1.0-SNAPSHOT\ProyectoListaCompraPersistencia-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa\2.7.12\org.eclipse.persistence.jpa-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\jakarta.persistence\2.2.3\jakarta.persistence-2.2.3.jar;C:\Users\JoseH\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\JoseH\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.core\2.7.12\org.eclipse.persistence.core-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.asm\9.4.0\org.eclipse.persistence.asm-9.4.0.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.antlr\2.7.12\org.eclipse.persistence.antlr-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa.jpql\2.7.12\org.eclipse.persistence.jpa.jpql-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.moxy\2.7.12\org.eclipse.persistence.moxy-2.7.12.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraDTOs\1.0-SNAPSHOT\ProyectoListaCompraDTOs-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ListaCompraFiltroPorCompra\1.0-SNAPSHOT\ListaCompraFiltroPorCompra-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\FiltroPorCategoria\1.0-SNAPSHOT\FiltroPorCategoria-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\JoseH\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\JoseH\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.0\junit-jupiter-params-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\JoseH\AppData\Local\Temp\surefire9117898941351143912\surefirebooter-20241004013225455_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\JoseH\AppData\Local\Temp\surefire3781057027444455397\surefirebooter-20241004024722858_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
@@ -60,14 +60,14 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testObtenerCompraPorNombreYCliente_CompraInexistente" classname="PruebasIntegracion.ClienteCompraIntegration" time="1.928">
-    <system-out><![CDATA[[EL Info]: 2024-10-04 01:32:27.153--ServerSession(1260467793)--EclipseLink, version: Eclipse Persistence Services - 2.7.12.v20230209-e5c4074ef3
+  <testcase name="testObtenerCompraPorNombreYCliente_CompraInexistente" classname="PruebasIntegracion.ClienteCompraIntegration" time="1.516">
+    <system-out><![CDATA[[EL Info]: 2024-10-04 02:47:24.234--ServerSession(507819576)--EclipseLink, version: Eclipse Persistence Services - 2.7.12.v20230209-e5c4074ef3
 ]]></system-out>
   </testcase>
-  <testcase name="testObtenerComprasPorCliente_ClienteExistente" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.102"/>
-  <testcase name="testAgregarClienteYCompra" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.04"/>
-  <testcase name="testEliminarCompraYVerificarCliente" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.036"/>
-  <testcase name="testObtenerCompraPorNombreYCliente_CompraExistente" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.042"/>
-  <testcase name="testObtenerComprasPorCliente_ClienteSinCompras" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.009"/>
-  <testcase name="testAgregarVariasComprasYVerificarConsistencia" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.097"/>
+  <testcase name="testObtenerComprasPorCliente_ClienteExistente" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.1"/>
+  <testcase name="testAgregarClienteYCompra" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.043"/>
+  <testcase name="testEliminarCompraYVerificarCliente" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.04"/>
+  <testcase name="testObtenerCompraPorNombreYCliente_CompraExistente" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.053"/>
+  <testcase name="testObtenerComprasPorCliente_ClienteSinCompras" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.008"/>
+  <testcase name="testAgregarVariasComprasYVerificarConsistencia" classname="PruebasIntegracion.ClienteCompraIntegration" time="0.096"/>
 </testsuite>

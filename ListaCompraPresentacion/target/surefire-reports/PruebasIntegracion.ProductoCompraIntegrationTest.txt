@@ -1,10 +1,15 @@
 -------------------------------------------------------------------------------
 Test set: PruebasIntegracion.ProductoCompraIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.642 s <<< FAILURE! -- in PruebasIntegracion.ProductoCompraIntegrationTest
-PruebasIntegracion.ProductoCompraIntegrationTest.testAgregarProductoYCompra -- Time elapsed: 1.600 s <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "DTOs.CompraDTO.getNombreCompra()" because the return value of "DTOs.ProductoDTO.getCompraDTO()" is null
-	at PruebasIntegracion.ProductoCompraIntegrationTest.testAgregarProductoYCompra(ProductoCompraIntegrationTest.java:100)
+Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.249 s <<< FAILURE! -- in PruebasIntegracion.ProductoCompraIntegrationTest
+PruebasIntegracion.ProductoCompraIntegrationTest.testObtenerProductosPorCompraId -- Time elapsed: 0.101 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <0>
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+	at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:510)
+	at PruebasIntegracion.ProductoCompraIntegrationTest.testObtenerProductosPorCompraId(ProductoCompraIntegrationTest.java:224)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:686)
