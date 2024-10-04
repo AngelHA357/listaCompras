@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import org.itson.pruebas.listacomprapresentacion.modelotabla.CustomTableModel;
 
 /**
  *
@@ -32,8 +33,8 @@ public class panelListaProductos extends javax.swing.JPanel {
     private IGestorCompras gestorCompras;
     private IFiltroPorCompra filtroCompra;
     private IFiltroPorCategoria filtroCategoria;
-    private DefaultTableModel modelo;
-    
+    Object[] columnNames = {"Nombre", "Cantidad", "Categoria", "Comprado"};
+
     /**
      * Creates new form panelAgregarProducto
      */
@@ -48,9 +49,8 @@ public class panelListaProductos extends javax.swing.JPanel {
         mostrarListaProductos();
     }
 
-    
     private void mostrarListaProductos() {
-        modelo = (DefaultTableModel) tblListaProductos.getModel();
+        tblListaProductos.setModel(modelo);
         modelo.setRowCount(0);
         List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId());
         if (listaProductoCliente != null) {
@@ -60,20 +60,61 @@ public class panelListaProductos extends javax.swing.JPanel {
 
     }
 
-    private void realizarAccionCheckbox()  {
-        modelo.addTableModelListener((TableModelEvent e) -> {
-            if (e.getColumn() == 3) {
-                int row = e.getFirstRow();
-                boolean comprado = (Boolean) modelo.getValueAt(row, 3);
-                if (comprado) {
-                    String nombreProducto = (String) tblListaProductos.getValueAt(row, 0);
-                    System.out.println("Producto comprado: " + nombreProducto);
-                    
-                }
-            }
-        });
+    private void realizarAccionCheckbox() {
+        int filaSeleccionada = tblListaProductos.getSelectedRow();
 
+        if (filaSeleccionada != -1) {
+            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+
+            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+            }
+            ProductoDTO productoBuscar = new ProductoDTO();
+            productoBuscar.setNombre(datosFila[0].toString());
+            productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
+            productoBuscar.setCategoria(datosFila[2].toString());
+            productoBuscar.setComprado((Boolean) datosFila[3]);
+
+            ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+
+            modelo.addTableModelListener((TableModelEvent e) -> {
+                if (e.getColumn() == 3) {
+                    int row = e.getFirstRow();
+                    boolean comprado = (Boolean) modelo.getValueAt(row, 3);
+                    if (comprado) {
+                        productoSelec.setComprado(comprado);
+                        gestorProductos.actualizarProducto(productoSelec);
+                        tblListaProductos.isCellEditable(row, 3);
+                    }
+                }
+            });
+
+        }
     }
+
+    DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], columnNames) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Solo permite editar la columna "Comprado" (índice 3) y solo a true
+            if (column == 3) {
+                // Obtener el valor actual de la celda
+                Boolean value = (Boolean) getValueAt(row, column);
+                // Permitir editar solo si el valor actual es false
+                return Boolean.FALSE.equals(value);
+            }
+            return super.isCellEditable(row, column);
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // Devuelve la clase de cada columna
+            if (columnIndex == 3) {
+                return Boolean.class; // Para que se muestre como checkbox
+            }
+            return super.getColumnClass(columnIndex);
+        }
+    };
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
