@@ -10,14 +10,16 @@ import com.mycompany.listacomprafiltroporcategoria.FiltroPorCategoria;
 import com.mycompany.listacomprafiltroporcategoria.IFiltroPorCategoria;
 import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
 import com.mycompany.listacomprafiltroporcompra.IFiltroPorCompra;
-import com.mycompany.listacompragestorcompras.GestorCompras;
 import com.mycompany.listacompragestorcompras.IGestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
 import com.mycompany.listacompragestorproductos.IGestorProductos;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import org.itson.pruebas.listacomprapresentacion.modelotabla.CustomTableModel;
 
 /**
  *
@@ -31,6 +33,7 @@ public class panelListaProductos extends javax.swing.JPanel {
     private IGestorCompras gestorCompras;
     private IFiltroPorCompra filtroCompra;
     private IFiltroPorCategoria filtroCategoria;
+    Object[] columnNames = {"Nombre", "Cantidad", "Categoria", "Comprado"};
 
     /**
      * Creates new form panelAgregarProducto
@@ -47,13 +50,70 @@ public class panelListaProductos extends javax.swing.JPanel {
     }
 
     private void mostrarListaProductos() {
-        DefaultTableModel modelo = (DefaultTableModel) tblListaProductos.getModel();
+        tblListaProductos.setModel(modelo);
         modelo.setRowCount(0);
         List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId());
         if (listaProductoCliente != null) {
-            listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado() ? "Si" : "No"}));
+            listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado()}));
+        }
+        realizarAccionCheckbox();
+
+    }
+
+    private void realizarAccionCheckbox() {
+        int filaSeleccionada = tblListaProductos.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+
+            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+            }
+            ProductoDTO productoBuscar = new ProductoDTO();
+            productoBuscar.setNombre(datosFila[0].toString());
+            productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
+            productoBuscar.setCategoria(datosFila[2].toString());
+            productoBuscar.setComprado((Boolean) datosFila[3]);
+
+            ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+
+            modelo.addTableModelListener((TableModelEvent e) -> {
+                if (e.getColumn() == 3) {
+                    int row = e.getFirstRow();
+                    boolean comprado = (Boolean) modelo.getValueAt(row, 3);
+                    if (comprado) {
+                        productoSelec.setComprado(comprado);
+                        gestorProductos.actualizarProducto(productoSelec);
+                        tblListaProductos.isCellEditable(row, 3);
+                    }
+                }
+            });
+
         }
     }
+
+    DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], columnNames) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Solo permite editar la columna "Comprado" (índice 3) y solo a true
+            if (column == 3) {
+                // Obtener el valor actual de la celda
+                Boolean value = (Boolean) getValueAt(row, column);
+                // Permitir editar solo si el valor actual es false
+                return Boolean.FALSE.equals(value);
+            }
+            return super.isCellEditable(row, column);
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // Devuelve la clase de cada columna
+            if (columnIndex == 3) {
+                return Boolean.class; // Para que se muestre como checkbox
+            }
+            return super.getColumnClass(columnIndex);
+        }
+    };
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -87,9 +147,16 @@ public class panelListaProductos extends javax.swing.JPanel {
                 "Producto", "Cantidad", "Categoria", "Comprado"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -163,9 +230,9 @@ public class panelListaProductos extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 731, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(146, 146, 146))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(43, 43, 43)
                 .addComponent(btnMostrarTodo)
-                .addGap(117, 117, 117)
+                .addGap(89, 89, 89)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,7 +308,7 @@ public class panelListaProductos extends javax.swing.JPanel {
             modelo.setRowCount(0);
             List<ProductoDTO> listaProductoCliente = filtroCategoria.filtrarPorCategoriaYCompraId(txtCategoria.getText(), compra.getId());
             if (listaProductoCliente != null) {
-                listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado() ? "Si" : "No"}));
+                listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado()}));
             }
         } else {
             JOptionPane.showMessageDialog(this, "Ingrese una Categoría", "Categoría vacía", JOptionPane.INFORMATION_MESSAGE);
@@ -255,7 +322,6 @@ public class panelListaProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCategoriaActionPerformed
 
     private void btnMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodoActionPerformed
-
         mostrarListaProductos();
 
     }//GEN-LAST:event_btnMostrarTodoActionPerformed
