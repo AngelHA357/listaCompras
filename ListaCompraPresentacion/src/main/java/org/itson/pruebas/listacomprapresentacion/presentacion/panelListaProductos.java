@@ -14,12 +14,12 @@ import com.mycompany.listacompragestorcompras.IGestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
 import com.mycompany.listacompragestorproductos.IGestorProductos;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import org.itson.pruebas.listacomprapresentacion.modelotabla.CustomTableModel;
 
 /**
  *
@@ -33,7 +33,7 @@ public class panelListaProductos extends javax.swing.JPanel {
     private IGestorCompras gestorCompras;
     private IFiltroPorCompra filtroCompra;
     private IFiltroPorCategoria filtroCategoria;
-    Object[] columnNames = {"Nombre", "Cantidad", "Categoria", "Comprado"};
+    private final Object[] columnNames = {"Nombre", "Cantidad", "Categoria", "Comprado"};
 
     /**
      * Creates new form panelAgregarProducto
@@ -47,6 +47,7 @@ public class panelListaProductos extends javax.swing.JPanel {
         initComponents();
         tblListaProductos.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 14));
         mostrarListaProductos();
+        actualizarProducto();
     }
 
     private void mostrarListaProductos() {
@@ -61,45 +62,37 @@ public class panelListaProductos extends javax.swing.JPanel {
     }
 
     private void realizarAccionCheckbox() {
-        int filaSeleccionada = tblListaProductos.getSelectedRow();
+        modelo.addTableModelListener((TableModelEvent e) -> {
+            if (e.getColumn() == 3) {
+                int row = e.getFirstRow();
+                boolean comprado = (Boolean) modelo.getValueAt(row, 3);
+                if (comprado) {
+                    ProductoDTO productoBuscar = new ProductoDTO();
+                    productoBuscar.setNombre(modelo.getValueAt(row, 0).toString());
+                    productoBuscar.setCantidad(Double.valueOf(modelo.getValueAt(row, 1).toString()));
+                    productoBuscar.setCategoria(modelo.getValueAt(row, 2).toString());
+                    productoBuscar.setComprado(false);
 
-        if (filaSeleccionada != -1) {
-            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+                    ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
 
-            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
-                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
-            }
-            ProductoDTO productoBuscar = new ProductoDTO();
-            productoBuscar.setNombre(datosFila[0].toString());
-            productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
-            productoBuscar.setCategoria(datosFila[2].toString());
-            productoBuscar.setComprado((Boolean) datosFila[3]);
-
-            ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
-
-            modelo.addTableModelListener((TableModelEvent e) -> {
-                if (e.getColumn() == 3) {
-                    int row = e.getFirstRow();
-                    boolean comprado = (Boolean) modelo.getValueAt(row, 3);
-                    if (comprado) {
-                        productoSelec.setComprado(comprado);
-                        gestorProductos.actualizarProducto(productoSelec);
-                        tblListaProductos.isCellEditable(row, 3);
-                    }
+                    productoSelec.setComprado(comprado);
+                    productoSelec.setCompra(compra);
+                    gestorProductos.actualizarProducto(productoSelec);
+                    tblListaProductos.isCellEditable(row, 3);
                 }
-            });
+            }
+        });
 
-        }
     }
 
     DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], columnNames) {
         @Override
         public boolean isCellEditable(int row, int column) {
-            // Solo permite editar la columna "Comprado" (índice 3) y solo a true
+            if (column >= 0 && column <= 2) {
+                return false;
+            }
             if (column == 3) {
-                // Obtener el valor actual de la celda
                 Boolean value = (Boolean) getValueAt(row, column);
-                // Permitir editar solo si el valor actual es false
                 return Boolean.FALSE.equals(value);
             }
             return super.isCellEditable(row, column);
@@ -107,13 +100,45 @@ public class panelListaProductos extends javax.swing.JPanel {
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
-            // Devuelve la clase de cada columna
             if (columnIndex == 3) {
-                return Boolean.class; // Para que se muestre como checkbox
+                return Boolean.class;
             }
             return super.getColumnClass(columnIndex);
         }
     };
+
+    private void actualizarProducto() {
+
+        tblListaProductos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+
+                    int filaSeleccionada = tblListaProductos.getSelectedRow();
+
+                    if (filaSeleccionada != -1) {
+                        Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+
+                        for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+                            datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+                        }
+
+                        ProductoDTO productoBuscar = new ProductoDTO();
+                        productoBuscar.setNombre(datosFila[0].toString());
+                        productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
+                        productoBuscar.setCategoria(datosFila[2].toString());
+                        productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
+                        ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+                        productoSelec.setCompra(compra);
+
+                        panelDatosProducto actualizarDatosProducto = new panelDatosProducto(menuInicio, compra, productoSelec, true);
+                        menuInicio.mostrarPanel(actualizarDatosProducto);
+                    }
+                }
+            }
+        });
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -285,11 +310,7 @@ public class panelListaProductos extends javax.swing.JPanel {
                 productoBuscar.setNombre(datosFila[0].toString());
                 productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
                 productoBuscar.setCategoria(datosFila[2].toString());
-                if (datosFila[3].toString().equals("No")) {
-                    productoBuscar.setComprado(false);
-                } else {
-                    productoBuscar.setComprado(true);
-                }
+                productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
 
                 ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
                 gestorProductos.eliminarProducto(productoSelec.getId());

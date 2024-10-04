@@ -11,9 +11,9 @@ org\itson\pruebas\listacomprapresentacion\presentacion\panelNombreLista.class
 org\itson\pruebas\listacomprapresentacion\presentacion\panelListaProductos.class
 org\itson\pruebas\listacomprapresentacion\presentacion\frmMenuInicio$1.class
 org\itson\pruebas\listacomprapresentacion\presentacion\panelListaCompras$2.class
-org\itson\pruebas\listacomprapresentacion\modelotabla\CustomTableModel.class
 org\itson\pruebas\listacomprapresentacion\presentacion\panelListaProductos$1.class
 org\itson\pruebas\listacomprapresentacion\presentacion\panelListaProductos$6.class
+org\itson\pruebas\listacomprapresentacion\presentacion\panelListaProductos$8.class
 org\itson\pruebas\listacomprapresentacion\presentacion\frmRegistrarse.class
 org\itson\pruebas\listacomprapresentacion\presentacion\panelDatosProducto.class
 org\itson\pruebas\listacomprapresentacion\presentacion\panelDatosProducto$1.class

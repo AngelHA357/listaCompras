@@ -24,9 +24,11 @@ public class panelDatosProducto extends javax.swing.JPanel {
 
     private frmMenuInicio menuInicio;
     private CompraDTO compra;
+    private ProductoDTO producto;
     private IGestorProductos gestorProductos;
     private IGestorCompras gestorCompras;
     private IFiltroPorCompra filtroCompra;
+    private Boolean isUpdating;
 
     /**
      * Creates new form panelAgregarDatosProducto
@@ -34,11 +36,23 @@ public class panelDatosProducto extends javax.swing.JPanel {
     public panelDatosProducto(frmMenuInicio menuInicio, CompraDTO compra) {
         this.menuInicio = menuInicio;
         this.compra = compra;
+        this.isUpdating = false;
         gestorProductos = new GestorProductos();
         gestorCompras = new GestorCompras();
         filtroCompra = new FiltroPorCompra();
         initComponents();
+    }
 
+    public panelDatosProducto(frmMenuInicio menuInicio, CompraDTO compra, ProductoDTO producto, Boolean isUpdating) {
+        this.menuInicio = menuInicio;
+        this.compra = compra;
+        this.producto = producto;
+        this.isUpdating = isUpdating;
+        gestorProductos = new GestorProductos();
+        gestorCompras = new GestorCompras();
+        filtroCompra = new FiltroPorCompra();
+        initComponents();
+        cargarDatos();
     }
 
     /**
@@ -182,7 +196,13 @@ public class panelDatosProducto extends javax.swing.JPanel {
         Validadores validador = new Validadores();
         if (validarCamposLlenos()) {
             if (validador.validarCantidad(txtCantidad.getText())) {
-                guardarProducto();
+
+                if (isUpdating) {
+                    actualizarDatos();
+                } else {
+                    guardarProducto();
+                }
+
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
                 menuInicio.mostrarPanel(agregarProducto);
             } else {
@@ -210,7 +230,34 @@ public class panelDatosProducto extends javax.swing.JPanel {
 
     }
 
-    // Método para validar que todos los campos estén llenos
+    private void actualizarDatos() {
+        String nombre = txtNombre.getText();
+        Double cantidad = Double.valueOf(txtCantidad.getText());
+        String categoria = txtCategoría.getText();
+        if (nombre.equals(producto.getNombre())) {
+            ProductoDTO productoAct = new ProductoDTO(nombre, categoria, producto.isComprado(), compra, cantidad);
+            productoAct.setId(producto.getId());
+            gestorProductos.actualizarProducto(productoAct);
+        } else if (existeProductoEnCompra(nombre)) {
+            JOptionPane.showMessageDialog(this, "Ya existe un producto con ese nombre en la compra.", "Producto existente", JOptionPane.WARNING_MESSAGE);
+        } else {
+            ProductoDTO productoAct = new ProductoDTO(nombre, categoria, producto.isComprado(), compra, cantidad);
+            productoAct.setId(producto.getId());
+            gestorProductos.actualizarProducto(productoAct);
+        }
+    }
+
+    private void cargarDatos() {
+        if (isUpdating) {
+            String nombre = producto.getNombre();
+            txtNombre.setText(nombre);
+            String cantidad = producto.getCantidad().toString();
+            txtCantidad.setText(cantidad);
+            String categoria = producto.getCategoria();
+            txtCategoría.setText(categoria);
+        }
+    }
+
     private boolean validarCamposLlenos() {
         if (txtNombre.getText().isBlank() || txtCantidad.getText().isBlank() || txtCategoría.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
@@ -220,8 +267,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
     }
 
     public boolean existeProductoEnCompra(String nombre) {
-        // Supongamos que tienes una lista de productos almacenados
-        List<ProductoDTO> productos = filtroCompra.obtenerProductosFiltrarPorCompra(this.compra.getId()); // Método que devuelve todos los productos
+        List<ProductoDTO> productos = filtroCompra.obtenerProductosFiltrarPorCompra(this.compra.getId());
         for (ProductoDTO producto : productos) {
             if (producto.getNombre().equalsIgnoreCase(nombre)) {
                 return true;
