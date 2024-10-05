@@ -13,9 +13,11 @@ import com.mycompany.listacompragestorcompras.GestorCompras;
 import com.mycompany.listacompragestorcompras.IGestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
 import com.mycompany.listacompragestorproductos.IGestorProductos;
+import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -42,13 +44,19 @@ public class panelListaCompras extends javax.swing.JPanel {
         this.gestorProductos = new GestorProductos();
         this.filtroCompra = new FiltroPorCompra();
         initComponents();
-
-        tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
-
+        decorarTabla();
         mostrarListaCompras();
         menuInicio.mostrarPanel(this);
     }
 
+    private void decorarTabla() {
+        tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
+        tblListaCompras.getTableHeader().setReorderingAllowed(false);
+        tblListaCompras.getTableHeader().setBackground(new Color(255, 255, 185));
+        JScrollPane scrollPane = (JScrollPane) tblListaCompras.getParent().getParent();
+        scrollPane.getViewport().setBackground(new Color(255, 255, 185));
+    }
+    
     private void mostrarListaCompras() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();
         modelo.setRowCount(0);
@@ -80,8 +88,8 @@ public class panelListaCompras extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(1024, 597));
 
         tblListaCompras.setAutoCreateRowSorter(true);
-        tblListaCompras.setBackground(new java.awt.Color(255, 255, 185));
-        tblListaCompras.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 14)); // NOI18N
+        tblListaCompras.setBackground(new java.awt.Color(255, 255, 220));
+        tblListaCompras.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 18)); // NOI18N
         tblListaCompras.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -98,6 +106,8 @@ public class panelListaCompras extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblListaCompras.setAlignmentX(20.0F);
+        tblListaCompras.setGridColor(new java.awt.Color(204, 204, 204));
         jScrollPane1.setViewportView(tblListaCompras);
 
         btnVerLista.setBackground(new java.awt.Color(254, 194, 58));

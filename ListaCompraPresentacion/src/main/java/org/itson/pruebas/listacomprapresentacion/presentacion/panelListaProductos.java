@@ -13,12 +13,17 @@ import com.mycompany.listacomprafiltroporcompra.IFiltroPorCompra;
 import com.mycompany.listacompragestorcompras.IGestorCompras;
 import com.mycompany.listacompragestorproductos.GestorProductos;
 import com.mycompany.listacompragestorproductos.IGestorProductos;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -45,9 +50,17 @@ public class panelListaProductos extends javax.swing.JPanel {
         filtroCompra = new FiltroPorCompra();
         filtroCategoria = new FiltroPorCategoria();
         initComponents();
-        tblListaProductos.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 14));
+        decorarTabla();
         mostrarListaProductos();
         actualizarProducto();
+    }
+
+    private void decorarTabla() {
+        tblListaProductos.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 14));
+        tblListaProductos.getTableHeader().setReorderingAllowed(false);
+        tblListaProductos.getTableHeader().setBackground(new Color(255, 255, 185));
+        JScrollPane scrollPane = (JScrollPane) tblListaProductos.getParent().getParent();
+        scrollPane.getViewport().setBackground(new Color(255, 255, 185));
     }
 
     private void mostrarListaProductos() {
@@ -58,7 +71,7 @@ public class panelListaProductos extends javax.swing.JPanel {
             listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado()}));
         }
         realizarAccionCheckbox();
-
+        aplicarColorFilas();
     }
 
     private void realizarAccionCheckbox() {
@@ -78,11 +91,43 @@ public class panelListaProductos extends javax.swing.JPanel {
                     productoSelec.setComprado(comprado);
                     productoSelec.setCompra(compra);
                     gestorProductos.actualizarProducto(productoSelec);
-                    tblListaProductos.isCellEditable(row, 3);
                 }
             }
         });
+    }
 
+    private void aplicarColorFilas() {
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (column != 3) {
+                    Object compradoObj = table.getValueAt(row, 3);
+                    if (compradoObj instanceof Boolean && (Boolean) compradoObj) {
+                        cell.setBackground(Color.GREEN);
+                    } else {
+                        cell.setBackground(Color.WHITE);
+                    }
+                }
+
+                if (isSelected) {
+                    cell.setBackground(table.getSelectionBackground());
+                    cell.setForeground(table.getSelectionForeground());
+                } else {
+                    cell.setForeground(Color.BLACK);
+                }
+
+                return cell;
+            }
+        };
+
+        for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+            if (i != 3) {
+                tblListaProductos.getColumnModel().getColumn(i).setCellRenderer(renderer);
+            }
+        }
     }
 
     DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], columnNames) {
@@ -164,7 +209,7 @@ public class panelListaProductos extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 185));
 
         tblListaProductos.setAutoCreateRowSorter(true);
-        tblListaProductos.setBackground(new java.awt.Color(255, 255, 185));
+        tblListaProductos.setBackground(new java.awt.Color(255, 255, 220));
         tblListaProductos.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 14)); // NOI18N
         tblListaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -189,6 +234,10 @@ public class panelListaProductos extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblListaProductos.setAlignmentX(1.0F);
+        tblListaProductos.setAlignmentY(1.0F);
+        tblListaProductos.setGridColor(new java.awt.Color(255, 255, 185));
+        tblListaProductos.setSelectionBackground(new java.awt.Color(255, 255, 185));
         jScrollPane1.setViewportView(tblListaProductos);
 
         jLabel1.setFont(new java.awt.Font("MS Reference Sans Serif", 1, 28)); // NOI18N
