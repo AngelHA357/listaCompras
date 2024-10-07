@@ -19,6 +19,11 @@ public class CompraBO implements ICompraBO {
     private final ICompraDAO compraDAO;
     private final CompraConversiones compraConversiones;
 
+    public CompraBO(ICompraDAO compraDAO, CompraConversiones compraConversiones){
+        this.compraDAO = compraDAO;
+        this.compraConversiones = compraConversiones;
+    }
+    
     public CompraBO() {
         conexion = Conexion.getInstance();
         this.compraDAO = new CompraDAO(conexion);

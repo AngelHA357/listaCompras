@@ -1,5 +1,7 @@
 package BOs;
 
+import Conversiones.ClientesConversiones;
+import DAOs.IClienteDAO;
 import DTOs.ClienteDTO;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
@@ -11,4 +13,8 @@ public interface IClienteBO {
 
     // Método para encontrar un cliente por usuario y contraseña
     public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasena) throws NegocioException;
+    
+    public ClientesConversiones getConversiones();
+    
+    public IClienteDAO getClienteDAO();
 }

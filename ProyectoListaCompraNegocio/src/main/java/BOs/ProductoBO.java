@@ -3,6 +3,7 @@ package BOs;
 import Conexion.Conexion;
 import Conexion.IConexion;
 import Conversiones.ProductosConversiones;
+import DAOs.IProductoDAO;
 import DAOs.ProductoDAO;
 import DTOs.ProductoDTO;
 import Entidades.Producto;
@@ -15,9 +16,14 @@ import java.util.logging.Logger;
 public class ProductoBO implements IProductoBO {
 
     private IConexion conexion;
-    private final ProductoDAO productoDAO;
+    private final IProductoDAO productoDAO;
     private final ProductosConversiones conversiones;
 
+    public ProductoBO(IProductoDAO productoDAO, ProductosConversiones conversiones){
+        this.productoDAO = productoDAO;
+        this.conversiones = conversiones;
+    }
+    
     public ProductoBO() {
         conexion = Conexion.getInstance();
         this.productoDAO = new ProductoDAO(conexion);

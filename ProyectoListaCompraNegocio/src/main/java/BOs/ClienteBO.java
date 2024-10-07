@@ -23,6 +23,11 @@ public class ClienteBO implements IClienteBO {
     private final IClienteDAO clienteDAO;
     private final ClientesConversiones conversiones;
 
+    public ClienteBO(IClienteDAO clienteDAO, ClientesConversiones conversiones){
+        this.clienteDAO = clienteDAO;
+        this.conversiones = conversiones;
+    }
+    
     public ClienteBO() {
         conexion = Conexion.getInstance();
         this.clienteDAO = new ClienteDAO(conexion);
@@ -52,4 +57,20 @@ public class ClienteBO implements IClienteBO {
             throw new NegocioException("No se encontró al usuario");
         }
     }
+
+    
+    
+    @Override
+    public IClienteDAO getClienteDAO() {
+        return clienteDAO;
+    }
+
+    @Override
+    public ClientesConversiones getConversiones() {
+        return conversiones;
+    }
+    
+    
+    
+    
 }

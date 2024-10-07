@@ -78,14 +78,12 @@ public class CompraDAO implements ICompraDAO {
     }
 
     @Override
-    public Compra eliminarCompra(Long id) throws PersistenciaException {
+    public void eliminarCompra(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
-        Compra compraEliminada = null;
         try {
             em.getTransaction().begin();
             Compra compra = em.find(Compra.class, id);
             if (compra != null) {
-                compraEliminada = new Compra(compra.getNombre(), compra.getCliente());
                 em.remove(compra);
             }
             em.getTransaction().commit();
@@ -97,7 +95,6 @@ public class CompraDAO implements ICompraDAO {
         } finally {
             em.close();
         }
-        return compraEliminada;
     }
 
     @Override

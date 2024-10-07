@@ -14,7 +14,7 @@ public interface ICompraDAO {
 
     public Compra actualizarCompra(Compra compra) throws PersistenciaException;
 
-    public Compra eliminarCompra(Long id) throws PersistenciaException;
+    public void eliminarCompra(Long id) throws PersistenciaException;
 
     public List<Compra> obtenerComprasPorCliente(Long clienteId) throws PersistenciaException;
 

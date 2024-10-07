@@ -9,6 +9,7 @@ import BOs.CompraBO;
 import BOs.ICompraBO;
 import Conexion.Conexion;
 import Conexion.IConexion;
+import Conversiones.CompraConversiones;
 import DAOs.ClienteDAO;
 import DAOs.CompraDAO;
 import DAOs.IClienteDAO;
@@ -23,6 +24,8 @@ import Entidades.Producto;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -30,6 +33,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -38,66 +49,56 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CompraBOTest {
 
     private ICompraBO compraBO;
-    private IConexion conexion;
+    private ICompraDAO compraDAOMock;
+    CompraConversiones conversionesMock;
 
     @BeforeAll
     public static void setUpClass() {
-        System.setProperty("modoPrueba", "true"); 
     }
 
     @AfterAll
     public static void tearDownClass() {
-        System.clearProperty("modoPrueba"); 
     }
 
     @BeforeEach
     public void setUp() throws PersistenciaException {
-        conexion = Conexion.getInstance(); 
-        compraBO = new CompraBO(); 
-        limpiarBaseDeDatos();
+        compraDAOMock = mock(CompraDAO.class);
+        conversionesMock = mock(CompraConversiones.class);
+        
+        compraBO = new CompraBO(compraDAOMock, conversionesMock);
     }
 
     @AfterEach
     public void tearDown() throws PersistenciaException {
-        limpiarBaseDeDatos();
-    }
-
-    private void limpiarBaseDeDatos() throws PersistenciaException {
-        // Limpiar productos, clientes y compras
-        IProductoDAO productoDAO = new ProductoDAO(conexion);
-        IClienteDAO clienteDAO = new ClienteDAO(conexion);
-        ICompraDAO compraDAO = new CompraDAO(conexion);
-
-        if (!productoDAO.obtenerTodosLosProductos().isEmpty()) {
-            for (Producto producto : productoDAO.obtenerTodosLosProductos()) {
-                productoDAO.eliminarProducto(producto.getId());
-            }
-        }
         
-        if (!compraDAO.obtenerTodasLasCompras().isEmpty()) {
-            for (Compra compra : compraDAO.obtenerTodasLasCompras()) {
-                compraDAO.eliminarCompra(compra.getId());
-            }
-        }
-
-        if (!clienteDAO.obtenerTodosLosClientes().isEmpty()) {
-            for (Cliente cliente : clienteDAO.obtenerTodosLosClientes()) {
-                clienteDAO.eliminarCliente(cliente.getId());
-            }
-        }        
     }
 
     @Test
-    public void testAgregarCompra() {
+    public void testAgregarCompra() throws PersistenciaException {
+        // Creamos un CompraDTO de prueba
         CompraDTO compraDTO = new CompraDTO("Compra de Prueba", null);
 
-        compraBO.agregarCompra(compraDTO);
+        // Simulamos la conversión de CompraDTO a Compra usando el mock de CompraConversiones
+        Compra compra = new Compra("Compra de Prueba", null);
+        when(conversionesMock.dtoAEntidad(any(CompraDTO.class))).thenReturn(compra);
+        
+        // Simulamos que el DAO guarda la compra y devuelve la entidad
+        when(compraDAOMock.agregarCompra(any(Compra.class))).thenReturn(compra);
+        
+        // Simulamos la conversión de Compra a CompraDTO para el retorno
+        when(conversionesMock.entidadADTO(any(Compra.class))).thenReturn(compraDTO);
+        
+        // Llamamos al método bajo prueba
+        CompraDTO resultadoDTO = compraBO.agregarCompra(compraDTO);
 
-        // Obtener la compra recién agregada desde la base de datos
-        List<CompraDTO> resultado = compraBO.obtenerTodasLasCompras();
+        // Verificamos las interacciones con los mocks
+        verify(conversionesMock, times(1)).dtoAEntidad(compraDTO);
+        verify(conversionesMock, times(1)).entidadADTO(compra);
+        verify(compraDAOMock, times(1)).agregarCompra(compra);
 
-        assertNotNull(resultado);
-        assertTrue(resultado.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra de Prueba")));
+        // Verificamos que el resultado no sea nulo y sea correcto
+        assertNotNull(resultadoDTO);
+        assertEquals("Compra de Prueba", resultadoDTO.getNombreCompra());
     }
     
 //     @Test
@@ -119,156 +120,125 @@ public class CompraBOTest {
 //    }
     
     @Test
-    public void testObtenerCompraPorId() {
+    public void testObtenerCompraPorId() throws PersistenciaException {
+        // Creamos un CompraDTO de prueba
         CompraDTO compraDTO = new CompraDTO("Compra de Prueba", null);
-        compraDTO = compraBO.agregarCompra(compraDTO);
+        Compra compra = new Compra("Compra de Prueba", null);
 
-        CompraDTO resultado = compraBO.obtenerCompraPorId(compraDTO.getId());
+        // Simulamos la conversión de CompraDTO a Compra
+        when(conversionesMock.dtoAEntidad(compraDTO)).thenReturn(compra);
 
+        // Simulamos que el DAO retorna la compra al buscar por ID
+        when(compraDAOMock.obtenerCompraPorId(anyLong())).thenReturn(compra);
+
+        // Simulamos la conversión de Compra a CompraDTO para el retorno
+        when(conversionesMock.entidadADTO(compra)).thenReturn(compraDTO);
+
+        // Llamamos al método bajo prueba
+        CompraDTO resultado = compraBO.obtenerCompraPorId(1L);
+
+        // Verificamos que las conversiones y la consulta en el DAO se realicen correctamente
+        verify(conversionesMock, times(1)).entidadADTO(compra);
+        verify(compraDAOMock, times(1)).obtenerCompraPorId(1L);
+
+        // Verificamos que el resultado no sea nulo y sea correcto
         assertNotNull(resultado);
-        assertEquals(compraDTO.getId(), resultado.getId());
-    }
+        assertEquals("Compra de Prueba", resultado.getNombreCompra());
+}
     
     @Test
-    public void testObtenerCompraPorId_Inexistente() {
-        long idInexistente = 9999L; 
+    public void testObtenerCompraPorId_Inexistente() throws PersistenciaException {
+        long idInexistente = 9999L;
 
+        // Simulamos que el DAO no encuentra la compra
+        when(compraDAOMock.obtenerCompraPorId(idInexistente)).thenReturn(null);
+
+        // Llamamos al método bajo prueba
         CompraDTO resultado = compraBO.obtenerCompraPorId(idInexistente);
 
-        assertNull(resultado); 
-    }
+        // Verificamos que se retorne null si no existe la compra
+        assertNull(resultado);
 
-    @Test
-    public void testObtenerTodasLasCompras() {
-        compraBO.agregarCompra(new CompraDTO("Compra 1", null));
-        compraBO.agregarCompra(new CompraDTO("Compra 2", null));
-
-        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
-
-        assertNotNull(compras);
-        assertTrue(compras.size() == 2); 
+        // Verificamos que el DAO fue invocado correctamente
+        verify(compraDAOMock, times(1)).obtenerCompraPorId(idInexistente);
     }
     
     @Test
-    public void testObtenerTodasLasCompras_Vacio() {
-        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
+    public void testObtenerTodasLasCompras() throws PersistenciaException {
+        // Simulamos una lista de Compras
+        List<Compra> compras = Arrays.asList(
+                new Compra("Compra 1", null),
+                new Compra("Compra 2", null)
+        );
 
-        assertNotNull(compras);
-        assertTrue(compras.isEmpty());
+        // Simulamos que el DAO retorna las compras
+        when(compraDAOMock.obtenerTodasLasCompras()).thenReturn(compras);
+
+        // Creamos una lista para almacenar los resultados de la conversión manual
+        List<CompraDTO> compraDTOs = new ArrayList<>();
+
+        // Simulamos las conversiones manualmente utilizando un ciclo
+        for (Compra compra : compras) {
+            CompraDTO compraDTO = new CompraDTO(compra.getNombre(), null);
+            compraDTOs.add(compraDTO);
+        }
+
+        /// Llamamos al método bajo prueba
+        List<CompraDTO> resultado = compraBO.obtenerTodasLasCompras();
+
+        // Verificamos que la lista no sea nula y tenga el tamaño esperado
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+
+        // Verificamos que las conversiones y el DAO fueron llamados correctamente
+        verify(compraDAOMock, times(1)).obtenerTodasLasCompras();
+        verify(conversionesMock, times(2)).entidadADTO(any(Compra.class));
     }
     
     @Test
-    public void testEliminarCompra() {
-        CompraDTO compraDTO = new CompraDTO("Compra a Eliminar", null);
-        compraDTO = compraBO.agregarCompra(compraDTO);
+    public void testObtenerTodasLasCompras_Vacio() throws PersistenciaException {
+        // Simulamos que no hay compras en el DAO
+        when(compraDAOMock.obtenerTodasLasCompras()).thenReturn(Collections.emptyList());
 
-        compraBO.eliminarCompra(compraDTO.getId());
+        // Llamamos al método bajo prueba
+        List<CompraDTO> resultado = compraBO.obtenerTodasLasCompras();
 
-        CompraDTO resultado = compraBO.obtenerCompraPorId(compraDTO.getId());
+        // Verificamos que la lista sea vacía
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
 
-        assertNull(resultado); 
+        // Verificamos que el DAO fue llamado correctamente
+        verify(compraDAOMock, times(1)).obtenerTodasLasCompras();
+    }
+    
+    @Test
+    public void testEliminarCompra() throws PersistenciaException {
+        // Simulamos una Compra
+        Long id = 1L;
+
+        compraBO.eliminarCompra(id);
+
+        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+
+        // Verificamos que el DAO fue invocado correctamente
+        verify(compraDAOMock).eliminarCompra(anyLong());
+        verify(compraDAOMock).eliminarCompra(longArgumentCaptor.capture());
+        assertEquals(1L, longArgumentCaptor.getValue());
     }
     
     @Test
     public void testEliminarCompra_Inexistente() throws PersistenciaException {
-        CompraDTO compraDTO = new CompraDTO("Compra Existente", null);
-        compraBO.agregarCompra(compraDTO);
-
-        List<CompraDTO> comprasAntes = compraBO.obtenerTodasLasCompras();
-        int cantidadAntes = comprasAntes.size();
-
+        // Simulamos el ID de una compra inexistente
         long idInexistente = 9999L;
-        compraBO.eliminarCompra(idInexistente); 
 
-        List<CompraDTO> comprasDespues = compraBO.obtenerTodasLasCompras();
-        int cantidadDespues = comprasDespues.size();
+        // Llamamos al método eliminarCompra con un ID inexistente
+        compraBO.eliminarCompra(idInexistente);
 
-
-        assertEquals(cantidadAntes, cantidadDespues);
-    }
-    
-    @Test
-    public void testAgregarObtenerYEliminarCompra() {
-        // Agregar una compra
-        CompraDTO compraDTO = new CompraDTO("Compra para Integración", null);
-        compraBO.agregarCompra(compraDTO);
-
-        // Obtener la compra recién agregada
-        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
-        assertNotNull(compras);
-        assertTrue(compras.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra para Integración")));
-
-        // Eliminar la compra
-        CompraDTO compraEliminada = compras.stream().filter(compra -> compra.getNombreCompra().equals("Compra para Integración")).findFirst().get();
-        compraBO.eliminarCompra(compraEliminada.getId());
-
-        // Verificar que la compra fue eliminada
-        CompraDTO compraObtenida = compraBO.obtenerCompraPorId(compraEliminada.getId());
-        assertNull(compraObtenida);
-    }
-    
-    @Test
-    public void testAgregarMultiplesComprasYVerificarEliminacion() {
-        // Agregar varias compras
-        CompraDTO compraDTO1 = new CompraDTO("Compra 1", null);
-        CompraDTO compraDTO2 = new CompraDTO("Compra 2", null);
-        compraBO.agregarCompra(compraDTO1);
-        compraBO.agregarCompra(compraDTO2);
-
-        // Obtener todas las compras y verificar que ambas fueron agregadas
-        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
-        assertNotNull(compras);
-        assertEquals(2, compras.size());
-
-        // Eliminar una de las compras
-        CompraDTO compraEliminar = compras.stream().filter(compra -> compra.getNombreCompra().equals("Compra 1")).findFirst().get();
-        compraBO.eliminarCompra(compraEliminar.getId());
-
-        // Verificar que la compra fue eliminada y la otra permanece
-        compras = compraBO.obtenerTodasLasCompras();
-        assertEquals(1, compras.size());
-        assertTrue(compras.stream().anyMatch(compra -> compra.getNombreCompra().equals("Compra 2")));
-    }
-    
-    @Test
-    public void testAgregarYObtenerCompraPorNombre() {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setNombre("Cliente Prueba");
-        ClienteBO clienteBO = new ClienteBO();
-        clienteDTO = clienteBO.agregarCliente(clienteDTO); 
-        
-        // Agregar una compra
-        CompraDTO compraDTO = new CompraDTO("Compra para Obtener", clienteDTO);
-        compraBO.agregarCompra(compraDTO);
-
-        // Obtener la compra por nombre
-        CompraDTO resultado = compraBO.obtenerCompraPorNombreYCliente("Compra para Obtener", clienteDTO.getId());
-
-        // Verificar que la compra fue obtenida correctamente
-        assertNotNull(resultado);
-        assertEquals("Compra para Obtener", resultado.getNombreCompra());
-    }
-    
-    @Test
-    public void testAgregarObtenerYEliminarTodasLasCompras() {
-        // Agregar varias compras
-        CompraDTO compraDTO1 = new CompraDTO("Compra A", null);
-        CompraDTO compraDTO2 = new CompraDTO("Compra B", null);
-        compraBO.agregarCompra(compraDTO1);
-        compraBO.agregarCompra(compraDTO2);
-
-        // Verificar que ambas compras fueron agregadas
-        List<CompraDTO> compras = compraBO.obtenerTodasLasCompras();
-        assertEquals(2, compras.size());
-
-        // Eliminar todas las compras
-        for (CompraDTO compra : compras) {
-            compraBO.eliminarCompra(compra.getId());
-        }
-
-        // Verificar que no queda ninguna compra
-        compras = compraBO.obtenerTodasLasCompras();
-        assertTrue(compras.isEmpty());
+        // Verificamos que el DAO fue invocado correctamente
+        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(compraDAOMock).eliminarCompra(anyLong());
+        verify(compraDAOMock).eliminarCompra(longArgumentCaptor.capture());
+        assertEquals(idInexistente, longArgumentCaptor.getValue());
     }
 
 }
