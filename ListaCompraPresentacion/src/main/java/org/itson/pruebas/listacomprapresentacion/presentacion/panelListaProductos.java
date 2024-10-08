@@ -237,6 +237,7 @@ public class panelListaProductos extends javax.swing.JPanel {
         tblListaProductos.setAlignmentX(1.0F);
         tblListaProductos.setAlignmentY(1.0F);
         tblListaProductos.setGridColor(new java.awt.Color(255, 255, 185));
+        tblListaProductos.setRowHeight(25);
         tblListaProductos.setSelectionBackground(new java.awt.Color(255, 255, 185));
         jScrollPane1.setViewportView(tblListaProductos);
 

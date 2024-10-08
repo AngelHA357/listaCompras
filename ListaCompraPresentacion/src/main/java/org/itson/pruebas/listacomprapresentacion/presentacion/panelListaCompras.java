@@ -108,6 +108,7 @@ public class panelListaCompras extends javax.swing.JPanel {
         });
         tblListaCompras.setAlignmentX(20.0F);
         tblListaCompras.setGridColor(new java.awt.Color(204, 204, 204));
+        tblListaCompras.setRowHeight(30);
         jScrollPane1.setViewportView(tblListaCompras);
 
         btnVerLista.setBackground(new java.awt.Color(254, 194, 58));
