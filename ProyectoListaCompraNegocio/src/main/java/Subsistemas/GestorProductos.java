@@ -33,6 +33,11 @@ public class GestorProductos implements IGestorProductos {
         this.conversiones = new ProductosConversiones();
     }
 
+    public GestorProductos(IProductoDAO productoDAO, ProductosConversiones conversiones){
+        this.productoDAO = productoDAO;
+        this.conversiones = conversiones;
+    }
+    
     @Override
     public ProductoDTO agregarProducto(ProductoDTO productoDTO) {
         Producto producto = conversiones.dtoAEntidad(productoDTO);
@@ -42,7 +47,7 @@ public class GestorProductos implements IGestorProductos {
             return conversiones.entidadADTO(productoAgregado, false);
 
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -53,7 +58,7 @@ public class GestorProductos implements IGestorProductos {
             Producto producto = productoDAO.obtenerProductoPorId(id);
             return conversiones.entidadADTO(producto, false);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -71,7 +76,7 @@ public class GestorProductos implements IGestorProductos {
 
             return productosDTO;
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -83,7 +88,7 @@ public class GestorProductos implements IGestorProductos {
             Producto productoActualizado = productoDAO.actualizarProducto(producto);
             return conversiones.entidadADTO(productoActualizado, false);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -93,7 +98,7 @@ public class GestorProductos implements IGestorProductos {
         try {
             productoDAO.eliminarProducto(id);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -103,7 +108,7 @@ public class GestorProductos implements IGestorProductos {
             Producto producto = productoDAO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);
             return conversiones.entidadADTO(producto, false);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

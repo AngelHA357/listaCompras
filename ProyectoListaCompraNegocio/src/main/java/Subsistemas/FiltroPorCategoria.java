@@ -32,6 +32,11 @@ public class FiltroPorCategoria implements IFiltroPorCategoria {
         this.productoDAO = new ProductoDAO(conexion);
         this.conversiones = new ProductosConversiones();
     }
+    
+    public FiltroPorCategoria(IProductoDAO productoDAO, ProductosConversiones conversiones){
+        this.productoDAO = productoDAO;
+        this.conversiones = conversiones;
+    }
 
     @Override
     public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId) {
@@ -46,7 +51,7 @@ public class FiltroPorCategoria implements IFiltroPorCategoria {
 
             return productosDTO;
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FiltroPorCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

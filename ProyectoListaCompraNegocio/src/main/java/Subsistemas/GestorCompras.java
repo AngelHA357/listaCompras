@@ -32,6 +32,11 @@ public class GestorCompras implements IGestorCompras{
         this.compraDAO = new CompraDAO(conexion);
         this.compraConversiones = new CompraConversiones();
     }
+    
+    public GestorCompras(ICompraDAO compraDAO, CompraConversiones compraConversiones){
+        this.compraDAO = compraDAO;
+        this.compraConversiones = compraConversiones;
+    }
 
     @Override
     public CompraDTO agregarCompra(CompraDTO compraDTO) {
@@ -39,7 +44,7 @@ public class GestorCompras implements IGestorCompras{
         try {
             return compraConversiones.entidadADTO(compraDAO.agregarCompra(compra));
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -50,7 +55,7 @@ public class GestorCompras implements IGestorCompras{
             Compra compra = compraDAO.obtenerCompraPorId(id);
             return compraConversiones.entidadADTO(compra);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -68,7 +73,7 @@ public class GestorCompras implements IGestorCompras{
 
             return comprasDTO;
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -80,7 +85,7 @@ public class GestorCompras implements IGestorCompras{
         try {
             return compraActualizada = compraConversiones.entidadADTO(compraDAO.actualizarCompra(compra));
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -90,7 +95,7 @@ public class GestorCompras implements IGestorCompras{
         try {
             compraDAO.eliminarCompra(id);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -107,7 +112,7 @@ public class GestorCompras implements IGestorCompras{
 
             return comprasDTO;
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -118,7 +123,7 @@ public class GestorCompras implements IGestorCompras{
             Compra compra = compraDAO.obtenerCompraPorNombreYCliente(nombre, clienteId);
             return compraConversiones.entidadADTO(compra);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(CompraBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

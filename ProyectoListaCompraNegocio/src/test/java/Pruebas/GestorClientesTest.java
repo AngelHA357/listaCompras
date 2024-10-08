@@ -4,10 +4,6 @@
  */
 package Pruebas;
 
-import Subsistemas.ClienteBO;
-import Subsistemas.IClienteBO;
-import Conexion.Conexion;
-import Conexion.IConexion;
 import Conversiones.ClientesConversiones;
 import DAOs.ClienteDAO;
 import DAOs.IClienteDAO;
@@ -15,7 +11,8 @@ import DTOs.ClienteDTO;
 import Entidades.Cliente;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
-import java.util.List;
+import Subsistemas.GestorClientes;
+import Subsistemas.IGestorClientes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +20,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.Mock;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,10 +29,10 @@ import static org.mockito.Mockito.when;
  *
  * @author JoseH
  */
-public class ClienteBOTest {
+public class GestorClientesTest {
 
     private IClienteDAO clienteDAOMock;  
-    private IClienteBO clienteBO;
+    private IGestorClientes gestorClientes;
     ClientesConversiones conversionesMock;
 
     @BeforeAll
@@ -54,7 +49,7 @@ public class ClienteBOTest {
         clienteDAOMock = mock(ClienteDAO.class);
         conversionesMock = mock(ClientesConversiones.class);
         
-        clienteBO = new ClienteBO(clienteDAOMock, conversionesMock);
+        gestorClientes = new GestorClientes(clienteDAOMock, conversionesMock);
     }
     
     @AfterEach
@@ -76,7 +71,7 @@ public class ClienteBOTest {
         when(clienteDAOMock.agregarCliente(any(Cliente.class))).thenReturn(cliente);
 
         // Llamamos al método bajo prueba
-        ClienteDTO resultadoDTO = clienteBO.agregarCliente(clienteDTO);
+        ClienteDTO resultadoDTO = gestorClientes.agregarCliente(clienteDTO);
 
         // Verificamos que la conversión fue llamada correctamente
         verify(conversionesMock, times(1)).convertirDTOAEntidad(clienteDTO);
@@ -123,7 +118,7 @@ public class ClienteBOTest {
         when(conversionesMock.convertirEntidadADTO(cliente)).thenReturn(clienteDTO);
 
         // Llamamos al método bajo prueba
-        ClienteDTO clienteObtenido = clienteBO.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
+        ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
 
         // Verificamos que se encontró el cliente correcto y que la conversión se realizó
         assertNotNull(clienteObtenido);
@@ -144,7 +139,7 @@ public class ClienteBOTest {
         when(clienteDAOMock.obtenerClientePorUsuarioYContrasena(usuario, contrasenia)).thenReturn(null);
 
         // Llamamos al método bajo prueba
-        ClienteDTO clienteObtenido = clienteBO.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
+        ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
 
         // Verificamos que el método retorne null cuando no se encuentra el cliente
         assertNull(clienteObtenido);

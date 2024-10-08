@@ -25,11 +25,16 @@ public class GestorClientes implements IGestorClientes {
     private IConexion conexion;
     private final IClienteDAO clienteDAO;
     private final ClientesConversiones conversiones;
-
+    
     public GestorClientes() {
         conexion = Conexion.getInstance();
         this.clienteDAO = new ClienteDAO(conexion);
         this.conversiones = new ClientesConversiones();
+    }
+    
+    public GestorClientes(IClienteDAO clienteDAO, ClientesConversiones conversiones){
+        this.clienteDAO = clienteDAO;
+        this.conversiones = conversiones;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class GestorClientes implements IGestorClientes {
             Cliente clienteAgregado = clienteDAO.agregarCliente(cliente);
             return conversiones.convertirEntidadADTO(clienteAgregado);
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ClienteBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestorClientes.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }

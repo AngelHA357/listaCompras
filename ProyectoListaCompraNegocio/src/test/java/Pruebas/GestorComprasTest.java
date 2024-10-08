@@ -4,25 +4,14 @@
  */
 package Pruebas;
 
-import Subsistemas.ClienteBO;
-import Subsistemas.CompraBO;
-import Subsistemas.ICompraBO;
-import Conexion.Conexion;
-import Conexion.IConexion;
 import Conversiones.CompraConversiones;
-import DAOs.ClienteDAO;
 import DAOs.CompraDAO;
-import DAOs.IClienteDAO;
 import DAOs.ICompraDAO;
-import DAOs.IProductoDAO;
-import DAOs.ProductoDAO;
-import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
-import Entidades.Cliente;
 import Entidades.Compra;
-import Entidades.Producto;
-import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
+import Subsistemas.GestorCompras;
+import Subsistemas.IGestorCompras;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,9 +34,9 @@ import static org.mockito.Mockito.when;
  *
  * @author JoseH
  */
-public class CompraBOTest {
+public class GestorComprasTest {
 
-    private ICompraBO compraBO;
+    private IGestorCompras gestorCompras;
     private ICompraDAO compraDAOMock;
     CompraConversiones conversionesMock;
 
@@ -65,7 +53,7 @@ public class CompraBOTest {
         compraDAOMock = mock(CompraDAO.class);
         conversionesMock = mock(CompraConversiones.class);
         
-        compraBO = new CompraBO(compraDAOMock, conversionesMock);
+        gestorCompras = new GestorCompras(compraDAOMock, conversionesMock);
     }
 
     @AfterEach
@@ -89,7 +77,7 @@ public class CompraBOTest {
         when(conversionesMock.entidadADTO(any(Compra.class))).thenReturn(compraDTO);
         
         // Llamamos al método bajo prueba
-        CompraDTO resultadoDTO = compraBO.agregarCompra(compraDTO);
+        CompraDTO resultadoDTO = gestorCompras.agregarCompra(compraDTO);
 
         // Verificamos las interacciones con los mocks
         verify(conversionesMock, times(1)).dtoAEntidad(compraDTO);
@@ -135,7 +123,7 @@ public class CompraBOTest {
         when(conversionesMock.entidadADTO(compra)).thenReturn(compraDTO);
 
         // Llamamos al método bajo prueba
-        CompraDTO resultado = compraBO.obtenerCompraPorId(1L);
+        CompraDTO resultado = gestorCompras.obtenerCompraPorId(1L);
 
         // Verificamos que las conversiones y la consulta en el DAO se realicen correctamente
         verify(conversionesMock, times(1)).entidadADTO(compra);
@@ -154,7 +142,7 @@ public class CompraBOTest {
         when(compraDAOMock.obtenerCompraPorId(idInexistente)).thenReturn(null);
 
         // Llamamos al método bajo prueba
-        CompraDTO resultado = compraBO.obtenerCompraPorId(idInexistente);
+        CompraDTO resultado = gestorCompras.obtenerCompraPorId(idInexistente);
 
         // Verificamos que se retorne null si no existe la compra
         assertNull(resultado);
@@ -184,7 +172,7 @@ public class CompraBOTest {
         }
 
         /// Llamamos al método bajo prueba
-        List<CompraDTO> resultado = compraBO.obtenerTodasLasCompras();
+        List<CompraDTO> resultado = gestorCompras.obtenerTodasLasCompras();
 
         // Verificamos que la lista no sea nula y tenga el tamaño esperado
         assertNotNull(resultado);
@@ -201,7 +189,7 @@ public class CompraBOTest {
         when(compraDAOMock.obtenerTodasLasCompras()).thenReturn(Collections.emptyList());
 
         // Llamamos al método bajo prueba
-        List<CompraDTO> resultado = compraBO.obtenerTodasLasCompras();
+        List<CompraDTO> resultado = gestorCompras.obtenerTodasLasCompras();
 
         // Verificamos que la lista sea vacía
         assertNotNull(resultado);
@@ -216,7 +204,7 @@ public class CompraBOTest {
         // Simulamos una Compra
         Long id = 1L;
 
-        compraBO.eliminarCompra(id);
+        gestorCompras.eliminarCompra(id);
 
         ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
@@ -232,7 +220,7 @@ public class CompraBOTest {
         long idInexistente = 9999L;
 
         // Llamamos al método eliminarCompra con un ID inexistente
-        compraBO.eliminarCompra(idInexistente);
+        gestorCompras.eliminarCompra(idInexistente);
 
         // Verificamos que el DAO fue invocado correctamente
         ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);

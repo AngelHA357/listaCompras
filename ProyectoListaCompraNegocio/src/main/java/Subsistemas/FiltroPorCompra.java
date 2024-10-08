@@ -33,6 +33,11 @@ public class FiltroPorCompra implements IFiltroPorCompra {
         this.conversiones = new ProductosConversiones();
     }
 
+    public FiltroPorCompra(IProductoDAO productoDAO, ProductosConversiones conversiones){
+        this.productoDAO = productoDAO;
+        this.conversiones = conversiones;
+    }
+    
     @Override
     public List<ProductoDTO> obtenerProductosFiltrarPorCompra(Long compraId) {
         try {
@@ -46,7 +51,7 @@ public class FiltroPorCompra implements IFiltroPorCompra {
 
             return productosDTO;
         } catch (PersistenciaException ex) {
-            Logger.getLogger(ProductoBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FiltroPorCompra.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

@@ -4,26 +4,20 @@
  */
 package Pruebas;
 
-import Subsistemas.CompraBO;
-import Subsistemas.ICompraBO;
-import Subsistemas.IProductoBO;
-import Subsistemas.ProductoBO;
-import Conexion.Conexion;
-import Conexion.IConexion;
 import Conversiones.CompraConversiones;
 import Conversiones.ProductosConversiones;
-import DAOs.ClienteDAO;
-import DAOs.CompraDAO;
-import DAOs.IClienteDAO;
 import DAOs.ICompraDAO;
 import DAOs.IProductoDAO;
 import DAOs.ProductoDAO;
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
-import Entidades.Cliente;
 import Entidades.Compra;
 import Entidades.Producto;
 import Exceptions.PersistenciaException;
+import Subsistemas.GestorCompras;
+import Subsistemas.GestorProductos;
+import Subsistemas.IGestorCompras;
+import Subsistemas.IGestorProductos;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +31,6 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,13 +40,10 @@ import static org.mockito.Mockito.when;
  *
  * @author JoseH
  */
-public class ProductoBOTest {
-    private IProductoBO productoBO;
+public class GestorProductosTest {
+    private IGestorProductos gestorProductos;
     private IProductoDAO productoDAOMock;
     private ProductosConversiones conversionesMock;
-    
-    public ProductoBOTest() {
-    }
     
     @BeforeAll
     public static void setUpClass() {
@@ -70,7 +60,7 @@ public class ProductoBOTest {
         productoDAOMock = mock(ProductoDAO.class);
         conversionesMock = mock(ProductosConversiones.class);
         
-        productoBO = new ProductoBO(productoDAOMock, conversionesMock);
+        gestorProductos = new GestorProductos(productoDAOMock, conversionesMock);
     }
     
     @AfterEach
@@ -94,7 +84,7 @@ public class ProductoBOTest {
         when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
 
         // Llamamos al método bajo prueba
-        ProductoDTO resultadoDTO = productoBO.agregarProducto(productoDTO);
+        ProductoDTO resultadoDTO = gestorProductos.agregarProducto(productoDTO);
 
         // Verificamos las interacciones con los mocks
         verify(conversionesMock, times(1)).dtoAEntidad(productoDTO);
@@ -133,7 +123,7 @@ public class ProductoBOTest {
         when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
 
         // Llamamos al método bajo prueba
-        ProductoDTO resultadoDTO = productoBO.actualizarProducto(productoDTO);
+        ProductoDTO resultadoDTO = gestorProductos.actualizarProducto(productoDTO);
 
         // Verificamos las interacciones con los mocks
         verify(conversionesMock, times(1)).dtoAEntidad(productoDTO);
@@ -148,7 +138,7 @@ public class ProductoBOTest {
         productoDTO.setNombre("Producto Actualizado");
         producto.setNombre("Producto Actualizado");
 
-        resultadoDTO = productoBO.actualizarProducto(productoDTO);
+        resultadoDTO = gestorProductos.actualizarProducto(productoDTO);
 
         // Verificamos que el resultado actualizado sea correcto
         assertNotNull(resultadoDTO);
@@ -171,7 +161,7 @@ public class ProductoBOTest {
         when(productoDAOMock.actualizarProducto(any(Producto.class))).thenReturn(null);
 
         // Llamamos al método bajo prueba
-        ProductoDTO resultado = productoBO.actualizarProducto(productoDTO);
+        ProductoDTO resultado = gestorProductos.actualizarProducto(productoDTO);
 
         // Verificamos que el resultado sea null si el producto no existe
         assertNull(resultado);
@@ -185,7 +175,7 @@ public class ProductoBOTest {
         // Simulamos un ID de un producto
         Long id = 1L;
 
-        productoBO.eliminarProducto(id);
+        gestorProductos.eliminarProducto(id);
 
         ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
@@ -200,7 +190,7 @@ public class ProductoBOTest {
         // Simulamos un ID de un producto inexistente
         Long idInexistente = 999L;
 
-        productoBO.eliminarProducto(idInexistente);
+        gestorProductos.eliminarProducto(idInexistente);
 
         ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
@@ -223,7 +213,7 @@ public class ProductoBOTest {
         when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
 
         // Llamamos al método bajo prueba
-        ProductoDTO resultadoDTO = productoBO.obtenerProductoPorId(1L);
+        ProductoDTO resultadoDTO = gestorProductos.obtenerProductoPorId(1L);
 
         // Verificamos las interacciones con los mocks
         verify(productoDAOMock, times(1)).obtenerProductoPorId(1L);
@@ -242,7 +232,7 @@ public class ProductoBOTest {
         when(productoDAOMock.obtenerProductoPorId(idInexistente)).thenReturn(null);
 
         // Llamamos al método bajo prueba
-        ProductoDTO resultado = productoBO.obtenerProductoPorId(idInexistente);
+        ProductoDTO resultado = gestorProductos.obtenerProductoPorId(idInexistente);
 
         // Verificamos que el resultado sea null si no existe el producto
         assertNull(resultado);
@@ -251,112 +241,13 @@ public class ProductoBOTest {
         verify(productoDAOMock, times(1)).obtenerProductoPorId(idInexistente);
     }
     
-    @Test
-    public void testFiltrarPorCategoriaYCompraId() throws PersistenciaException {
-        // Creamos datos de prueba
-        CompraDTO compraDTO = new CompraDTO("Compra 1", null);
-        ProductoDTO productoDTO = new ProductoDTO("Producto A", "Categoria C", false, compraDTO, 15.0);
-        Producto producto = new Producto("Producto A", "Categoria C", false, null, 15.0);
-
-        // Simulamos que el DAO retorna una lista de productos
-        when(productoDAOMock.filtrarPorCategoriaYCompraId(anyString(), anyLong())).thenReturn(Arrays.asList(producto));
-
-        // Simulamos la conversión de Producto a ProductoDTO
-        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
-
-        // Llamamos al método bajo prueba
-        List<ProductoDTO> resultado = productoBO.filtrarPorCategoriaYCompraId("Categoria C", 1L);
-
-        // Verificamos las interacciones con los mocks
-        verify(productoDAOMock, times(1)).filtrarPorCategoriaYCompraId("Categoria C", 1L);
-        verify(conversionesMock, times(1)).entidadADTO(producto, false);
-
-        // Verificamos el resultado
-        assertNotNull(resultado);
-        assertEquals(1, resultado.size());
-        assertEquals("Producto A", resultado.get(0).getNombre());
-    }
     
-    @Test
-    public void testFiltrarPorCategoriaYCompraId_SinResultados() throws PersistenciaException {
-        // Simulamos que no hay productos que coincidan con la categoría y el ID de la compra
-        when(productoDAOMock.filtrarPorCategoriaYCompraId(anyString(), anyLong())).thenReturn(Collections.emptyList());
-
-        // Llamamos al método bajo prueba
-        List<ProductoDTO> resultado = productoBO.filtrarPorCategoriaYCompraId("Categoria Inexistente", 9999L);
-
-        // Verificamos que el resultado sea una lista vacía
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
-
-        // Verificamos que el DAO fue invocado correctamente
-        verify(productoDAOMock, times(1)).filtrarPorCategoriaYCompraId("Categoria Inexistente", 9999L);
-    }
-    
-    @Test
-    public void testFiltrarPorCompra() throws PersistenciaException {
-        // Crear mocks necesarios
-        ICompraDAO compraDAOMock = mock(ICompraDAO.class);
-        CompraConversiones conversionesCompra = mock(CompraConversiones.class);
-        ICompraBO compraBO = new CompraBO(compraDAOMock, conversionesCompra);
-
-        // Creamos una CompraDTO de prueba
-        CompraDTO compraDTO = new CompraDTO("Compra", null);
-        Compra compra = new Compra("Compra", null);
-        when(conversionesCompra.dtoAEntidad(compraDTO)).thenReturn(compra);
-        when(compraDAOMock.agregarCompra(any(Compra.class))).thenReturn(compra);
-        when(conversionesCompra.entidadADTO(compra)).thenReturn(compraDTO);
-        compraDTO = compraBO.agregarCompra(compraDTO);
-
-        // Creamos los productos asociados a la compra
-        ProductoDTO productoDTO1 = new ProductoDTO("Producto C", "Categoria D", false, compraDTO, 25.0);
-        ProductoDTO productoDTO2 = new ProductoDTO("Producto D", "Categoria D", false, compraDTO, 30.0);
-        Producto producto1 = new Producto("Producto C", "Categoria D", false, compra, 25.0);
-        Producto producto2 = new Producto("Producto D", "Categoria D", false, compra, 30.0);
-
-        when(conversionesMock.dtoAEntidad(productoDTO1)).thenReturn(producto1);
-        when(conversionesMock.dtoAEntidad(productoDTO2)).thenReturn(producto2);
-        when(productoDAOMock.agregarProducto(any(Producto.class))).thenReturn(producto1).thenReturn(producto2);
-
-        productoBO.agregarProducto(productoDTO1);
-        productoBO.agregarProducto(productoDTO2);
-
-        // Simulamos el filtro por compra
-        when(productoDAOMock.obtenerProductosPorCompraId(anyLong())).thenReturn(Arrays.asList(producto1, producto2));
-
-        List<ProductoDTO> resultado = productoBO.filtrarPorCompra(1L);
-
-        // Verificaciones
-        assertNotNull(resultado);
-        assertEquals(2, resultado.size());
-
-        // Verificación de que el método fue invocado correctamente
-        verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(1L);
-    }
-    
-    @Test
-    public void testFiltrarPorCompraInexistente() throws PersistenciaException {
-        Long compraIdInexistente = 999L;
-
-        // Simulamos que no se encuentran productos para la compra inexistente
-        when(productoDAOMock.obtenerProductosPorCompraId(compraIdInexistente)).thenReturn(Collections.emptyList());
-
-        List<ProductoDTO> resultado = productoBO.filtrarPorCompra(compraIdInexistente);
-
-        // Verificaciones
-        assertNotNull(resultado);
-        assertEquals(0, resultado.size());
-
-        // Verificación de que el método fue invocado correctamente
-        verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(compraIdInexistente);
-    }
-
     @Test
     public void testObtenerProductoPorCaracteristicas() throws PersistenciaException {
         // Crear mocks necesarios
         ICompraDAO compraDAOMock = mock(ICompraDAO.class);
         CompraConversiones conversionesCompra = mock(CompraConversiones.class);
-        ICompraBO compraBO = new CompraBO(compraDAOMock, conversionesCompra);
+        IGestorCompras compraBO = new GestorCompras(compraDAOMock, conversionesCompra);
 
         // Creamos una CompraDTO de prueba
         CompraDTO compraDTO = new CompraDTO("Compra", null);
@@ -378,7 +269,7 @@ public class ProductoBOTest {
         when(productoDAOMock.obtenerProductoPorCaracteristicas("Producto E", "Categoria E", true, 35.0, compraDTO.getId())).thenReturn(producto);
 
         // Llamamos al método bajo prueba
-        ProductoDTO resultado = productoBO.obtenerProductoPorCaracteristicas("Producto E", "Categoria E", true, 35.0, compraDTO.getId());
+        ProductoDTO resultado = gestorProductos.obtenerProductoPorCaracteristicas("Producto E", "Categoria E", true, 35.0, compraDTO.getId());
 
         // Verificaciones
         assertNotNull(resultado);
@@ -396,7 +287,7 @@ public class ProductoBOTest {
         // Simulamos que no se encuentra un producto con las características especificadas
         when(productoDAOMock.obtenerProductoPorCaracteristicas("Producto Inexistente", "Categoria Inexistente", true, 100.0, 999L)).thenReturn(null);
 
-        ProductoDTO resultado = productoBO.obtenerProductoPorCaracteristicas("Producto Inexistente", "Categoria Inexistente", true, 100.0, 999L);
+        ProductoDTO resultado = gestorProductos.obtenerProductoPorCaracteristicas("Producto Inexistente", "Categoria Inexistente", true, 100.0, 999L);
 
         // Verificación
         assertNull(resultado);
@@ -422,7 +313,7 @@ public class ProductoBOTest {
                 .thenReturn(productoDTO2);
 
         // Llamamos al método bajo prueba
-        List<ProductoDTO> resultado = productoBO.obtenerTodosLosProductos();
+        List<ProductoDTO> resultado = gestorProductos.obtenerTodosLosProductos();
 
         // Verificamos las interacciones con los mocks
         verify(productoDAOMock, times(1)).obtenerTodosLosProductos();
@@ -441,7 +332,7 @@ public class ProductoBOTest {
         when(productoDAOMock.obtenerTodosLosProductos()).thenReturn(Collections.emptyList());
 
         // Llamamos al método bajo prueba
-        List<ProductoDTO> resultado = productoBO.obtenerTodosLosProductos();
+        List<ProductoDTO> resultado = gestorProductos.obtenerTodosLosProductos();
 
         // Verificaciones
         assertNotNull(resultado);
