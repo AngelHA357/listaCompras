@@ -19,6 +19,13 @@ public class ProductoDAO implements IProductoDAO {
         this.conexion = conexion;
     }
 
+    /**
+     * Método para crear un producto
+     *
+     * @param producto
+     * @return Producto agregado.
+     * @throws PersistenciaException
+     */
     @Override
     public Producto agregarProducto(Producto producto) throws PersistenciaException {
         EntityManager em = null;
@@ -42,6 +49,13 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
+    /**
+     * Método para obtener un producto por su ID
+     *
+     * @param id
+     * @return Producto concreto.
+     * @throws PersistenciaException
+     */
     @Override
     public Producto obtenerProductoPorId(Long id) throws PersistenciaException {
         EntityManager em = null;
@@ -57,6 +71,12 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
+    /**
+     * Método para obtener todos los productos
+     *
+     * @return Lista de Productos.
+     * @throws PersistenciaException
+     */
     @Override
     public List<Producto> obtenerTodosLosProductos() throws PersistenciaException {
         EntityManager em = null;
@@ -73,6 +93,13 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
+    /**
+     * Método para actualizar un producto existente
+     *
+     * @param producto
+     * @return Producto actualizado.
+     * @throws PersistenciaException
+     */
     @Override
     public Producto actualizarProducto(Producto producto) throws PersistenciaException {
         EntityManager em = null;
@@ -96,6 +123,13 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
+    /**
+     * Método para eliminar un producto por su ID
+     *
+     * @param id
+     * @return Producto que se elimino.
+     * @throws PersistenciaException
+     */
     @Override
     public Producto eliminarProducto(Long id) throws PersistenciaException {
         EntityManager em = null;
@@ -123,6 +157,14 @@ public class ProductoDAO implements IProductoDAO {
         return productoEliminado;
     }
 
+    /**
+     * Método para obtener los productos de una categoría determinada
+     *
+     * @param categoria
+     * @param compraId
+     * @return Lista de Productos.
+     * @throws PersistenciaException
+     */
     @Override
     public List<Producto> filtrarPorCategoriaYCompraId(String categoria, Long compraId) throws PersistenciaException {
         EntityManager em = null;
@@ -141,6 +183,13 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
+    /**
+     * Método para obtener los productos de una compra según su id
+     *
+     * @param compraId
+     * @return Lista de Productos.
+     * @throws PersistenciaException
+     */
     @Override
     public List<Producto> obtenerProductosPorCompraId(Long compraId) throws PersistenciaException {
         EntityManager em = null;
@@ -158,6 +207,17 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
+    /**
+     * Método para obtener un producto por todas sus características.
+     *
+     * @param nombre
+     * @param categoria
+     * @param comprado
+     * @param cantidad
+     * @param compraId
+     * @return Producto concreto.
+     * @throws PersistenciaException
+     */
     @Override
     public Producto obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws PersistenciaException {
         EntityManager em = null;

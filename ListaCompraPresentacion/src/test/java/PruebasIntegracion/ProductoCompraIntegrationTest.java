@@ -270,7 +270,7 @@ public class ProductoCompraIntegrationTest {
 
     /**
      * Permite que se comprueben que articulos añadidos, editados o eliminados
-     * se actualicen correctamente al filtralos por categorías.
+     * se actualicen correctamente al filtrarlos por categorías.
      *
      * Se asegura que el producto cambie correctamente y que el producto
      * eliminado no aparezca en las compras por categoria.
@@ -285,14 +285,17 @@ public class ProductoCompraIntegrationTest {
 
         gestorProductos.agregarProducto(producto1);
         ProductoDTO productoAgregado2 = gestorProductos.agregarProducto(producto2);
+        
+        producto1 = gestorProductos.obtenerProductoPorCaracteristicas(producto1.getNombre(), producto1.getCategoria(), producto1.isComprado()
+                , producto1.getCantidad() ,producto1.getCompra().getId());
 
         producto1.setNombre("Papel Higiénico");
         gestorProductos.actualizarProducto(producto1);
 
         gestorProductos.eliminarProducto(productoAgregado2.getId());
 
-        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal", compraAgregada.getId());
-        assertTrue(productosCategoria.size() == 2);
+        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal", producto1.getCompra().getId());
+        assertTrue(productosCategoria.size() == 1);
         
         
         assertTrue(productosCategoria.stream()
@@ -318,12 +321,13 @@ public class ProductoCompraIntegrationTest {
         
         gestorProductos.agregarProducto(producto1);
         gestorProductos.agregarProducto(producto2);
-        
+        producto1 = gestorProductos.obtenerProductoPorCaracteristicas(producto1.getNombre(), producto1.getCategoria(), producto1.isComprado()
+                , producto1.getCantidad() ,producto1.getCompra().getId());
         
         producto1.setComprado(true);
         gestorProductos.actualizarProducto(producto1);
 
-        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal", compraAgregada.getId());
+        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal", producto1.getCompra().getId());
         assertTrue(productosCategoria.size() > 0);
 
         assertTrue(productosCategoria.stream()

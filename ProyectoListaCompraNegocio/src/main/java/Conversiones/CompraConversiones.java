@@ -52,7 +52,7 @@ public class CompraConversiones {
         List<ProductoDTO> productosDTO = new ArrayList<>();
 
         for (Producto producto : entidad.getProductos()) {
-            ProductoDTO productoDTO = productosConversiones.entidadADTO(producto, false);
+            ProductoDTO productoDTO = productosConversiones.entidadADTO(producto);
             productosDTO.add(productoDTO);
         }
 

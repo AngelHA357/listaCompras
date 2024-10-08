@@ -83,12 +83,12 @@ public class GestorProductosTest {
 
             when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
             when(productoDAOMock.agregarProducto(any(Producto.class))).thenReturn(producto);
-            when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
+            when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
 
             ProductoDTO resultadoDTO = gestorProductos.agregarProducto(productoDTO);
 
             verify(conversionesMock, times(1)).dtoAEntidad(productoDTO);
-            verify(conversionesMock, times(1)).entidadADTO(producto, false);
+            verify(conversionesMock, times(1)).entidadADTO(producto);
             verify(productoDAOMock, times(1)).agregarProducto(producto);
 
             assertNotNull(resultadoDTO);
@@ -122,12 +122,12 @@ public class GestorProductosTest {
 
         when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
         when(productoDAOMock.actualizarProducto(any(Producto.class))).thenReturn(producto);
-        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
+        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
 
         ProductoDTO resultadoDTO = gestorProductos.actualizarProducto(productoDTO);
 
         verify(conversionesMock, times(1)).dtoAEntidad(productoDTO);
-        verify(conversionesMock, times(1)).entidadADTO(producto, false);
+        verify(conversionesMock, times(1)).entidadADTO(producto);
         verify(productoDAOMock, times(1)).actualizarProducto(producto);
 
         assertNotNull(resultadoDTO);
@@ -152,7 +152,7 @@ public class GestorProductosTest {
         Producto producto = new Producto("Producto Inexistente", "Categoria X", false, null, 5.0);
 
         when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
-        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
+        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
         when(productoDAOMock.actualizarProducto(any(Producto.class))).thenReturn(null);
 
         ProductoDTO resultado = gestorProductos.actualizarProducto(productoDTO);
@@ -205,12 +205,12 @@ public class GestorProductosTest {
         Producto producto = new Producto("Producto de Prueba", "Categoria A", false, null, 5.0);
 
         when(productoDAOMock.obtenerProductoPorId(anyLong())).thenReturn(producto);
-        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
+        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
 
         ProductoDTO resultadoDTO = gestorProductos.obtenerProductoPorId(1L);
 
         verify(productoDAOMock, times(1)).obtenerProductoPorId(1L);
-        verify(conversionesMock, times(1)).entidadADTO(producto, false);
+        verify(conversionesMock, times(1)).entidadADTO(producto);
 
         assertNotNull(resultadoDTO);
         assertEquals("Producto de Prueba", resultadoDTO.getNombre());
@@ -255,7 +255,7 @@ public class GestorProductosTest {
             Producto producto = new Producto("Producto E", "Categoria E", true, compra, 35.0);
 
             when(conversionesMock.dtoAEntidad(productoDTO)).thenReturn(producto);
-            when(conversionesMock.entidadADTO(producto, false)).thenReturn(productoDTO);
+            when(conversionesMock.entidadADTO(producto)).thenReturn(productoDTO);
             when(productoDAOMock.agregarProducto(any(Producto.class))).thenReturn(producto);
 
             when(productoDAOMock.obtenerProductoPorCaracteristicas("Producto E", "Categoria E", true, 35.0, compraDTO.getId())).thenReturn(producto);
@@ -307,7 +307,7 @@ public class GestorProductosTest {
         when(productoDAOMock.obtenerTodosLosProductos()).thenReturn(Arrays.asList(producto1, producto2));
 
         // Se simula la conversión de Producto a ProductoDTO
-        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean()))
+        when(conversionesMock.entidadADTO(any(Producto.class)))
                 .thenReturn(productoDTO1)
                 .thenReturn(productoDTO2);
 
@@ -316,7 +316,7 @@ public class GestorProductosTest {
 
         // Se verifica las interacciones con los mocks
         verify(productoDAOMock, times(1)).obtenerTodosLosProductos();
-        verify(conversionesMock, times(2)).entidadADTO(any(Producto.class), anyBoolean());
+        verify(conversionesMock, times(2)).entidadADTO(any(Producto.class));
 
         // Se verifica el resultado
         assertNotNull(resultado);

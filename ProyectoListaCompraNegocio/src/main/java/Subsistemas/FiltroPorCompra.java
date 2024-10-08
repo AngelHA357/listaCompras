@@ -45,7 +45,7 @@ public class FiltroPorCompra implements IFiltroPorCompra {
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
                 productosDTO.add(productoDTO);
             }
 

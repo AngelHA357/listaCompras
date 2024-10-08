@@ -55,7 +55,7 @@ public class GestorProductos implements IGestorProductos {
 
         try {
             Producto productoAgregado = productoDAO.agregarProducto(producto);
-            return conversiones.entidadADTO(productoAgregado, false);
+            return conversiones.entidadADTO(productoAgregado);
 
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,7 +67,7 @@ public class GestorProductos implements IGestorProductos {
     public ProductoDTO obtenerProductoPorId(Long id) {
         try {
             Producto producto = productoDAO.obtenerProductoPorId(id);
-            return conversiones.entidadADTO(producto, false);
+            return conversiones.entidadADTO(producto);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,7 +81,7 @@ public class GestorProductos implements IGestorProductos {
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
                 productosDTO.add(productoDTO);
             }
 
@@ -97,7 +97,7 @@ public class GestorProductos implements IGestorProductos {
         Producto producto = conversiones.dtoAEntidad(productoDTO);
         try {
             Producto productoActualizado = productoDAO.actualizarProducto(producto);
-            return conversiones.entidadADTO(productoActualizado, false);
+            return conversiones.entidadADTO(productoActualizado);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -117,7 +117,7 @@ public class GestorProductos implements IGestorProductos {
     public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) {
         try {
             Producto producto = productoDAO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);
-            return conversiones.entidadADTO(producto, false);
+            return conversiones.entidadADTO(producto);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
