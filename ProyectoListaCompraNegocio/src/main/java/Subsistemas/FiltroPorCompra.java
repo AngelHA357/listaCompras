@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class FiltroPorCompra implements IFiltroPorCompra {
 
@@ -33,11 +34,18 @@ public class FiltroPorCompra implements IFiltroPorCompra {
         this.conversiones = new ProductosConversiones();
     }
 
-    public FiltroPorCompra(IProductoDAO productoDAO, ProductosConversiones conversiones){
+    public FiltroPorCompra(IProductoDAO productoDAO, ProductosConversiones conversiones) {
         this.productoDAO = productoDAO;
         this.conversiones = conversiones;
     }
-    
+
+    /**
+     * Método para obtener productos asociados a una compra específica.
+     *
+     * @param compraId ID de la compra de la que se quieren obtener los
+     * productos.
+     * @return Lista de productos que pertenecen a la compra especificada.
+     */
     @Override
     public List<ProductoDTO> obtenerProductosFiltrarPorCompra(Long compraId) {
         try {

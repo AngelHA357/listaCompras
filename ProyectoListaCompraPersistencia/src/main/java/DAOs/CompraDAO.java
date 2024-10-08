@@ -7,7 +7,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public class CompraDAO implements ICompraDAO {
 
     private final IConexion conexion;

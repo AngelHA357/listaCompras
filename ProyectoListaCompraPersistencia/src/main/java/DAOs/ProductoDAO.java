@@ -9,7 +9,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 /**
- * Implementación del DAO para la entidad Producto.
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
  */
 public class ProductoDAO implements IProductoDAO {
 

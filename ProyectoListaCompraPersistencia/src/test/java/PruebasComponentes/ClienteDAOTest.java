@@ -104,7 +104,6 @@ public class ClienteDAOTest {
     
      @Test
     public void testObtenerClientePorUsuarioYContrasenaClienteExistente() throws PersistenciaException {
-        // Datos de prueba
          String usuario = "wacho" + System.currentTimeMillis();
         String contrasenia = "ABCD1234";
         
@@ -114,10 +113,8 @@ public class ClienteDAOTest {
         
         clienteDAO.agregarCliente(cliente);
 
-        // Obtener el cliente
         Cliente clienteObtenido = clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
 
-        // Verificar el cliente
         assertNotNull(cliente);
         assertEquals(usuario, clienteObtenido.getUsuario());
         assertEquals("ABCD1234", clienteObtenido.getContrasenia());
@@ -125,11 +122,9 @@ public class ClienteDAOTest {
 
     @Test
     public void testObtenerClientePorUsuarioYContrasena_ClienteInexistente() throws PersistenciaException {
-        // Datos de prueba
         String usuario = "usuarioInexistente";
         String contrasenia = "contraseñaErronea";
 
-        // Verificar que no se obtenga un cliente
         assertThrows(PersistenciaException.class, () -> {
             clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
         });

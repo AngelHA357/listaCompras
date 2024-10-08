@@ -10,21 +10,67 @@ import java.util.List;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public interface IGestorCompras {
 
-    public CompraDTO agregarCompra(CompraDTO compraDTO)  throws NegocioException;
+    /**
+     * Método para agregar una nueva compra al sistema.
+     *
+     * @param compraDTO Objeto de tipo CompraDTO que contiene los datos de la
+     * compra.
+     * @return La compra agregada.
+     * @throws NegocioException Si ocurre un error al agregar la compra.
+     */
+    public CompraDTO agregarCompra(CompraDTO compraDTO) throws NegocioException;
 
+    /**
+     * Método para obtener una compra por su ID.
+     *
+     * @param id ID de la compra.
+     * @return La compra encontrada o null si no se encuentra.
+     */
     public CompraDTO obtenerCompraPorId(Long id);
 
+    /**
+     * Método para obtener todas las compras registradas en el sistema.
+     *
+     * @return Lista de todas las compras.
+     */
     public List<CompraDTO> obtenerTodasLasCompras();
 
+    /**
+     * Método para actualizar una compra existente.
+     *
+     * @param compraDTO Objeto CompraDTO con los datos actualizados.
+     * @return La compra actualizada.
+     */
     public CompraDTO actualizarCompra(CompraDTO compraDTO);
 
+    /**
+     * Método para eliminar una compra del sistema.
+     *
+     * @param id ID de la compra a eliminar.
+     */
     public void eliminarCompra(Long id);
 
+    /**
+     * Método para obtener todas las compras realizadas por un cliente
+     * específico.
+     *
+     * @param clienteId ID del cliente.
+     * @return Lista de compras realizadas por el cliente.
+     */
     public List<CompraDTO> obtenerComprasPorCliente(Long clienteId);
 
+    /**
+     * Método para obtener una compra específica por su nombre y el ID del
+     * cliente.
+     *
+     * @param nombre Nombre de la compra.
+     * @param clienteId ID del cliente.
+     * @return La compra correspondiente o null si no se encuentra.
+     */
     public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId);
 }

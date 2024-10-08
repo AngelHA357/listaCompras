@@ -1,5 +1,10 @@
 package DTOs;
 
+/**
+ *
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
+ */
 public class ClienteDTO {
 
     private Long id;
@@ -9,9 +14,21 @@ public class ClienteDTO {
     private String usuario;
     private String contrasenia;
 
+    /**
+     * Constructor por defecto.
+     */
     public ClienteDTO() {
     }
 
+    /**
+     * Constructor con parámetros para crear un ClienteDTO.
+     *
+     * @param nombre Nombre del cliente.
+     * @param apellidoPaterno Apellido paterno del cliente.
+     * @param apellidoMaterno Apellido materno del cliente.
+     * @param usuario Nombre de usuario del cliente.
+     * @param contrasenia Contraseña del cliente.
+     */
     public ClienteDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String usuario, String contrasenia) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -19,6 +36,8 @@ public class ClienteDTO {
         this.usuario = usuario;
         this.contrasenia = contrasenia;
     }
+    
+    // Métodos getter y setter
 
     public Long getId() {
         return id;
@@ -27,7 +46,7 @@ public class ClienteDTO {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getNombre() {
         return nombre;
     }

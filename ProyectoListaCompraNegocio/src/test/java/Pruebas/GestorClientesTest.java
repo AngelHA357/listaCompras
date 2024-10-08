@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345 .
  */
 public class GestorClientesTest {
 

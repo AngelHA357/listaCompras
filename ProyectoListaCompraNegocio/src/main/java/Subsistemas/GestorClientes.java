@@ -18,7 +18,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class GestorClientes implements IGestorClientes {
 
@@ -37,6 +38,13 @@ public class GestorClientes implements IGestorClientes {
         this.conversiones = conversiones;
     }
 
+    /**
+     * Método para agregar un nuevo cliente.
+     *
+     * @param clienteDTO Datos del cliente a agregar.
+     * @return ClienteDTO con los detalles del cliente agregado.
+     * @throws NegocioException Si ocurre algún error en la lógica de negocio.
+     */
     @Override
     public ClienteDTO agregarCliente(ClienteDTO clienteDTO) throws NegocioException {
         if (clienteDTO.getNombre() == null || clienteDTO.getNombre().isBlank()) {
@@ -65,6 +73,15 @@ public class GestorClientes implements IGestorClientes {
         }
     }
 
+    /**
+     * Método para encontrar un cliente utilizando su usuario y contraseña.
+     *
+     * @param usuario Nombre de usuario del cliente.
+     * @param contrasena Contraseña del cliente.
+     * @return ClienteDTO con los detalles del cliente encontrado.
+     * @throws NegocioException Si el cliente no existe o si ocurre algún error
+     * en la lógica de negocio.
+     */
     @Override
     public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) throws NegocioException {
         if (usuario == null || usuario.isBlank()) {

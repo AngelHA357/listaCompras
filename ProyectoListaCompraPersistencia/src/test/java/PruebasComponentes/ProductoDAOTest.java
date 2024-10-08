@@ -59,7 +59,6 @@ public class ProductoDAOTest {
     }
     
     private void limpiarBaseDeDatos() throws PersistenciaException {
-         // Obtener todos los productos y eliminarlos
         ICompraDAO compraDAO = new CompraDAO(conexion);
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
         for (Producto producto : productos) {
@@ -72,7 +71,6 @@ public class ProductoDAOTest {
             clienteDAO.eliminarCliente(cliente.getId());
         }
         
-        // Obtener todas las compras y eliminarlas
         List<Compra> compras = compraDAO.obtenerTodasLasCompras();
         for (Compra compra : compras) {
             compraDAO.eliminarCompra(compra.getId());

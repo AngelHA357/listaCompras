@@ -3,7 +3,10 @@ package DAOs;
 import Entidades.Cliente;
 import Exceptions.PersistenciaException;
 import java.util.List;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public interface IClienteDAO {
 
     /**

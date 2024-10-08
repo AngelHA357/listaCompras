@@ -2,7 +2,10 @@ package Conversiones;
 
 import DTOs.ClienteDTO;
 import Entidades.Cliente;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public class ClientesConversiones {
 
     public ClienteDTO convertirEntidadADTO(Cliente cliente) {

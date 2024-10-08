@@ -9,9 +9,23 @@ public class ProductoDTO {
     private CompraDTO compraDTO;
     private Double cantidad;
 
+    /**
+     *
+     * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+     * 245345.
+     */
     public ProductoDTO() {
     }
 
+    /**
+     * Constructor con parámetros para crear un ProductoDTO.
+     *
+     * @param nombre Nombre del producto.
+     * @param categoria Categoría del producto.
+     * @param comprado Estado de compra del producto.
+     * @param compraDTO Objeto CompraDTO asociado.
+     * @param cantidad Cantidad del producto.
+     */
     public ProductoDTO(String nombre, String categoria, boolean comprado, CompraDTO compraDTO, Double cantidad) {
         this.nombre = nombre;
         this.categoria = categoria;
@@ -19,6 +33,8 @@ public class ProductoDTO {
         this.compraDTO = compraDTO;
         this.cantidad = cantidad;
     }
+    
+    // Métodos getter y setter
 
     public Long getId() {
         return id;
@@ -27,7 +43,7 @@ public class ProductoDTO {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getNombre() {
         return nombre;
     }
@@ -75,6 +91,5 @@ public class ProductoDTO {
     public void setCantidad(Double cantidad) {
         this.cantidad = cantidad;
     }
-    
-    
+
 }

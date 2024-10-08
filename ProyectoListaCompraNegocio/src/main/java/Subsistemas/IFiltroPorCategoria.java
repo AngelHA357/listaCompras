@@ -9,10 +9,20 @@ import java.util.List;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public interface IFiltroPorCategoria {
 
+    /**
+     * Método para filtrar productos de una compra específica por categoría.
+     *
+     * @param categoria Categoría de los productos a filtrar.
+     * @param compraId ID de la compra de la que se quieren filtrar los
+     * productos.
+     * @return Lista de productos que pertenecen a la categoría y compra
+     * especificada.
+     */
     public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId);
 
 }

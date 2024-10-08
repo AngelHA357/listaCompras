@@ -6,7 +6,10 @@ import Exceptions.PersistenciaException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public class ClienteDAO implements IClienteDAO {
 
     private final IConexion conexion;

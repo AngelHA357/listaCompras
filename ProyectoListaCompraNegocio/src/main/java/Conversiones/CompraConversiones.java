@@ -7,7 +7,10 @@ import Entidades.Producto;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public class CompraConversiones {
 
     private final ProductosConversiones productosConversiones;

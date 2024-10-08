@@ -6,6 +6,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ * 
  * Singleton para manejar la conexión con JPA
  */
 public class Conexion implements IConexion {
@@ -29,7 +31,7 @@ public class Conexion implements IConexion {
         }
         return entityManagerFactory;
     }
-    
+
     public static Conexion getInstance() {
         if (instance == null) {
             instance = new Conexion();
