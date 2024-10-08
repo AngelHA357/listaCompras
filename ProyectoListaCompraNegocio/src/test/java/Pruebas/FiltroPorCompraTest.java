@@ -1,4 +1,3 @@
-
 package Pruebas;
 
 import Conversiones.CompraConversiones;
@@ -40,11 +39,11 @@ import static org.mockito.Mockito.when;
  * @author victo
  */
 public class FiltroPorCompraTest {
-    
+
     private IFiltroPorCompra filtroCompra;
     private IProductoDAO productoDAOMock;
     private ProductosConversiones conversionesMock;
-    
+
     @BeforeAll
     public static void setUpClass() {
         System.setProperty("modoPrueba", "true"); // Activar modo prueba si es necesario
@@ -54,75 +53,86 @@ public class FiltroPorCompraTest {
     public static void tearDownClass() {
         System.clearProperty("modoPrueba"); // Limpiar propiedades al finalizar
     }
-    
+
     @BeforeEach
     public void setUp() throws PersistenciaException {
         productoDAOMock = mock(ProductoDAO.class);
         conversionesMock = mock(ProductosConversiones.class);
-        
-        
+
         filtroCompra = new FiltroPorCompra(productoDAOMock, conversionesMock);
     }
-    
+
     @AfterEach
     public void tearDown() {
-    }    
-    
+    }
+
+    /**
+     * Se verifica que el método obtenerProductosFiltrarPorCompra retorne los
+     * productos filtrados correctamente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Test
     public void testFiltrarPorCompra() throws PersistenciaException {
         try {
-            // Crear mocks necesarios
+            // Se crean mocks necesarios
             ICompraDAO compraDAOMock = mock(ICompraDAO.class);
             CompraConversiones conversionesCompra = mock(CompraConversiones.class);
             IGestorCompras compraBO = new GestorCompras(compraDAOMock, conversionesCompra);
-            
-            // Creamos una CompraDTO de prueba
+
+            // Se crea una CompraDTO de prueba
             CompraDTO compraDTO = new CompraDTO("Compra", null);
             Compra compra = new Compra("Compra", null);
             when(conversionesCompra.dtoAEntidad(compraDTO)).thenReturn(compra);
             when(compraDAOMock.agregarCompra(any(Compra.class))).thenReturn(compra);
             when(conversionesCompra.entidadADTO(compra)).thenReturn(compraDTO);
             compraDTO = compraBO.agregarCompra(compraDTO);
-            
-            // Creamos los productos asociados a la compra
+
+            // Se crean los productos asociados a la compra
             ProductoDTO productoDTO1 = new ProductoDTO("Producto C", "Categoria D", false, compraDTO, 25.0);
             ProductoDTO productoDTO2 = new ProductoDTO("Producto D", "Categoria D", false, compraDTO, 30.0);
             Producto producto1 = new Producto("Producto C", "Categoria D", false, compra, 25.0);
             Producto producto2 = new Producto("Producto D", "Categoria D", false, compra, 30.0);
-            
+
             when(conversionesMock.dtoAEntidad(productoDTO1)).thenReturn(producto1);
             when(conversionesMock.dtoAEntidad(productoDTO2)).thenReturn(producto2);
-            
-            // Simulamos el filtro por compra
+
+            // Se simula el filtro por compra
             when(productoDAOMock.obtenerProductosPorCompraId(anyLong())).thenReturn(Arrays.asList(producto1, producto2));
-            
+
             List<ProductoDTO> resultado = filtroCompra.obtenerProductosFiltrarPorCompra(1L);
-            
-            // Verificaciones
+
+            // Se verifican los resultados
             assertNotNull(resultado);
             assertEquals(2, resultado.size());
-            
-            // Verificación de que el método fue invocado correctamente
+
+            // Se verifica que el método fue invocado correctamente
             verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(1L);
         } catch (NegocioException ex) {
             Logger.getLogger(FiltroPorCompraTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * Se verifica que el método obtenerProductosFiltrarPorCompra retorne una
+     * lista vacía para una compra inexistente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Test
     public void testFiltrarPorCompraInexistente() throws PersistenciaException {
         Long compraIdInexistente = 999L;
 
-        // Simulamos que no se encuentran productos para la compra inexistente
+        // Se simula que no se encuentran productos para la compra inexistente
         when(productoDAOMock.obtenerProductosPorCompraId(compraIdInexistente)).thenReturn(Collections.emptyList());
 
         List<ProductoDTO> resultado = filtroCompra.obtenerProductosFiltrarPorCompra(compraIdInexistente);
 
-        // Verificaciones
+        // Se verifican los resultados
         assertNotNull(resultado);
         assertEquals(0, resultado.size());
 
-        // Verificación de que el método fue invocado correctamente
+        // Se verifica que el método fue invocado correctamente
         verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(compraIdInexistente);
     }
 

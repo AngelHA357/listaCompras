@@ -6,8 +6,11 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
+import Exceptions.NegocioException;
 import Subsistemas.IGestorCompras;
 import Subsistemas.GestorCompras;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -101,15 +104,23 @@ public class panelNombreLista extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese un nombre para la lista.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
         } else {
             CompraDTO compra = new CompraDTO(compraS, cliente);
-            CompraDTO compraDTO;
+            CompraDTO compraDTO = null;
 
             CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
             if (compraSelec == null) {
-                compraDTO = gestorCompras.agregarCompra(compra);
+                try {
+                    compraDTO = gestorCompras.agregarCompra(compra);
+                } catch (NegocioException ex) {
+                    Logger.getLogger(panelNombreLista.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
                 menuInicio.mostrarPanel(agregarProducto);
             } else if (!compraS.equals(compraSelec.getNombreCompra())) {
-                compraDTO = gestorCompras.agregarCompra(compra);
+                try {
+                    compraDTO = gestorCompras.agregarCompra(compra);
+                } catch (NegocioException ex) {
+                    Logger.getLogger(panelNombreLista.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
                 menuInicio.mostrarPanel(agregarProducto);
             } else {

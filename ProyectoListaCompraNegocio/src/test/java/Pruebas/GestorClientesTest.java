@@ -57,24 +57,30 @@ public class GestorClientesTest {
     public void tearDown() {
     }
 
+    /**
+     * Se verifica que el método agregarCliente agregue un cliente
+     * correctamente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Test
     public void testAgregarCliente() throws PersistenciaException {
         try {
-            // Creamos un ClienteDTO de prueba
+            // Se crea un ClienteDTO de prueba
             ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
 
-            // Simulamos la conversión de ClienteDTO a Cliente usando el mock de ClientesConversiones
+            // Se simula la conversión de ClienteDTO a Cliente
             Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
             when(conversionesMock.convertirDTOAEntidad(any(ClienteDTO.class))).thenReturn(cliente);
-
             when(conversionesMock.convertirEntidadADTO(any(Cliente.class))).thenReturn(clienteDTO);
 
-            // Simulamos que el DAO retorna un Cliente al agregar
+            // Se simula que el DAO retorna un Cliente al agregar
             when(clienteDAOMock.agregarCliente(any(Cliente.class))).thenReturn(cliente);
 
-            // Llamamos al método bajo prueba
+            // Se llama al método bajo prueba
             ClienteDTO resultadoDTO = gestorClientes.agregarCliente(clienteDTO);
 
+            // Se verifican las interacciones con los mocks
             verify(conversionesMock, times(1)).convertirDTOAEntidad(clienteDTO);
             verify(conversionesMock, times(1)).convertirEntidadADTO(cliente);
             verify(clienteDAOMock, times(1)).agregarCliente(cliente);
@@ -86,6 +92,9 @@ public class GestorClientesTest {
         }
     }
 
+    /**
+     * Se verifica que se lance una excepción cuando el usuario es nulo.
+     */
     @Test
     public void testAgregarCliente_UsuarioNulo() {
         ClienteDTO clienteDTO = new ClienteDTO(null, "Encinas", "Guzmán", null, "ABCD1234");
@@ -95,6 +104,9 @@ public class GestorClientesTest {
         });
     }
 
+    /**
+     * Se verifica que se lance una excepción cuando el usuario está vacío.
+     */
     @Test
     public void testAgregarCliente_UsuarioVacio() {
         ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", "", "ABCD1234");
@@ -104,52 +116,68 @@ public class GestorClientesTest {
         });
     }
 
+    /**
+     * Se verifica que el método encontrarClientePorUsuarioYContrasena retorne
+     * el cliente correcto si existe.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si ocurre un error de negocio.
+     */
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_ClienteExistente() throws PersistenciaException, NegocioException {
         String usuario = "toribio";
         String contrasenia = "ABCD1234";
 
-        // Creamos un ClienteDTO y Cliente de prueba
+        // Se crean un ClienteDTO y un Cliente de prueba
         ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
 
-        // Simulamos que el DAO encuentra el cliente por usuario y contraseña
+        // Se simula que el DAO encuentra el cliente por usuario y contraseña
         when(clienteDAOMock.obtenerClientePorUsuarioYContrasena(usuario, contrasenia)).thenReturn(cliente);
-
-        // Simulamos la conversión de Cliente a ClienteDTO
         when(conversionesMock.convertirEntidadADTO(cliente)).thenReturn(clienteDTO);
 
-        // Llamamos al método bajo prueba
+        // Se llama al método bajo prueba
         ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
 
-        // Verificamos que se encontró el cliente correcto y que la conversión se realizó
+        // Se verifica que se encontró el cliente correcto y que la conversión se realizó
         assertNotNull(clienteObtenido);
         assertEquals(usuario, clienteObtenido.getUsuario());
         assertEquals(contrasenia, clienteObtenido.getContrasenia());
 
-        // Verificamos que los mocks fueron invocados correctamente
+        // Se verifican las interacciones con los mocks
         verify(clienteDAOMock, times(1)).obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
         verify(conversionesMock, times(1)).convertirEntidadADTO(cliente);
     }
 
+    /**
+     * Se verifica que el método encontrarClientePorUsuarioYContrasena retorne
+     * null si el cliente no existe.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si ocurre un error de negocio.
+     */
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_ClienteInexistente() throws PersistenciaException, NegocioException {
         String usuario = "usuarioInexistente";
         String contrasenia = "contraseniaErronea";
 
-        // Simulamos que el DAO no encuentra ningún cliente
+        // Se simula que el DAO no encuentra ningún cliente
         when(clienteDAOMock.obtenerClientePorUsuarioYContrasena(usuario, contrasenia)).thenReturn(null);
 
-        // Llamamos al método bajo prueba
+        // Se llama al método bajo prueba
         ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
 
-        // Verificamos que el método retorne null cuando no se encuentra el cliente
+        // Se verifica que el método retorne null cuando no se encuentra el cliente
         assertNull(clienteObtenido);
 
-        // Verificamos que el mock del DAO fue invocado correctamente
+        // Se verifica que el mock del DAO fue invocado correctamente
         verify(clienteDAOMock, times(1)).obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
     }
 
+    /**
+     * Se verifica que se lance una excepción cuando el usuario es nulo en
+     * encontrarClientePorUsuarioYContrasena.
+     */
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_UsuarioNulo() {
         String usuario = null;
@@ -160,6 +188,10 @@ public class GestorClientesTest {
         });
     }
 
+    /**
+     * Se verifica que se lance una excepción cuando el usuario está vacío en
+     * encontrarClientePorUsuarioYContrasena.
+     */
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_UsuarioVacio() {
         String usuario = "";

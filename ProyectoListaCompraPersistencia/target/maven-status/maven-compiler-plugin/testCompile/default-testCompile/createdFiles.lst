@@ -1,7 +1,4 @@
 PruebasComponentes\CompraTest.class
+PruebasComponentes\ClienteDAOTest.class
 PruebasComponentes\CompraDAOTest.class
 PruebasComponentes\ProductoDAOTest.class
-PruebasIntegracion\ClienteCompraIntegrationTest.class
-PruebasComponentes\ClienteDAOTest.class
-PruebasIntegracion\ProductoCompraIntegrationTest.class
-PruebasIntegracion\ClienteCompraProductoIntegration.class

@@ -5,12 +5,15 @@
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
+import Exceptions.NegocioException;
 import Subsistemas.IGestorClientes;
 import Subsistemas.GestorClientes;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
@@ -287,7 +290,11 @@ public class frmRegistrarse extends javax.swing.JFrame {
                 && validador.validaUsuario(usuario) && validador.validaContrasena(contrasena)) {
 
             ClienteDTO cliente = new ClienteDTO(nombres, apellidoPaterno, apellidoMaterno, usuario, contrasena);
-            gestorClientes.agregarCliente(cliente);
+            try {
+                gestorClientes.agregarCliente(cliente);
+            } catch (NegocioException ex) {
+                Logger.getLogger(frmRegistrarse.class.getName()).log(Level.SEVERE, null, ex);
+            }
             frmInicioSesion inicioSesion = new frmInicioSesion(pantallaInicial);
             inicioSesion.setVisible(true);
             dispose();

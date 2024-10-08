@@ -17,6 +17,7 @@ import DTOs.CompraDTO;
 import Entidades.Cliente;
 import Entidades.Compra;
 import Entidades.Producto;
+import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import Subsistemas.GestorClientes;
 import Subsistemas.GestorCompras;
@@ -91,7 +92,7 @@ public class ClienteCompraIntegration {
      * agregado correctamente.
      */
     @Test
-    public void testAgregarClienteYCompra()  {
+    public void testAgregarClienteYCompra() throws NegocioException  {
         ClienteDTO clienteDTO = new ClienteDTO("Juan", "Pérez", "Gómez", "juanp", "pass123");
         ClienteDTO clienteAgregado = gestorClientes.agregarCliente(clienteDTO);
         CompraDTO compraDTO = new CompraDTO("Compra de Ejemplo", clienteAgregado);
@@ -106,7 +107,7 @@ public class ClienteCompraIntegration {
      * correctamente del cliente asociado.
      */
     @Test
-    public void testEliminarCompraYVerificarCliente()  {
+    public void testEliminarCompraYVerificarCliente() throws NegocioException  {
         ClienteDTO clienteDTO = new ClienteDTO("Adriana", "López", "Santiago", "adriana", "pass141");
         clienteDTO = gestorClientes.agregarCliente(clienteDTO);
         CompraDTO compraDTO = new CompraDTO("Compra única", clienteDTO);
@@ -120,7 +121,7 @@ public class ClienteCompraIntegration {
      * registrado todas correctamente.
      */
     @Test
-    public void testAgregarVariasComprasYVerificarConsistencia() {
+    public void testAgregarVariasComprasYVerificarConsistencia() throws NegocioException {
         ClienteDTO clienteDTO = new ClienteDTO("Natalia", "Reyes", "Pérez", "natalia", "pass121");
         clienteDTO = gestorClientes.agregarCliente(clienteDTO);
         for (int i = 1; i <= 5; i++) {
@@ -137,7 +138,7 @@ public class ClienteCompraIntegration {
      * verificar su consistencia.
      */
     @Test
-    public void testObtenerComprasPorCliente_ClienteExistente() {
+    public void testObtenerComprasPorCliente_ClienteExistente() throws NegocioException {
         ClienteDTO clienteDTO = new ClienteDTO("Cliente Test", "Apellido", "Segundo", "test", "pass");
         clienteDTO = gestorClientes.agregarCliente(clienteDTO);
         CompraDTO compra1 = new CompraDTO("Compra 1", clienteDTO);
@@ -156,7 +157,7 @@ public class ClienteCompraIntegration {
      * verificando la consistencia de los datos.
      */
     @Test
-    public void testObtenerCompraPorNombreYCliente_CompraExistente()  {
+    public void testObtenerCompraPorNombreYCliente_CompraExistente() throws NegocioException  {
         ClienteDTO clienteDTO = new ClienteDTO("Cliente Test", "Apellido", "Segundo", "test", "pass");
         clienteDTO = gestorClientes.agregarCliente(clienteDTO);
         String nombreCompra = "Compra 1" + System.currentTimeMillis();

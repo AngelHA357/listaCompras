@@ -6,6 +6,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
+import Exceptions.NegocioException;
 import Subsistemas.IFiltroPorCompra;
 import Subsistemas.FiltroPorCompra;
 import Subsistemas.IGestorCompras;
@@ -13,6 +14,8 @@ import Subsistemas.GestorCompras;
 import Subsistemas.IGestorProductos;
 import Subsistemas.GestorProductos;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
@@ -200,7 +203,11 @@ public class panelDatosProducto extends javax.swing.JPanel {
                 if (isUpdating) {
                     actualizarDatos();
                 } else {
-                    guardarProducto();
+                    try {
+                        guardarProducto();
+                    } catch (NegocioException ex) {
+                        Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
@@ -216,7 +223,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
         menuInicio.mostrarPanel(agregarProducto);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void guardarProducto() {
+    private void guardarProducto() throws NegocioException {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
         String categoria = txtCategoría.getText();
