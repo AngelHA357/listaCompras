@@ -5,6 +5,7 @@
 package Subsistemas;
 
 import DTOs.CompraDTO;
+import Exceptions.NegocioException;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface IGestorCompras {
 
-    public CompraDTO agregarCompra(CompraDTO compraDTO);
+    public CompraDTO agregarCompra(CompraDTO compraDTO)  throws NegocioException;
 
     public CompraDTO obtenerCompraPorId(Long id);
 

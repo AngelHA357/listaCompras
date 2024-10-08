@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ProductoDAOTest {
     IProductoDAO productoDAO;
+    ICompraDAO compraDAO;
     IConexion conexion;
     
     public ProductoDAOTest() {
@@ -49,6 +50,7 @@ public class ProductoDAOTest {
     public void setUp() {
         conexion = Conexion.getInstance();
         productoDAO = new ProductoDAO(conexion);
+        compraDAO = new CompraDAO(conexion);
     }
     
     @AfterEach
@@ -86,18 +88,18 @@ public class ProductoDAOTest {
 
         Producto resultado = productoDAO.agregarProducto(producto);
 
-        assertNotNull(resultado); // Asegurarse de que el producto no sea nulo
-        assertEquals("Papel", resultado.getNombre()); // Verificar el nombre
+        assertNotNull(resultado);
+        assertEquals("Papel", resultado.getNombre());
     }
     
     public void testObtenerProductoPorId() throws PersistenciaException {
         Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
-        productoDAO.agregarProducto(producto); // Asegurarse de que el producto está en la base de datos
+        productoDAO.agregarProducto(producto);
 
         Producto resultado = productoDAO.obtenerProductoPorId(producto.getId());
 
-        assertNotNull(resultado); // Asegurarse de que el resultado no sea nulo
-        assertEquals(producto.getId(), resultado.getId()); // Verificar que el ID coincida
+        assertNotNull(resultado);
+        assertEquals(producto.getId(), resultado.getId());
     }
     
     @Test
@@ -107,8 +109,8 @@ public class ProductoDAOTest {
 
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
 
-        assertNotNull(productos); // Asegurarse de que la lista no sea nula
-        assertTrue(productos.size() >= 2); // Verificar que al menos haya dos productos
+        assertNotNull(productos);
+        assertTrue(productos.size() >= 2);
     }
     
     @Test
@@ -116,11 +118,11 @@ public class ProductoDAOTest {
         Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
         productoDAO.agregarProducto(producto);
 
-        producto.setNombre("Papel Nuevo"); // Cambiar el nombre
+        producto.setNombre("Papel Nuevo");
         Producto resultado = productoDAO.actualizarProducto(producto);
 
-        assertNotNull(resultado); // Asegurarse de que el resultado no sea nulo
-        assertEquals("Papel Nuevo", resultado.getNombre()); // Verificar el nuevo nombre
+        assertNotNull(resultado);
+        assertEquals("Papel Nuevo", resultado.getNombre());
     }
     
     @Test
@@ -130,21 +132,23 @@ public class ProductoDAOTest {
 
         Producto eliminado = productoDAO.eliminarProducto(producto.getId());
 
-        assertNotNull(eliminado); // Asegurarse de que el producto eliminado no sea nulo
-        assertEquals(producto.getId(), eliminado.getId()); // Verificar que el ID coincida
-        assertNull(productoDAO.obtenerProductoPorId(producto.getId())); // Verificar que el producto ya no esté en la base de datos
+        assertNotNull(eliminado);
+        assertEquals(producto.getId(), eliminado.getId());
+        assertNull(productoDAO.obtenerProductoPorId(producto.getId()));
     }
     
      @Test
     public void testFiltrarPorCategoria() throws PersistenciaException {
-//        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", null, 6.0));
-//        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", null, 6.0));
-//        productoDAO.agregarProducto(new Producto("Leche", "Alimentos", null, 10.0));
-//
-//        List<Producto> productosFiltrados = productoDAO.filtrarPorCategoria("Higiene Personal");
-//
-//        assertNotNull(productosFiltrados); // Asegurarse de que la lista no sea nula
-//        assertEquals(2, productosFiltrados.size()); // Debería devolver solo 2 productos
+        Compra compra1 = new Compra();
+        compraDAO.agregarCompra(compra1);
+        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", compra1, 6.0));
+        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", compra1, 6.0));
+        productoDAO.agregarProducto(new Producto("Leche", "Alimentos", compra1, 10.0));
+
+        List<Producto> productosFiltrados = productoDAO.filtrarPorCategoriaYCompraId("Higiene Personal", compra1.getId());
+
+        assertNotNull(productosFiltrados);
+        assertEquals(2, productosFiltrados.size());
     }
 
    

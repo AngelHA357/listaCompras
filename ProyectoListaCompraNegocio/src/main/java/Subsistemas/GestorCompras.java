@@ -11,6 +11,7 @@ import DAOs.CompraDAO;
 import DAOs.ICompraDAO;
 import DTOs.CompraDTO;
 import Entidades.Compra;
+import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,10 @@ public class GestorCompras implements IGestorCompras{
     }
 
     @Override
-    public CompraDTO agregarCompra(CompraDTO compraDTO) {
+    public CompraDTO agregarCompra(CompraDTO compraDTO) throws NegocioException{
+         if (compraDTO.getNombreCompra()== null || compraDTO.getNombreCompra().isBlank()) {
+            throw new NegocioException("El nombre no puede ser nulo o estar en blanco");
+        }
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
         try {
             return compraConversiones.entidadADTO(compraDAO.agregarCompra(compra));

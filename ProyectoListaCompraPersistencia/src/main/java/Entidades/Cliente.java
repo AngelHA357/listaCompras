@@ -2,6 +2,7 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class Cliente implements Serializable {
     private String contrasenia;
 
     
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente",  cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Compra> compras;
 
 

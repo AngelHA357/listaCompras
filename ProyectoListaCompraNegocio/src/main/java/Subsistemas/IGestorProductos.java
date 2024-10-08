@@ -5,6 +5,7 @@
 package Subsistemas;
 
 import DTOs.ProductoDTO;
+import Exceptions.NegocioException;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface IGestorProductos {
 
-    public ProductoDTO agregarProducto(ProductoDTO productoDTO);
+    public ProductoDTO agregarProducto(ProductoDTO productoDTO) throws NegocioException;
 
     public ProductoDTO obtenerProductoPorId(Long id);
 

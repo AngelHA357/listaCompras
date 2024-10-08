@@ -40,18 +40,14 @@ public class CompraTest {
     
     @Test
     public void agregarProductoACompra() {
-        // Crear una nueva instancia de Compra
         Compra compra = new Compra();
 
-        // Crear un nuevo producto y agregarlo a la compra
         Producto producto = new Producto("Papel", "Higiene Personal", compra, 6.0);
         compra.agregarProducto(producto);
         
-        // Verificar que el producto fue agregado correctamente
         assertEquals(1, compra.getProductos().size());
         assertEquals(producto, compra.getProductos().get(0));
 
-         // Asegurar que la compra asociada es la correcta
         assertEquals(compra, producto.getCompra()); 
     }
     
@@ -59,7 +55,6 @@ public class CompraTest {
     public void agregarProductoACompraNula() {
         Compra compra = null;
 
-        // Crear un producto con una compra nula
         assertThrows(NullPointerException.class, () -> {
             Producto producto = new Producto("Papel", "Higiene Personal", compra, 6.0);
             compra.agregarProducto(producto);
@@ -76,19 +71,10 @@ public class CompraTest {
         compra.agregarProducto(producto1);
         compra.agregarProducto(producto2);
 
-        // Verificar que se han agregado dos productos
         assertEquals(2, compra.getProductos().size());
         assertEquals(producto1, compra.getProductos().get(0));
         assertEquals(producto2, compra.getProductos().get(1));
     }
     
-    
-    
-    
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
 }

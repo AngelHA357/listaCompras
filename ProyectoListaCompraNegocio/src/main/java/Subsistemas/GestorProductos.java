@@ -11,6 +11,7 @@ import DAOs.IProductoDAO;
 import DAOs.ProductoDAO;
 import DTOs.ProductoDTO;
 import Entidades.Producto;
+import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +34,23 @@ public class GestorProductos implements IGestorProductos {
         this.conversiones = new ProductosConversiones();
     }
 
-    public GestorProductos(IProductoDAO productoDAO, ProductosConversiones conversiones){
+    public GestorProductos(IProductoDAO productoDAO, ProductosConversiones conversiones) {
         this.productoDAO = productoDAO;
         this.conversiones = conversiones;
     }
-    
+
     @Override
-    public ProductoDTO agregarProducto(ProductoDTO productoDTO) {
+    public ProductoDTO agregarProducto(ProductoDTO productoDTO) throws NegocioException {
+        if (productoDTO.getNombre() == null || productoDTO.getNombre().isBlank()) {
+            throw new NegocioException("El nombre del producto no puede ser nulo o estar en blanco");
+        }
+        if (productoDTO.getCategoria() == null || productoDTO.getCategoria().isBlank()) {
+            throw new NegocioException("La categoría del producto no puede ser nula o estar en blanco");
+        }
+        if (productoDTO.getCantidad() == null || productoDTO.getCantidad() <= 0) {
+            throw new NegocioException("La cantidad del producto no puede ser nula o menor o igual a cero");
+        }
+
         Producto producto = conversiones.dtoAEntidad(productoDTO);
 
         try {

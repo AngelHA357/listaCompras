@@ -69,17 +69,13 @@ public class ClienteDAOTest {
     
      @Test
     public void obtenerClienteExistente() throws PersistenciaException {
-        // Crear un nuevo cliente
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
 
-        // Agregar el cliente y obtener el resultado con su ID asignado
         Cliente clienteAgregado = clienteDAO.agregarCliente(cliente);
 
-        // Usar el ID del cliente recién agregado para obtenerlo de la base de datos
         Cliente resultado = clienteDAO.obtenerClientePorId(clienteAgregado.getId());
 
-        // Verificar que el cliente obtenido tiene el mismo ID y los mismos datos
-        assertNotNull(resultado); // Asegurarse de que el cliente no sea null
+        assertNotNull(resultado);
         assertEquals(clienteAgregado.getId(), resultado.getId());
         assertEquals("Victor Humberto", resultado.getNombre());
         assertEquals("Encinas", resultado.getApellidoPaterno());

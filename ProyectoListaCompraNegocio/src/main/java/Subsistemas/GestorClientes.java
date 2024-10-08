@@ -25,20 +25,36 @@ public class GestorClientes implements IGestorClientes {
     private IConexion conexion;
     private final IClienteDAO clienteDAO;
     private final ClientesConversiones conversiones;
-    
+
     public GestorClientes() {
         conexion = Conexion.getInstance();
         this.clienteDAO = new ClienteDAO(conexion);
         this.conversiones = new ClientesConversiones();
     }
-    
-    public GestorClientes(IClienteDAO clienteDAO, ClientesConversiones conversiones){
+
+    public GestorClientes(IClienteDAO clienteDAO, ClientesConversiones conversiones) {
         this.clienteDAO = clienteDAO;
         this.conversiones = conversiones;
     }
 
     @Override
-    public ClienteDTO agregarCliente(ClienteDTO clienteDTO) {
+    public ClienteDTO agregarCliente(ClienteDTO clienteDTO) throws NegocioException {
+        if (clienteDTO.getNombre() == null || clienteDTO.getNombre().isBlank()) {
+            throw new NegocioException("El nombre no puede ser nulo o estar en blanco");
+        }
+        if (clienteDTO.getApellidoPaterno() == null || clienteDTO.getApellidoPaterno().isBlank()) {
+            throw new NegocioException("El apellido paterno no puede ser nulo o estar en blanco");
+        }
+        if (clienteDTO.getApellidoMaterno() == null || clienteDTO.getApellidoMaterno().isBlank()) {
+            throw new NegocioException("El apellido materno no puede ser nulo o estar en blanco");
+        }
+        if (clienteDTO.getUsuario() == null || clienteDTO.getUsuario().isBlank()) {
+            throw new NegocioException("El usuario no puede ser nulo o estar en blanco");
+        }
+        if (clienteDTO.getContrasenia() == null || clienteDTO.getContrasenia().isBlank()) {
+            throw new NegocioException("La contraseña no puede ser nula o estar en blanco");
+        }
+
         Cliente cliente = conversiones.convertirDTOAEntidad(clienteDTO);
         try {
             Cliente clienteAgregado = clienteDAO.agregarCliente(cliente);
@@ -51,6 +67,10 @@ public class GestorClientes implements IGestorClientes {
 
     @Override
     public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) throws NegocioException {
+        if (usuario == null || usuario.isBlank()) {
+            throw new NegocioException("El usuario no puede ser nulo o estar en blanco");
+        }
+
         try {
             Cliente cliente = clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
             return conversiones.convertirEntidadADTO(cliente);
