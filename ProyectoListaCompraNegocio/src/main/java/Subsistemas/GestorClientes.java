@@ -27,12 +27,29 @@ public class GestorClientes implements IGestorClientes {
     private final IClienteDAO clienteDAO;
     private final ClientesConversiones conversiones;
 
+    /**
+     * Constructor que inicializa la conexión a la base de datos, un objeto de
+     * acceso a datos de clientes y un objeto de conversión de clientes.
+     *
+     * Este constructor obteniene la instancia de conexión, y se crea un
+     * ClienteDao para interactuar con la base de datos. También se inicializa
+     * un objeto ClientesConversiones para realizar conversiones entre entidades
+     * y DTOs.
+     */
     public GestorClientes() {
         conexion = Conexion.getInstance();
         this.clienteDAO = new ClienteDAO(conexion);
         this.conversiones = new ClientesConversiones();
     }
 
+    /**
+     * Incializa el objeto clienteDAO y el objeto de Conversiones mediante la
+     * inyeccion de dependencias, este constructor es útil para la elaboración
+     * de pruebas unitarias.
+     *
+     * @param clienteDAO Objeto que implementa la interfaz IClienteDAO.
+     * @param conversiones Objeto de la clase ClientesConversiones.
+     */
     public GestorClientes(IClienteDAO clienteDAO, ClientesConversiones conversiones) {
         this.clienteDAO = clienteDAO;
         this.conversiones = conversiones;

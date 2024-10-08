@@ -29,12 +29,29 @@ public class GestorCompras implements IGestorCompras {
     private final ICompraDAO compraDAO;
     private final CompraConversiones compraConversiones;
 
+    /**
+     * Constructor que inicializa la conexión a la base de datos, un objeto de
+     * acceso a datos de compras y un objeto de conversión de compras.
+     *
+     * Este constructor obteniene la instancia de conexión, y se crea un
+     * CompraDAO para interactuar con la base de datos. También se inicializa un
+     * objeto CompraConversiones para realizar conversiones entre entidades y
+     * DTOs.
+     */
     public GestorCompras() {
         conexion = Conexion.getInstance();
         this.compraDAO = new CompraDAO(conexion);
         this.compraConversiones = new CompraConversiones();
     }
 
+    /**
+     * Incializa el objeto compraDAO y el objeto de Conversiones mediante la
+     * inyeccion de dependencias, este constructor es útil para la elaboración
+     * de pruebas unitarias.
+     *
+     * @param compraDAO Objeto que implementa la interfaz ICompraDAO.
+     * @param compraConversiones Objeto de la clase CompraConversiones.
+     */
     public GestorCompras(ICompraDAO compraDAO, CompraConversiones compraConversiones) {
         this.compraDAO = compraDAO;
         this.compraConversiones = compraConversiones;

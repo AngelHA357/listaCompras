@@ -29,12 +29,29 @@ public class GestorProductos implements IGestorProductos {
     private final IProductoDAO productoDAO;
     private final ProductosConversiones conversiones;
 
+    /**
+     * Constructor que inicializa la conexión a la base de datos, un objeto de
+     * acceso a datos de productos y un objeto de conversión de productos.
+     *
+     * Este constructor obteniene la instancia de conexión, y se crea un
+     * ProductoDAO para interactuar con la base de datos. También se inicializa
+     * un objeto ProductosConversiones para realizar conversiones entre
+     * entidades y DTOs.
+     */
     public GestorProductos() {
         conexion = Conexion.getInstance();
         this.productoDAO = new ProductoDAO(conexion);
         this.conversiones = new ProductosConversiones();
     }
 
+    /**
+     * Incializa el objeto productoDAO y el objeto de Conversiones mediante la
+     * inyeccion de dependencias, este constructor es útil para la elaboración
+     * de pruebas unitarias.
+     *
+     * @param productoDAO Objeto que implementa la interfaz IProductoDAO.
+     * @param conversiones Objeto de la clase ProductosConversiones.
+     */
     public GestorProductos(IProductoDAO productoDAO, ProductosConversiones conversiones) {
         this.productoDAO = productoDAO;
         this.conversiones = conversiones;
