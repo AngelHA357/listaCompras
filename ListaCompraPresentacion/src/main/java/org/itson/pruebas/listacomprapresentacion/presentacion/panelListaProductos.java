@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
@@ -27,8 +23,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * Panel que permite mostrar las lista de productos contenidos en una lista de
+ * compras.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class panelListaProductos extends javax.swing.JPanel {
 
@@ -41,7 +40,13 @@ public class panelListaProductos extends javax.swing.JPanel {
     private final Object[] columnNames = {"Nombre", "Cantidad", "Categoria", "Comprado"};
 
     /**
-     * Creates new form panelAgregarProducto
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame menu inicio y la compra. Además inicializa el valor del
+     * frame principal y la compra. También crea la instancia GestorProductos,
+     * FiltroPorCompra y FiltroPorCategoría.
+     *
+     * @param menuInicio Frame de menu inicio donde se pintará este panel.
+     * @param compra Compra actual.
      */
     public panelListaProductos(frmMenuInicio menuInicio, CompraDTO compra) {
         this.menuInicio = menuInicio;
@@ -55,6 +60,10 @@ public class panelListaProductos extends javax.swing.JPanel {
         actualizarProducto();
     }
 
+    /**
+     * Permite agregarle detalles estéticos a la tabla donde se muestran los
+     * productos.
+     */
     private void decorarTabla() {
         tblListaProductos.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 14));
         tblListaProductos.getTableHeader().setReorderingAllowed(false);
@@ -63,6 +72,9 @@ public class panelListaProductos extends javax.swing.JPanel {
         scrollPane.getViewport().setBackground(new Color(255, 255, 185));
     }
 
+    /**
+     * Permite llenar la tabla con las listas de productos que tiene una compra.
+     */
     private void mostrarListaProductos() {
         tblListaProductos.setModel(modelo);
         modelo.setRowCount(0);
@@ -74,6 +86,9 @@ public class panelListaProductos extends javax.swing.JPanel {
         aplicarColorFilas();
     }
 
+    /**
+     * Permite que el checkBox cambie el estado de producto como comprado.
+     */
     private void realizarAccionCheckbox() {
         modelo.addTableModelListener((TableModelEvent e) -> {
             if (e.getColumn() == 3) {
@@ -96,6 +111,10 @@ public class panelListaProductos extends javax.swing.JPanel {
         });
     }
 
+    /**
+     * Permite ya que el producto haya sido marcado como comprado que se cambie
+     * el color de la fila por verde para indicar que ya fue comprado.
+     */
     private void aplicarColorFilas() {
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
             @Override
@@ -130,6 +149,10 @@ public class panelListaProductos extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Permite que todas las columnas no sean editables excepto la que contiene
+     * el checkbox.
+     */
     DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], columnNames) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -152,8 +175,11 @@ public class panelListaProductos extends javax.swing.JPanel {
         }
     };
 
+    /**
+     * Método que permite seleccionar un producto para que se pueda actualizar.
+     * Funciona al hacer doble clic en la fila.
+     */
     private void actualizarProducto() {
-
         tblListaProductos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -274,12 +300,6 @@ public class panelListaProductos extends javax.swing.JPanel {
             }
         });
 
-        txtCategoria.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCategoriaActionPerformed(evt);
-            }
-        });
-
         jLabel3.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 12)); // NOI18N
         jLabel3.setText("Ingrese una Categoría");
 
@@ -359,11 +379,22 @@ public class panelListaProductos extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que permite mostrar el panel para poder agregar un producto.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         panelDatosProducto agregarDatosProducto = new panelDatosProducto(menuInicio, compra);
         menuInicio.mostrarPanel(agregarDatosProducto);
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
+    /**
+     * Método que permite borrar un producto de la lista de compras. Se obtiene
+     * el producto al seleccionar la fila y hacerle clic a este botón.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
         int filaSeleccionada = tblListaProductos.getSelectedRow();
 
@@ -391,7 +422,12 @@ public class panelListaProductos extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Seleccione un producto", "Atención", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarProductoActionPerformed
-
+    /**
+     * Método que permite filtrar la lista de productos según el texto
+     * ingresado.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnFiltrarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarCategoriaActionPerformed
         DefaultTableModel modelo = (DefaultTableModel) tblListaProductos.getModel();
 
@@ -408,10 +444,11 @@ public class panelListaProductos extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnFiltrarCategoriaActionPerformed
 
-    private void txtCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCategoriaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCategoriaActionPerformed
-
+    /**
+     * Método que permite ver todos los productos de una compra.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodoActionPerformed
         mostrarListaProductos();
 

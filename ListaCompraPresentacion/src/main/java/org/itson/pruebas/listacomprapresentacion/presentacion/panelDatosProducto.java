@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
@@ -20,8 +16,10 @@ import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
 /**
+ * Panel que permite agregar un producto a una lista de compras.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class panelDatosProducto extends javax.swing.JPanel {
 
@@ -34,7 +32,13 @@ public class panelDatosProducto extends javax.swing.JPanel {
     private Boolean isUpdating;
 
     /**
-     * Creates new form panelAgregarDatosProducto
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame menu inicio y la compra. Además inicializa el valor del
+     * frame principal y el cliente. También crea la instancia GestorProductos,
+     * GestorCompras y FiltroPorCompra.
+     *
+     * @param menuInicio Frame de menu inicio donde se pintará este panel.
+     * @param compra Compra actual.
      */
     public panelDatosProducto(frmMenuInicio menuInicio, CompraDTO compra) {
         this.menuInicio = menuInicio;
@@ -46,6 +50,19 @@ public class panelDatosProducto extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * Método constructor que nos permite crear el frame cuando se quiere
+     * actualizar un producto y además recibe el valor del frame menu inicio, la
+     * compra, el producto a actualizar y un booleano que permite saber si se
+     * desea actualizar. Además inicializa el valor del frame principal y el
+     * cliente. También crea la instancia GestorProductos, GestorCompras y
+     * FiltroPorCompra.
+     *
+     * @param menuInicio Frame de menu inicio donde se pintará este panel.
+     * @param compra Compra actual.
+     * @param producto
+     * @param isUpdating
+     */
     public panelDatosProducto(frmMenuInicio menuInicio, CompraDTO compra, ProductoDTO producto, Boolean isUpdating) {
         this.menuInicio = menuInicio;
         this.compra = compra;
@@ -195,6 +212,12 @@ public class panelDatosProducto extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que nos permite agregar o actualizar un producto de la lista de
+     * compras.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         Validadores validador = new Validadores();
         if (validarCamposLlenos()) {
@@ -218,11 +241,22 @@ public class panelDatosProducto extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
+    /**
+     * Método que nos permite regresarnos al panel anterior de lista de
+     * productos.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
         menuInicio.mostrarPanel(agregarProducto);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
+    /**
+     * Permite agregar un producto a una lista de compras
+     *
+     * @throws NegocioException Se lanza en caso de que no pueda ser agregado.
+     */
     private void guardarProducto() throws NegocioException {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
@@ -237,6 +271,9 @@ public class panelDatosProducto extends javax.swing.JPanel {
 
     }
 
+    /**
+     * Permite actualizar un producto de una lista de compras.
+     */
     private void actualizarDatos() {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
@@ -254,6 +291,9 @@ public class panelDatosProducto extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Permite cargar los datos del producto para que puedan ser mostrados.
+     */
     private void cargarDatos() {
         if (isUpdating) {
             String nombre = producto.getNombre();
@@ -265,6 +305,12 @@ public class panelDatosProducto extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Permite validar si los espacios donde se agregan los productos no están
+     * vacíos.
+     *
+     * @return False si esta vacío, true en caso contrario.
+     */
     private boolean validarCamposLlenos() {
         if (txtNombre.getText().isBlank() || txtCantidad.getText().isBlank() || txtCategoría.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
@@ -273,6 +319,13 @@ public class panelDatosProducto extends javax.swing.JPanel {
         return true;
     }
 
+    /**
+     * Permite validar que el ombre del prodcuto no este repetido en la lista de
+     * compras.
+     *
+     * @param nombre NOmbre del producto.
+     * @return True en caso de que si aparezca, false en caso contrario.
+     */
     public boolean existeProductoEnCompra(String nombre) {
         List<ProductoDTO> productos = filtroCompra.obtenerProductosFiltrarPorCompra(this.compra.getId());
         for (ProductoDTO producto : productos) {

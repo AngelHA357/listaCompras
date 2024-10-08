@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
@@ -18,8 +14,10 @@ import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
 /**
+ * Frame que muestra la pantalla de registrase.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class frmRegistrarse extends javax.swing.JFrame {
 
@@ -27,9 +25,11 @@ public class frmRegistrarse extends javax.swing.JFrame {
     private IGestorClientes gestorClientes;
 
     /**
-     * Creates new form frmRegistrarse
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame principal. Además inicializa el valor del frame principal
+     * y se crea la instancia de un gestorClientes.
      *
-     * @param pantallaInicial
+     * @param pantallaInicial Frame inicial.
      */
     public frmRegistrarse(PantallaInicial pantallaInicial) {
         this.pantallaInicial = pantallaInicial;
@@ -39,6 +39,10 @@ public class frmRegistrarse extends javax.swing.JFrame {
         lblIniciarSesion();
     }
 
+    /**
+     * Permite agregarle acciones de botón a un label. Permite abrir el frame de
+     * inicioSesion.
+     */
     private void lblIniciarSesion() {
         lblIniciarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -276,6 +280,12 @@ public class frmRegistrarse extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que nos permite registrar un usuario y abre el frame de inicio de
+     * sesión.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
         Validadores validador = new Validadores();
 
@@ -286,7 +296,7 @@ public class frmRegistrarse extends javax.swing.JFrame {
         char[] contrasenaChar = pswContrasena.getPassword();
         String contrasena = new String(contrasenaChar);
 
-        if (validador.validaNombre(nombres) && validador.validaApellido(apellidoPaterno) && validador.validaApellido(apellidoMaterno) 
+        if (validador.validaNombre(nombres) && validador.validaApellido(apellidoPaterno) && validador.validaApellido(apellidoMaterno)
                 && validador.validaUsuario(usuario) && validador.validaContrasena(contrasena)) {
 
             ClienteDTO cliente = new ClienteDTO(nombres, apellidoPaterno, apellidoMaterno, usuario, contrasena);
@@ -305,6 +315,11 @@ public class frmRegistrarse extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
+    /**
+     * Método que nos permite regresar a la pantalla inicial.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         pantallaInicial.setVisible(true);
         dispose();

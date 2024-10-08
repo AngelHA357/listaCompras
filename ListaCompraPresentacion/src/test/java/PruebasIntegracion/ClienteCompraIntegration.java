@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package PruebasIntegracion;
 
 import Conexion.Conexion;
@@ -32,14 +28,20 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Esta clase permite realizar pruebas de integración con el Cliente y la
+ * Compra.
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class ClienteCompraIntegration {
 
     IGestorClientes gestorClientes;
     IGestorCompras gestorCompras;
 
+    /**
+     * Constructor por defecto
+     */
     public ClienteCompraIntegration() {
     }
 
@@ -92,7 +94,7 @@ public class ClienteCompraIntegration {
      * agregado correctamente.
      */
     @Test
-    public void testAgregarClienteYCompra() throws NegocioException  {
+    public void testAgregarClienteYCompra() throws NegocioException {
         ClienteDTO clienteDTO = new ClienteDTO("Juan", "Pérez", "Gómez", "juanp", "pass123");
         ClienteDTO clienteAgregado = gestorClientes.agregarCliente(clienteDTO);
         CompraDTO compraDTO = new CompraDTO("Compra de Ejemplo", clienteAgregado);
@@ -107,7 +109,7 @@ public class ClienteCompraIntegration {
      * correctamente del cliente asociado.
      */
     @Test
-    public void testEliminarCompraYVerificarCliente() throws NegocioException  {
+    public void testEliminarCompraYVerificarCliente() throws NegocioException {
         ClienteDTO clienteDTO = new ClienteDTO("Adriana", "López", "Santiago", "adriana", "pass141");
         clienteDTO = gestorClientes.agregarCliente(clienteDTO);
         CompraDTO compraDTO = new CompraDTO("Compra única", clienteDTO);
@@ -157,7 +159,7 @@ public class ClienteCompraIntegration {
      * verificando la consistencia de los datos.
      */
     @Test
-    public void testObtenerCompraPorNombreYCliente_CompraExistente() throws NegocioException  {
+    public void testObtenerCompraPorNombreYCliente_CompraExistente() throws NegocioException {
         ClienteDTO clienteDTO = new ClienteDTO("Cliente Test", "Apellido", "Segundo", "test", "pass");
         clienteDTO = gestorClientes.agregarCliente(clienteDTO);
         String nombreCompra = "Compra 1" + System.currentTimeMillis();
@@ -176,7 +178,7 @@ public class ClienteCompraIntegration {
      * consultar sus compras.
      */
     @Test
-    public void testObtenerComprasPorCliente_ClienteSinCompras(){
+    public void testObtenerComprasPorCliente_ClienteSinCompras() {
         Long clienteId = 999L;
         List<CompraDTO> compras = gestorCompras.obtenerComprasPorCliente(clienteId);
         assertNotNull(compras);
@@ -188,7 +190,7 @@ public class ClienteCompraIntegration {
      * encuentra en la base de datos.
      */
     @Test
-    public void testObtenerCompraPorNombreYCliente_CompraInexistente(){
+    public void testObtenerCompraPorNombreYCliente_CompraInexistente() {
         Long clienteId = 999L;
         String nombreCompra = "Compra Inexistente";
         assertNull(gestorCompras.obtenerCompraPorNombreYCliente(nombreCompra, clienteId));

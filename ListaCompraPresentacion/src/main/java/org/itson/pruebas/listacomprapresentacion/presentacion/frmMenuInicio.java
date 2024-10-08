@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
@@ -9,14 +5,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 /**
+ * Frame que muestra la pantalla de menu de inicio.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class frmMenuInicio extends javax.swing.JFrame {
 
@@ -24,32 +21,46 @@ public class frmMenuInicio extends javax.swing.JFrame {
     private ClienteDTO cliente;
 
     /**
-     * Creates new form frmMenuInicio
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame principal y el cliente. Además inicializa el valor del
+     * frame principal y el cliente.
+     *
+     * @param pantallaInicial Frame inicial.
+     * @param cliente Cliente actual.
      */
     public frmMenuInicio(PantallaInicial pantallaInicial, ClienteDTO cliente) {
         this.pantallaInicial = pantallaInicial;
-        this.cliente=cliente;
+        this.cliente = cliente;
         initComponents();
         cargarComboBox();
         lblCerrarSesion();
     }
 
-    private void cargarComboBox(){
+    /**
+     * Permite cargar los datos del comboBox y además se genera un método oyente
+     * al momento de presionar una opcion del comboBox. Uno permite abrir la
+     * lista de compras y otro permite agregar una compra.
+     */
+    private void cargarComboBox() {
         cbxListaAcciones.addItem("Mi lista de compras");
         cbxListaAcciones.addItem("Añadir lista");
-        
+
         cbxListaAcciones.addActionListener((ActionEvent e) -> {
             if (cbxListaAcciones.getSelectedIndex() == 0) {
                 panelListaCompras listaCompras = new panelListaCompras(this, cliente);
                 mostrarPanel(listaCompras);
-            }else if (cbxListaAcciones.getSelectedIndex() == 1) {
+            } else if (cbxListaAcciones.getSelectedIndex() == 1) {
                 panelNombreLista nombreLista = new panelNombreLista(this, cliente);
                 mostrarPanel(nombreLista);
             }
         });
     }
-    
-    private void lblCerrarSesion(){
+
+    /**
+     * Permite agregarle acciones de botón a un label. Permite cerrar el frame
+     * menuInicio y manda a la pantalla inicial, es decir, cerrar sesión.
+     */
+    private void lblCerrarSesion() {
         lblCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         lblCerrarSesion.addMouseListener(new MouseAdapter() {
@@ -70,17 +81,23 @@ public class frmMenuInicio extends javax.swing.JFrame {
             }
         });
     }
-    
-    protected void mostrarPanel(JPanel p){
+
+    /**
+     * Permite que los paneles se muestren en este frame. Primero borra el panel
+     * actual y luego repinta el nuevo panel.
+     *
+     * @param p Panel a pintar.
+     */
+    protected void mostrarPanel(JPanel p) {
         p.setSize(1024, 597);
-        p.setLocation(0,0);
-        
+        p.setLocation(0, 0);
+
         panelPrincipal.removeAll();
         panelPrincipal.add(p, BorderLayout.CENTER);
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

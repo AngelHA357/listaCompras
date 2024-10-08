@@ -8,7 +8,6 @@ import DAOs.IClienteDAO;
 import DAOs.ICompraDAO;
 import DAOs.IProductoDAO;
 import DAOs.ProductoDAO;
-import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
 import Entidades.Cliente;
@@ -34,8 +33,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Esta clase permite realizar pruebas de integración con los productos y las
+ * compras.
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class ProductoCompraIntegrationTest {
 
@@ -44,6 +46,9 @@ public class ProductoCompraIntegrationTest {
     private IFiltroPorCompra filtroPorCompra;
     private IFiltroPorCategoria filtroPorCategoria;
 
+    /**
+     * Constructor por defecto
+     */
     public ProductoCompraIntegrationTest() {
     }
 
@@ -223,13 +228,12 @@ public class ProductoCompraIntegrationTest {
     public void testObtenerProductosPorCompraId() throws NegocioException {
         CompraDTO compraDTO = new CompraDTO("Compra Variada", null);
         CompraDTO compraAgregada = gestorCompras.agregarCompra(compraDTO);
-        
+
         ProductoDTO producto1 = new ProductoDTO("Papel", "Higiene Personal", false, compraAgregada, 6.0);
         ProductoDTO producto2 = new ProductoDTO("Jabón", "Higiene Personal", false, compraAgregada, 6.0);
         gestorProductos.agregarProducto(producto1);
         gestorProductos.agregarProducto(producto2);
-        
-       
+
         List<ProductoDTO> productos = filtroPorCompra.obtenerProductosFiltrarPorCompra(compraAgregada.getId());
 
         assertNotNull(productos);
@@ -285,21 +289,22 @@ public class ProductoCompraIntegrationTest {
 
         gestorProductos.agregarProducto(producto1);
         ProductoDTO productoAgregado2 = gestorProductos.agregarProducto(producto2);
-        
-        producto1 = gestorProductos.obtenerProductoPorCaracteristicas(producto1.getNombre(), producto1.getCategoria(), producto1.isComprado()
-                , producto1.getCantidad() ,producto1.getCompra().getId());
+
+        producto1 = gestorProductos.obtenerProductoPorCaracteristicas(producto1.getNombre(), producto1.getCategoria(),
+                producto1.isComprado(), producto1.getCantidad(), producto1.getCompra().getId());
 
         producto1.setNombre("Papel Higiénico");
         gestorProductos.actualizarProducto(producto1);
 
         gestorProductos.eliminarProducto(productoAgregado2.getId());
 
-        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal", producto1.getCompra().getId());
+        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal",
+                producto1.getCompra().getId());
+
         assertTrue(productosCategoria.size() == 1);
-        
-        
+
         assertTrue(productosCategoria.stream()
-            .anyMatch(p -> p.getNombre().equals("Papel Higiénico")));
+                .anyMatch(p -> p.getNombre().equals("Papel Higiénico")));
 
         assertFalse(productosCategoria.stream()
                 .anyMatch(p -> p.getId().equals(productoAgregado2.getId())));
@@ -318,21 +323,22 @@ public class ProductoCompraIntegrationTest {
         CompraDTO compraAgregada = gestorCompras.agregarCompra(compraDTO);
         ProductoDTO producto1 = new ProductoDTO("Papel", "Higiene Personal", false, compraAgregada, 6.0);
         ProductoDTO producto2 = new ProductoDTO("Jabón", "Higiene Personal", false, compraAgregada, 6.0);
-        
+
         gestorProductos.agregarProducto(producto1);
         gestorProductos.agregarProducto(producto2);
-        producto1 = gestorProductos.obtenerProductoPorCaracteristicas(producto1.getNombre(), producto1.getCategoria(), producto1.isComprado()
-                , producto1.getCantidad() ,producto1.getCompra().getId());
-        
+        producto1 = gestorProductos.obtenerProductoPorCaracteristicas(producto1.getNombre(), producto1.getCategoria(),
+                producto1.isComprado(), producto1.getCantidad(), producto1.getCompra().getId());
+
         producto1.setComprado(true);
         gestorProductos.actualizarProducto(producto1);
 
-        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal", producto1.getCompra().getId());
+        List<ProductoDTO> productosCategoria = filtroPorCategoria.filtrarPorCategoriaYCompraId("Higiene Personal",
+                producto1.getCompra().getId());
+
         assertTrue(productosCategoria.size() > 0);
 
         assertTrue(productosCategoria.stream()
                 .anyMatch(p -> p.getNombre().equals("Papel") && p.isComprado()));
     }
 
-   
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package PruebasComponentes;
 
 import Conexion.Conexion;
@@ -25,8 +21,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Esta clase permite realizar pruebas unitarias con la Compra
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class CompraDAOTest {
 
@@ -34,6 +32,9 @@ public class CompraDAOTest {
     IConexion conexion;
     private static Long clienteIdCounter = 1000L;
 
+    /**
+     * Constructor por defecto.
+     */
     public CompraDAOTest() {
     }
 
@@ -58,6 +59,12 @@ public class CompraDAOTest {
         limpiarBaseDeDatos();
     }
 
+    /**
+     * Permite borrar los datos agregados en la base de datos.
+     *
+     * @throws PersistenciaException Se lanza en caso de que faller alguna
+     * conexión.
+     */
     private void limpiarBaseDeDatos() throws PersistenciaException {
         IProductoDAO productoDAO = new ProductoDAO(conexion);
         IClienteDAO clienteDAO = new ClienteDAO(conexion);
@@ -78,6 +85,12 @@ public class CompraDAOTest {
 
     }
 
+    /**
+     * Permite probar la adición de una nueva compra.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al agregar la
+     * compra.
+     */
     @Test
     public void agregarCompra() throws PersistenciaException {
         Compra compra = new Compra("Cosas para el GYM", null);
@@ -86,9 +99,14 @@ public class CompraDAOTest {
 
         assertNotNull(resultado.getId());
         assertEquals("Cosas para el GYM", resultado.getNombre());
-
     }
 
+    /**
+     * Permite probar la eliminación de una compra existente.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al eliminar la
+     * compra.
+     */
     @Test
     public void eliminarCompra() throws PersistenciaException {
         Compra compra = new Compra("EjemploCompra", null);
@@ -99,6 +117,12 @@ public class CompraDAOTest {
         assertNull(resultado);
     }
 
+    /**
+     * Permite probar la obtención de una compra por su ID.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al obtener la
+     * compra.
+     */
     @Test
     public void testObtenerCompraPorId() throws PersistenciaException {
         Compra compra = new Compra("Compra Test", null);
@@ -110,6 +134,13 @@ public class CompraDAOTest {
         assertEquals(compra.getId(), resultado.getId());
     }
 
+    /**
+     * Permite probar la obtención de todas las compras registradas.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al obtener las
+     * compras.
+     */
+    @Test
     public void testObtenerTodasLasCompras() throws PersistenciaException {
         compraDAO.agregarCompra(new Compra("Compra 1", null));
         compraDAO.agregarCompra(new Compra("Compra 2", null));
@@ -120,6 +151,12 @@ public class CompraDAOTest {
         assertTrue(compras.size() >= 2);
     }
 
+    /**
+     * Permite probar la actualización de una compra existente.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al actualizar la
+     * compra.
+     */
     @Test
     public void testActualizarCompra() throws PersistenciaException {
         Compra compraOriginal = new Compra("Compra Inicial", null);
@@ -133,5 +170,5 @@ public class CompraDAOTest {
         assertEquals(compraOriginal.getId(), compraActualizada.getId());
         assertEquals("Compra Actualizada", compraActualizada.getNombre());
     }
-
+ 
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
@@ -21,8 +17,10 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * Panel que permite mostrar las listas de compras de un cliente.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class panelListaCompras extends javax.swing.JPanel {
 
@@ -34,7 +32,13 @@ public class panelListaCompras extends javax.swing.JPanel {
     private IFiltroPorCompra filtroCompra;
 
     /**
-     * Creates new form panelListaCompras
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame menu inicio y el cliente. Además inicializa el valor del
+     * frame principal y el cliente. También crea la instancia CompraDTO,
+     * GestorCompras, GestorProductos y FiltroPorCompra.
+     *
+     * @param menuInicio Frame de menu inicio donde se pintará este panel.
+     * @param cliente Cliente actual.
      */
     public panelListaCompras(frmMenuInicio menuInicio, ClienteDTO cliente) {
         this.menuInicio = menuInicio;
@@ -49,6 +53,10 @@ public class panelListaCompras extends javax.swing.JPanel {
         menuInicio.mostrarPanel(this);
     }
 
+    /**
+     * Permite agregarle detalles estéticos a la tabla donde se muestran las
+     * compras.
+     */
     private void decorarTabla() {
         tblListaCompras.getTableHeader().setFont(new Font("MS Reference Sans Serif", Font.BOLD, 18));
         tblListaCompras.getTableHeader().setReorderingAllowed(false);
@@ -56,7 +64,10 @@ public class panelListaCompras extends javax.swing.JPanel {
         JScrollPane scrollPane = (JScrollPane) tblListaCompras.getParent().getParent();
         scrollPane.getViewport().setBackground(new Color(255, 255, 185));
     }
-    
+
+    /**
+     * Permite llenar la tabla con las listas de compras que tiene un cliente.
+     */
     private void mostrarListaCompras() {
         DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();
         modelo.setRowCount(0);
@@ -65,7 +76,6 @@ public class panelListaCompras extends javax.swing.JPanel {
         if (listaComprasCliente != null) {
             listaComprasCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombreCompra()}));
         }
-
     }
 
     /**
@@ -177,6 +187,12 @@ public class panelListaCompras extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que nos permite ver los productos que contiene una lista de
+     * compras.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnVerListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerListaActionPerformed
         int filaSeleccionada = tblListaCompras.getSelectedRow();
 
@@ -198,6 +214,12 @@ public class panelListaCompras extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnVerListaActionPerformed
 
+    /**
+     * Método que nos permite eliminar una lista de compras junto a todos su
+     * productos.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int filaSeleccionada = tblListaCompras.getSelectedRow();
 
@@ -207,9 +229,9 @@ public class panelListaCompras extends javax.swing.JPanel {
             for (int i = 0; i < tblListaCompras.getColumnCount(); i++) {
                 datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);
             }
-            
+
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar esta lista?", "Atención", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {    
+            if (respuesta == JOptionPane.YES_OPTION) {
                 compra.setNombreCompra(datosFila[0].toString());
                 CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
                 List<ProductoDTO> productosAsociados = filtroCompra.obtenerProductosFiltrarPorCompra(compraSelec.getId());
