@@ -6,9 +6,8 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
-import com.mycompany.listacompragestorclientes.GestorClientes;
-import com.mycompany.listacompragestorcompras.GestorCompras;
-import com.mycompany.listacompragestorcompras.IGestorCompras;
+import Subsistemas.IGestorCompras;
+import Subsistemas.GestorCompras;
 import javax.swing.JOptionPane;
 
 /**

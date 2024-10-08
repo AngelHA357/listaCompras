@@ -1,11 +1,17 @@
-package BOs;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
+package Subsistemas;
 
-import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
-import Exceptions.PersistenciaException;
 import java.util.List;
 
-public interface IProductoBO {
+/**
+ *
+ * @author IJCF
+ */
+public interface IGestorProductos {
 
     public ProductoDTO agregarProducto(ProductoDTO productoDTO);
 
@@ -17,9 +23,6 @@ public interface IProductoBO {
 
     public void eliminarProducto(Long id);
 
-    public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId);
-
-    public List<ProductoDTO> filtrarPorCompra(Long compraId);
-    
     public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId);
+
 }

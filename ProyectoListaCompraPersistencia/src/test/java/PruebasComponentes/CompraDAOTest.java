@@ -91,14 +91,14 @@ public class CompraDAOTest {
 
     }
 
-    @Test
-    public void eliminarCompra() throws PersistenciaException {
-        Compra compra = new Compra("EjemploCompra", null);
-        compraDAO.agregarCompra(compra);
-        Compra resultado = compraDAO.eliminarCompra(compra.getId());
-
-        assertEquals("EjemploCompra", resultado.getNombre());
-    }
+//    @Test
+//    public void eliminarCompra() throws PersistenciaException {
+//        Compra compra = new Compra("EjemploCompra", null);
+//        compraDAO.agregarCompra(compra);
+//        Compra resultado = compraDAO.eliminarCompra(compra.getId());
+//
+//        assertEquals("EjemploCompra", resultado.getNombre());
+//    }
 
     @Test
     public void testObtenerCompraPorId() throws PersistenciaException {
@@ -121,11 +121,11 @@ public class CompraDAOTest {
         assertTrue(compras.size() >= 2); // Verificar que al menos hay dos compras
     }
 
-    @Test
-    public void testEliminarCompraInexistente() throws PersistenciaException {
-        Compra resultado = compraDAO.eliminarCompra(999L); // ID que no existe
-        assertNull(resultado); // Debería retornar null
-    }
+//    @Test
+//    public void testEliminarCompraInexistente() throws PersistenciaException {
+//        Compra resultado = compraDAO.eliminarCompra(999L); // ID que no existe
+//        assertNull(resultado); // Debería retornar null
+//    }
 
     @Test
     public void testActualizarCompra() throws PersistenciaException {

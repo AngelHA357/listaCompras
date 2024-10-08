@@ -5,8 +5,8 @@
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
-import com.mycompany.listacompragestorclientes.GestorClientes;
-import com.mycompany.listacompragestorclientes.IGestorClientes;
+import Subsistemas.IGestorClientes;
+import Subsistemas.GestorClientes;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;

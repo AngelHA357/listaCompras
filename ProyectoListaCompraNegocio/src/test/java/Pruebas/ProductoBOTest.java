@@ -4,10 +4,10 @@
  */
 package Pruebas;
 
-import BOs.CompraBO;
-import BOs.ICompraBO;
-import BOs.IProductoBO;
-import BOs.ProductoBO;
+import Subsistemas.CompraBO;
+import Subsistemas.ICompraBO;
+import Subsistemas.IProductoBO;
+import Subsistemas.ProductoBO;
 import Conexion.Conexion;
 import Conexion.IConexion;
 import Conversiones.CompraConversiones;

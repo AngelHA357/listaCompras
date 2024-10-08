@@ -4,8 +4,8 @@
  */
 package Pruebas;
 
-import BOs.ClienteBO;
-import BOs.IClienteBO;
+import Subsistemas.ClienteBO;
+import Subsistemas.IClienteBO;
 import Conexion.Conexion;
 import Conexion.IConexion;
 import Conversiones.ClientesConversiones;

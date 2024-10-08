@@ -4,9 +4,9 @@
  */
 package Pruebas;
 
-import BOs.ClienteBO;
-import BOs.CompraBO;
-import BOs.ICompraBO;
+import Subsistemas.ClienteBO;
+import Subsistemas.CompraBO;
+import Subsistemas.ICompraBO;
 import Conexion.Conexion;
 import Conexion.IConexion;
 import Conversiones.CompraConversiones;

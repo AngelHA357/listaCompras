@@ -6,12 +6,12 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
-import com.mycompany.listacomprafiltroporcompra.FiltroPorCompra;
-import com.mycompany.listacomprafiltroporcompra.IFiltroPorCompra;
-import com.mycompany.listacompragestorcompras.GestorCompras;
-import com.mycompany.listacompragestorcompras.IGestorCompras;
-import com.mycompany.listacompragestorproductos.GestorProductos;
-import com.mycompany.listacompragestorproductos.IGestorProductos;
+import Subsistemas.IFiltroPorCompra;
+import Subsistemas.FiltroPorCompra;
+import Subsistemas.IGestorCompras;
+import Subsistemas.GestorCompras;
+import Subsistemas.IGestorProductos;
+import Subsistemas.GestorProductos;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;

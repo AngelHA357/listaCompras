@@ -1,4 +1,4 @@
-package BOs;
+package Subsistemas;
 
 import DTOs.CompraDTO;
 import Exceptions.PersistenciaException;

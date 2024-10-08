@@ -1,4 +1,4 @@
-package BOs;
+package Subsistemas;
 
 import Conexion.Conexion;
 import Conexion.IConexion;

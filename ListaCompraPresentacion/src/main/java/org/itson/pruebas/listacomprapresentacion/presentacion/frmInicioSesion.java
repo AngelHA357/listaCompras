@@ -4,14 +4,16 @@
  */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
-import BOs.ClienteBO;
+import Subsistemas.IGestorClientes;
+import Subsistemas.GestorClientes;
 import DTOs.ClienteDTO;
-import com.mycompany.listacompragestorclientes.GestorClientes;
-import com.mycompany.listacompragestorclientes.IGestorClientes;
+import Exceptions.NegocioException;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
@@ -230,13 +232,17 @@ public class frmInicioSesion extends javax.swing.JFrame {
         if (validador.validaUsuario(usuario)) {
             if (validador.validaContrasena(contrasena)) {
 
-                ClienteDTO cliente = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasena);
-                if (cliente != null) {
-                    frmMenuInicio menuInicio = new frmMenuInicio(pantallaInicial, cliente);
-                    menuInicio.setVisible(true);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "El usuario no existe", "Usuario", JOptionPane.ERROR_MESSAGE);
+                try {
+                    ClienteDTO cliente = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasena);
+                    if (cliente != null) {
+                        frmMenuInicio menuInicio = new frmMenuInicio(pantallaInicial, cliente);
+                        menuInicio.setVisible(true);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El usuario no existe", "Usuario", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NegocioException ex) {
+                    Logger.getLogger(frmInicioSesion.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } else {
