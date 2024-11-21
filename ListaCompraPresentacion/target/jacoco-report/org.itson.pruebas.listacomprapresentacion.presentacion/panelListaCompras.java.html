@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>panelListaCompras.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ListaCompraPresentacion</a> &gt; <a href="index.source.html" class="el_package">org.itson.pruebas.listacomprapresentacion.presentacion</a> &gt; <span class="el_source">panelListaCompras.java</span></div><h1>panelListaCompras.java</h1><pre class="source lang-java linenums">package org.itson.pruebas.listacomprapresentacion.presentacion;
+
+import DTOs.ClienteDTO;
+import DTOs.CompraDTO;
+import DTOs.ProductoDTO;
+import Subsistemas.IFiltroPorCompra;
+import Subsistemas.FiltroPorCompra;
+import Subsistemas.IGestorCompras;
+import Subsistemas.GestorCompras;
+import Subsistemas.IGestorProductos;
+import Subsistemas.GestorProductos;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ * Panel que permite mostrar las listas de compras de un cliente.
+ *
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
+ */
+public class panelListaCompras extends javax.swing.JPanel {
+
+    private frmMenuInicio menuInicio;
+    private ClienteDTO cliente;
+    private CompraDTO compra;
+    private IGestorCompras gestorCompras;
+    private IGestorProductos gestorProductos;
+    private IFiltroPorCompra filtroCompra;
+
+    /**
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame menu inicio y el cliente. Además inicializa el valor del
+     * frame principal y el cliente. También crea la instancia CompraDTO,
+     * GestorCompras, GestorProductos y FiltroPorCompra.
+     *
+     * @param menuInicio Frame de menu inicio donde se pintará este panel.
+     * @param cliente Cliente actual.
+     */
+<span class="nc" id="L43">    public panelListaCompras(frmMenuInicio menuInicio, ClienteDTO cliente) {</span>
+<span class="nc" id="L44">        this.menuInicio = menuInicio;</span>
+<span class="nc" id="L45">        this.cliente = cliente;</span>
+<span class="nc" id="L46">        this.compra = new CompraDTO();</span>
+<span class="nc" id="L47">        this.gestorCompras = new GestorCompras();</span>
+<span class="nc" id="L48">        this.gestorProductos = new GestorProductos();</span>
+<span class="nc" id="L49">        this.filtroCompra = new FiltroPorCompra();</span>
+<span class="nc" id="L50">        initComponents();</span>
+<span class="nc" id="L51">        decorarTabla();</span>
+<span class="nc" id="L52">        mostrarListaCompras();</span>
+<span class="nc" id="L53">        menuInicio.mostrarPanel(this);</span>
+<span class="nc" id="L54">    }</span>
+
+    /**
+     * Permite agregarle detalles estéticos a la tabla donde se muestran las
+     * compras.
+     */
+    private void decorarTabla() {
+<span class="nc" id="L61">        tblListaCompras.getTableHeader().setFont(new Font(&quot;MS Reference Sans Serif&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L62">        tblListaCompras.getTableHeader().setReorderingAllowed(false);</span>
+<span class="nc" id="L63">        tblListaCompras.getTableHeader().setBackground(new Color(255, 255, 185));</span>
+<span class="nc" id="L64">        JScrollPane scrollPane = (JScrollPane) tblListaCompras.getParent().getParent();</span>
+<span class="nc" id="L65">        scrollPane.getViewport().setBackground(new Color(255, 255, 185));</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * Permite llenar la tabla con las listas de compras que tiene un cliente.
+     */
+    private void mostrarListaCompras() {
+<span class="nc" id="L72">        DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();</span>
+<span class="nc" id="L73">        modelo.setRowCount(0);</span>
+
+<span class="nc" id="L75">        List&lt;CompraDTO&gt; listaComprasCliente = gestorCompras.obtenerComprasPorCliente(cliente.getId());</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (listaComprasCliente != null) {</span>
+<span class="nc" id="L77">            listaComprasCliente.forEach(p -&gt; modelo.addRow(new Object[]{p.getNombreCompra()}));</span>
+        }
+<span class="nc" id="L79">    }</span>
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    // &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+<span class="nc" id="L90">        jScrollPane1 = new javax.swing.JScrollPane();</span>
+<span class="nc" id="L91">        tblListaCompras = new javax.swing.JTable();</span>
+<span class="nc" id="L92">        btnVerLista = new javax.swing.JButton();</span>
+<span class="nc" id="L93">        btnEliminar = new javax.swing.JButton();</span>
+<span class="nc" id="L94">        jLabel1 = new javax.swing.JLabel();</span>
+<span class="nc" id="L95">        jLabel2 = new javax.swing.JLabel();</span>
+
+<span class="nc" id="L97">        setBackground(new java.awt.Color(255, 255, 185));</span>
+<span class="nc" id="L98">        setMaximumSize(new java.awt.Dimension(1024, 597));</span>
+
+<span class="nc" id="L100">        tblListaCompras.setAutoCreateRowSorter(true);</span>
+<span class="nc" id="L101">        tblListaCompras.setBackground(new java.awt.Color(255, 255, 220));</span>
+<span class="nc" id="L102">        tblListaCompras.setFont(new java.awt.Font(&quot;MS Reference Sans Serif&quot;, 0, 18)); // NOI18N</span>
+<span class="nc" id="L103">        tblListaCompras.setModel(new javax.swing.table.DefaultTableModel(</span>
+            new Object [][] {
+
+            },
+            new String [] {
+                &quot;Lista de compras creadas&quot;
+            }
+<span class="nc" id="L110">        ) {</span>
+<span class="nc" id="L111">            boolean[] canEdit = new boolean [] {</span>
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+<span class="nc" id="L116">                return canEdit [columnIndex];</span>
+            }
+        });
+<span class="nc" id="L119">        tblListaCompras.setAlignmentX(20.0F);</span>
+<span class="nc" id="L120">        tblListaCompras.setGridColor(new java.awt.Color(204, 204, 204));</span>
+<span class="nc" id="L121">        tblListaCompras.setRowHeight(30);</span>
+<span class="nc" id="L122">        jScrollPane1.setViewportView(tblListaCompras);</span>
+
+<span class="nc" id="L124">        btnVerLista.setBackground(new java.awt.Color(254, 194, 58));</span>
+<span class="nc" id="L125">        btnVerLista.setFont(new java.awt.Font(&quot;MS Reference Sans Serif&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L126">        btnVerLista.setText(&quot;Ver lista de compras&quot;);</span>
+<span class="nc" id="L127">        btnVerLista.setFocusable(false);</span>
+<span class="nc" id="L128">        btnVerLista.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L130">                btnVerListaActionPerformed(evt);</span>
+<span class="nc" id="L131">            }</span>
+        });
+
+<span class="nc" id="L134">        btnEliminar.setBackground(new java.awt.Color(254, 194, 58));</span>
+<span class="nc" id="L135">        btnEliminar.setFont(new java.awt.Font(&quot;MS Reference Sans Serif&quot;, 1, 14)); // NOI18N</span>
+<span class="nc" id="L136">        btnEliminar.setText(&quot;Borrar lista&quot;);</span>
+<span class="nc" id="L137">        btnEliminar.setFocusable(false);</span>
+<span class="nc" id="L138">        btnEliminar.addActionListener(new java.awt.event.ActionListener() {</span>
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+<span class="nc" id="L140">                btnEliminarActionPerformed(evt);</span>
+<span class="nc" id="L141">            }</span>
+        });
+
+<span class="nc" id="L144">        jLabel1.setFont(new java.awt.Font(&quot;MS Reference Sans Serif&quot;, 1, 28)); // NOI18N</span>
+<span class="nc" id="L145">        jLabel1.setText(&quot;Lista de compras&quot;);</span>
+
+<span class="nc" id="L147">        jLabel2.setFont(new java.awt.Font(&quot;MS Reference Sans Serif&quot;, 0, 12)); // NOI18N</span>
+<span class="nc" id="L148">        jLabel2.setText(&quot;Para ver o borrar una lista seleccione la lista y luego haga clic en el botón&quot;);</span>
+
+<span class="nc" id="L150">        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);</span>
+<span class="nc" id="L151">        this.setLayout(layout);</span>
+<span class="nc" id="L152">        layout.setHorizontalGroup(</span>
+<span class="nc" id="L153">            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L154">            .addGroup(layout.createSequentialGroup()</span>
+<span class="nc" id="L155">                .addGap(75, 75, 75)</span>
+<span class="nc" id="L156">                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L157">                .addGap(439, 439, 439)</span>
+<span class="nc" id="L158">                .addComponent(btnVerLista, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L159">                .addContainerGap(74, Short.MAX_VALUE))</span>
+<span class="nc" id="L160">            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()</span>
+<span class="nc" id="L161">                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L162">                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L163">                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()</span>
+<span class="nc" id="L164">                        .addComponent(jLabel1)</span>
+<span class="nc" id="L165">                        .addGap(387, 387, 387))</span>
+<span class="nc" id="L166">                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()</span>
+<span class="nc" id="L167">                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 766, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L168">                        .addGap(128, 128, 128))</span>
+<span class="nc" id="L169">                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()</span>
+<span class="nc" id="L170">                        .addComponent(jLabel2)</span>
+<span class="nc" id="L171">                        .addGap(293, 293, 293))))</span>
+        );
+<span class="nc" id="L173">        layout.setVerticalGroup(</span>
+<span class="nc" id="L174">            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)</span>
+<span class="nc" id="L175">            .addGroup(layout.createSequentialGroup()</span>
+<span class="nc" id="L176">                .addGap(47, 47, 47)</span>
+<span class="nc" id="L177">                .addComponent(jLabel1)</span>
+<span class="nc" id="L178">                .addGap(37, 37, 37)</span>
+<span class="nc" id="L179">                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L180">                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)</span>
+<span class="nc" id="L181">                .addComponent(jLabel2)</span>
+<span class="nc" id="L182">                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)</span>
+<span class="nc" id="L183">                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)</span>
+<span class="nc" id="L184">                    .addComponent(btnVerLista, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L185">                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L186">                .addGap(57, 57, 57))</span>
+        );
+<span class="nc" id="L188">    }// &lt;/editor-fold&gt;//GEN-END:initComponents</span>
+
+    /**
+     * Método que nos permite ver los productos que contiene una lista de
+     * compras.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
+    private void btnVerListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerListaActionPerformed
+<span class="nc" id="L197">        int filaSeleccionada = tblListaCompras.getSelectedRow();</span>
+
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if (filaSeleccionada != -1) {</span>
+<span class="nc" id="L200">            Object[] datosFila = new Object[tblListaCompras.getColumnCount()];</span>
+
+<span class="nc bnc" id="L202" title="All 2 branches missed.">            for (int i = 0; i &lt; tblListaCompras.getColumnCount(); i++) {</span>
+<span class="nc" id="L203">                datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);</span>
+            }
+<span class="nc" id="L205">            compra.setNombreCompra(datosFila[0].toString());</span>
+<span class="nc" id="L206">            CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());</span>
+
+<span class="nc" id="L208">            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraSelec);</span>
+<span class="nc" id="L209">            menuInicio.mostrarPanel(agregarProducto);</span>
+<span class="nc" id="L210">        } else {</span>
+<span class="nc" id="L211">            JOptionPane.showMessageDialog(this, &quot;Seleccione una lista de compras&quot;, &quot;Atención&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+        }
+
+
+<span class="nc" id="L215">    }//GEN-LAST:event_btnVerListaActionPerformed</span>
+
+    /**
+     * Método que nos permite eliminar una lista de compras junto a todos su
+     * productos.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+<span class="nc" id="L224">        int filaSeleccionada = tblListaCompras.getSelectedRow();</span>
+
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (filaSeleccionada != -1) {</span>
+<span class="nc" id="L227">            Object[] datosFila = new Object[tblListaCompras.getColumnCount()];</span>
+
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            for (int i = 0; i &lt; tblListaCompras.getColumnCount(); i++) {</span>
+<span class="nc" id="L230">                datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);</span>
+            }
+
+<span class="nc" id="L233">            int respuesta = JOptionPane.showConfirmDialog(this, &quot;¿Estás seguro de borrar esta lista?&quot;, &quot;Atención&quot;, JOptionPane.YES_NO_OPTION);</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">            if (respuesta == JOptionPane.YES_OPTION) {</span>
+<span class="nc" id="L235">                compra.setNombreCompra(datosFila[0].toString());</span>
+<span class="nc" id="L236">                CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());</span>
+<span class="nc" id="L237">                List&lt;ProductoDTO&gt; productosAsociados = filtroCompra.obtenerProductosFiltrarPorCompra(compraSelec.getId());</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                for (ProductoDTO productoAsociado : productosAsociados) {</span>
+<span class="nc" id="L239">                    productoAsociado = gestorProductos.obtenerProductoPorCaracteristicas(productoAsociado.getNombre(), productoAsociado.getCategoria(), productoAsociado.isComprado(),</span>
+<span class="nc" id="L240">                            productoAsociado.getCantidad(), compraSelec.getId());</span>
+<span class="nc" id="L241">                    gestorProductos.eliminarProducto(productoAsociado.getId());</span>
+<span class="nc" id="L242">                }</span>
+<span class="nc" id="L243">                gestorCompras.eliminarCompra(compraSelec.getId());</span>
+<span class="nc" id="L244">                mostrarListaCompras();</span>
+            }
+
+<span class="nc" id="L247">        } else {</span>
+<span class="nc" id="L248">            JOptionPane.showMessageDialog(this, &quot;Seleccione una lista de compras&quot;, &quot;Atención&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+        }
+<span class="nc" id="L250">    }//GEN-LAST:event_btnEliminarActionPerformed</span>
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnVerLista;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblListaCompras;
+    // End of variables declaration//GEN-END:variables
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
