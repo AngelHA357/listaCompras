@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Conexion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ProyectoListaCompraPersistencia</a> &gt; <a href="index.source.html" class="el_package">Conexion</a> &gt; <span class="el_source">Conexion.java</span></div><h1>Conexion.java</h1><pre class="source lang-java linenums">package Conexion;
+
+import Exceptions.PersistenciaException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+/**
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ * 
+ * Singleton para manejar la conexión con JPA
+ */
+public class Conexion implements IConexion {
+
+    // Atributo estático para la instancia Singleton de EntityManagerFactory
+    private static EntityManagerFactory entityManagerFactory;
+    private static Conexion instance;
+
+    // Constructor privado para evitar instanciación desde fuera
+    private Conexion() {
+    }
+
+    // Método para obtener una única instancia de EntityManagerFactory
+    private static EntityManagerFactory getEntityManagerFactory() throws PersistenciaException {
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (entityManagerFactory == null) {</span>
+            try {
+<span class="fc" id="L27">                entityManagerFactory = Persistence.createEntityManagerFactory(&quot;conexionPU&quot;);</span>
+<span class="nc" id="L28">            } catch (Exception e) {</span>
+<span class="nc" id="L29">                throw new PersistenciaException(&quot;Error al crear EntityManagerFactory: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L30">            }</span>
+        }
+<span class="fc" id="L32">        return entityManagerFactory;</span>
+    }
+
+    public static Conexion getInstance() {
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L37">            instance = new Conexion();</span>
+        }
+<span class="fc" id="L39">        return instance;</span>
+    }
+
+    @Override
+    public EntityManager crearConexion() throws PersistenciaException {
+        // Usamos la única instancia de EntityManagerFactory para crear el EntityManager
+<span class="fc" id="L45">        return getEntityManagerFactory().createEntityManager();</span>
+    }
+
+    // Método para cerrar la EntityManagerFactory cuando ya no se necesite
+    public static void cerrarConexion() {
+<span class="nc bnc" id="L50" title="All 4 branches missed.">        if (entityManagerFactory != null &amp;&amp; entityManagerFactory.isOpen()) {</span>
+<span class="nc" id="L51">            entityManagerFactory.close();</span>
+        }
+<span class="nc" id="L53">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

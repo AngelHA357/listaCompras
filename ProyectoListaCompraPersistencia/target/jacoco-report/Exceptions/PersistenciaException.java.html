@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersistenciaException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ProyectoListaCompraPersistencia</a> &gt; <a href="index.source.html" class="el_package">Exceptions</a> &gt; <span class="el_source">PersistenciaException.java</span></div><h1>PersistenciaException.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Exceptions;
+
+/**
+ *
+ * @author pc
+ */
+public class PersistenciaException extends Exception{
+
+    /**
+     * Constructor sin parámetros.
+     */
+<span class="nc" id="L16">    public PersistenciaException() {</span>
+<span class="nc" id="L17">    }</span>
+
+    /**
+     * Constructor que recibe un mensaje de error.
+     *
+     * @param message Mensaje de error.
+     */
+    public PersistenciaException(String message) {
+<span class="nc" id="L25">        super(message);</span>
+<span class="nc" id="L26">    }</span>
+
+    /**
+     * Constructor que recibe un mensaje de error y una causa subyacente.
+     *
+     * @param message Mensaje de error.
+     * @param cause Causa subyacente.
+     */
+    public PersistenciaException(String message, Throwable cause) {
+<span class="fc" id="L35">        super(message, cause);</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * Constructor que recibe una causa subyacente.
+     *
+     * @param cause Causa subyacente.
+     */
+    public PersistenciaException(Throwable cause) {
+<span class="nc" id="L44">        super(cause);</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Constructor que recibe un mensaje de error, una causa subyacente, un
+     * indicador de supresión de habilitación y un indicador de escribibilidad
+     * de rastreo.
+     *
+     * @param message Mensaje de error.
+     * @param cause Causa subyacente.
+     * @param enableSuppression Indicador de supresión de habilitación.
+     * @param writableStackTrace Indicador de escribibilidad de rastreo.
+     */
+    public PersistenciaException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+<span class="nc" id="L58">        super(message, cause, enableSuppression, writableStackTrace);</span>
+<span class="nc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

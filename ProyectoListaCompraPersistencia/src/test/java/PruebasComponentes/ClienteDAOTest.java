@@ -131,7 +131,7 @@ public class ClienteDAOTest {
      * cliente.
      */
     @Test
-    public void testObtenerClientePorUsuarioYContrasenaClienteExistente() throws PersistenciaException {
+    public void testObtenerClientePorUsuarioYContrasena_ClienteExistente() throws PersistenciaException {
         String usuario = "wacho" + System.currentTimeMillis();
         String contrasenia = "ABCD1234";
 

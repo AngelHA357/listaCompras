@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ProyectoListaCompraPersistencia</a> &gt; <a href="index.source.html" class="el_package">DAOs</a> &gt; <span class="el_source">ClienteDAO.java</span></div><h1>ClienteDAO.java</h1><pre class="source lang-java linenums">package DAOs;
+
+import Conexion.IConexion;
+import Entidades.Cliente;
+import Exceptions.PersistenciaException;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
+public class ClienteDAO implements IClienteDAO {
+
+    private final IConexion conexion;
+
+<span class="fc" id="L17">    public ClienteDAO(IConexion conexion) {</span>
+<span class="fc" id="L18">        this.conexion = conexion;</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * Método para agregar un nuevo cliente.
+     *
+     * @param cliente Cliente a agregar.
+     * @return Cliente agregado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Cliente agregarCliente(Cliente cliente) throws PersistenciaException {
+<span class="fc" id="L30">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L32">            em.getTransaction().begin();</span>
+<span class="fc" id="L33">            em.persist(cliente);</span>
+<span class="fc" id="L34">            em.getTransaction().commit();</span>
+
+<span class="fc" id="L36">            return em.find(Cliente.class, cliente.getId());</span>
+<span class="nc" id="L37">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (em.getTransaction().isActive()) {</span>
+<span class="nc" id="L39">                em.getTransaction().rollback();</span>
+            }
+<span class="nc" id="L41">            throw new PersistenciaException(&quot;Error al agregar cliente&quot;, e);</span>
+        } finally {
+<span class="fc" id="L43">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para obtener un cliente por su ID.
+     *
+     * @param id ID del cliente a buscar.
+     * @return Cliente encontrado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
+<span class="fc" id="L56">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L58">            return em.find(Cliente.class, id);</span>
+<span class="nc" id="L59">        } catch (Exception e) {</span>
+<span class="nc" id="L60">            throw new PersistenciaException(&quot;Error al obtener cliente por ID&quot;, e);</span>
+        } finally {
+<span class="fc" id="L62">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para obtener todos los clientes.
+     *
+     * @return Lista de todos los clientes.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public List&lt;Cliente&gt; obtenerTodosLosClientes() throws PersistenciaException {
+<span class="fc" id="L74">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L76">            Query query = em.createQuery(&quot;SELECT c FROM Cliente c&quot;);</span>
+<span class="fc" id="L77">            return query.getResultList();</span>
+<span class="nc" id="L78">        } catch (Exception e) {</span>
+<span class="nc" id="L79">            throw new PersistenciaException(&quot;Error al obtener todos los clientes&quot;, e);</span>
+        } finally {
+<span class="fc" id="L81">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para actualizar un cliente existente.
+     *
+     * @param cliente Cliente con los nuevos datos.
+     * @return Cliente actualizado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Cliente actualizarCliente(Cliente cliente) throws PersistenciaException {
+<span class="nc" id="L94">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="nc" id="L96">            em.getTransaction().begin();</span>
+<span class="nc" id="L97">            em.merge(cliente);</span>
+<span class="nc" id="L98">            em.getTransaction().commit();</span>
+
+<span class="nc" id="L100">            return em.find(Cliente.class, cliente.getId());</span>
+<span class="nc" id="L101">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (em.getTransaction().isActive()) {</span>
+<span class="nc" id="L103">                em.getTransaction().rollback();</span>
+            }
+<span class="nc" id="L105">            throw new PersistenciaException(&quot;Error al actualizar cliente&quot;, e);</span>
+        } finally {
+<span class="nc" id="L107">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para eliminar un cliente por su ID.
+     *
+     * @param id ID del cliente a eliminar.
+     * @return Cliente eliminado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Cliente eliminarCliente(Long id) throws PersistenciaException {
+<span class="fc" id="L120">        EntityManager em = conexion.crearConexion();</span>
+<span class="fc" id="L121">        Cliente clienteEliminado = null; // Variable para almacenar el cliente a eliminar</span>
+        try {
+<span class="fc" id="L123">            em.getTransaction().begin();</span>
+<span class="fc" id="L124">            clienteEliminado = em.find(Cliente.class, id);</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            if (clienteEliminado != null) {</span>
+<span class="fc" id="L126">                em.remove(clienteEliminado);</span>
+            }
+<span class="fc" id="L128">            em.getTransaction().commit();</span>
+<span class="nc" id="L129">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (em.getTransaction().isActive()) {</span>
+<span class="nc" id="L131">                em.getTransaction().rollback();</span>
+            }
+<span class="nc" id="L133">            throw new PersistenciaException(&quot;Error al eliminar cliente&quot;, e);</span>
+        } finally {
+<span class="fc" id="L135">            em.close();</span>
+        }
+<span class="fc" id="L137">        return clienteEliminado;</span>
+    }
+
+    /**
+     * Método para obtener un cliente por su usuario y contraseña.
+     *
+     * @param usuario Nombre de usuario del cliente.
+     * @param contrasenia Contraseña del cliente.
+     * @return Cliente que coincide con las credenciales proporcionadas.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Cliente obtenerClientePorUsuarioYContrasena(String usuario, String contrasenia) throws PersistenciaException {
+<span class="fc" id="L150">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L152">            Query query = em.createQuery(&quot;SELECT c FROM Cliente c WHERE c.usuario = :usuario AND c.contrasenia = :contrasenia&quot;);</span>
+<span class="fc" id="L153">            query.setParameter(&quot;usuario&quot;, usuario);</span>
+<span class="fc" id="L154">            query.setParameter(&quot;contrasenia&quot;, contrasenia);</span>
+<span class="fc" id="L155">            return (Cliente) query.getSingleResult();</span>
+<span class="fc" id="L156">        } catch (Exception e) {</span>
+<span class="fc" id="L157">            throw new PersistenciaException(&quot;Error al obtener cliente por usuario y contraseña&quot;, e);</span>
+        } finally {
+<span class="fc" id="L159">            em.close();</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
