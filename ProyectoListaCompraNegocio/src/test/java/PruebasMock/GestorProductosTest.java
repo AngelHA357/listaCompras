@@ -1,9 +1,8 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
-package PruebasMock;
+package Pruebas;
 
 import Conversiones.CompraConversiones;
 import Conversiones.ProductosConversiones;
@@ -36,14 +35,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345 .
  */
 public class GestorProductosTest {
 
@@ -85,12 +83,12 @@ public class GestorProductosTest {
 
             when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
             when(productoDAOMock.agregarProducto(any(Producto.class))).thenReturn(producto);
-            when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
+            when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
 
             ProductoDTO resultadoDTO = gestorProductos.agregarProducto(productoDTO);
 
             verify(conversionesMock, times(1)).dtoAEntidad(productoDTO);
-            verify(conversionesMock, times(1)).entidadADTO(producto, false);
+            verify(conversionesMock, times(1)).entidadADTO(producto);
             verify(productoDAOMock, times(1)).agregarProducto(producto);
 
             assertNotNull(resultadoDTO);
@@ -118,22 +116,30 @@ public class GestorProductosTest {
      * conversiones y se actualice correctamente en el DAO.
      */
     @Test
-    public void testActualizarProducto() throws PersistenciaException, NegocioException {
-        Producto productoExistente = new Producto("Producto Original", "Categoria A", false, null, 5.0);
+    public void testActualizarProducto() throws PersistenciaException {
         ProductoDTO productoDTO = new ProductoDTO("Producto Original", "Categoria A", false, null, 5.0);
-        Producto productoActualizado = new Producto("Producto Actualizado", "Categoria A", false, null, 10.0);
+        Producto producto = new Producto("Producto Original", "Categoria A", false, null, 5.0);
 
-        when(productoDAOMock.obtenerProductoPorId(1L)).thenReturn(productoExistente);
-        when(conversionesMock.dtoAEntidad(productoDTO)).thenReturn(productoActualizado);
-        when(productoDAOMock.actualizarProducto(productoActualizado)).thenReturn(productoActualizado);
-        when(conversionesMock.entidadADTO(productoActualizado, false)).thenReturn(productoDTO);
+        when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
+        when(productoDAOMock.actualizarProducto(any(Producto.class))).thenReturn(producto);
+        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
 
-        ProductoDTO resultado = gestorProductos.actualizarProducto(productoDTO);
+        ProductoDTO resultadoDTO = gestorProductos.actualizarProducto(productoDTO);
 
-        assertNotNull(resultado);
-        assertEquals(productoDTO.getNombre(), resultado.getNombre());
-        verify(productoDAOMock, times(1)).obtenerProductoPorId(1L);
-        verify(productoDAOMock, times(1)).actualizarProducto(productoActualizado);
+        verify(conversionesMock, times(1)).dtoAEntidad(productoDTO);
+        verify(conversionesMock, times(1)).entidadADTO(producto);
+        verify(productoDAOMock, times(1)).actualizarProducto(producto);
+
+        assertNotNull(resultadoDTO);
+        assertEquals("Producto Original", resultadoDTO.getNombre());
+
+        productoDTO.setNombre("Producto Actualizado");
+        producto.setNombre("Producto Actualizado");
+
+        resultadoDTO = gestorProductos.actualizarProducto(productoDTO);
+
+        assertNotNull(resultadoDTO);
+        assertEquals("Producto Actualizado", resultadoDTO.getNombre());
     }
 
     /**
@@ -141,15 +147,18 @@ public class GestorProductosTest {
      * resultado sea nulo si no se encuentra el producto.
      */
     @Test
-    public void testActualizarProductoQueNoExiste() throws PersistenciaException, NegocioException {
+    public void testActualizarProductoQueNoExiste() throws PersistenciaException {
         ProductoDTO productoDTO = new ProductoDTO("Producto Inexistente", "Categoria X", false, null, 5.0);
-        
-        when(productoDAOMock.obtenerProductoPorId(999L)).thenReturn(null);
+        Producto producto = new Producto("Producto Inexistente", "Categoria X", false, null, 5.0);
 
-        assertThrows(NegocioException.class, () -> gestorProductos.actualizarProducto(productoDTO));
+        when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
+        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
+        when(productoDAOMock.actualizarProducto(any(Producto.class))).thenReturn(null);
 
-        verify(productoDAOMock, times(1)).obtenerProductoPorId(999L);
-        verify(productoDAOMock, never()).actualizarProducto(any());
+        ProductoDTO resultado = gestorProductos.actualizarProducto(productoDTO);
+
+        assertNull(resultado);
+        verify(productoDAOMock, times(1)).actualizarProducto(any(Producto.class));
     }
 
     /**
@@ -157,15 +166,16 @@ public class GestorProductosTest {
      * correctamente al DAO con el ID del producto.
      */
     @Test
-    public void testEliminarProducto() throws PersistenciaException, NegocioException {
-        Producto productoExistente = new Producto("Producto Original", "Categoria A", false, null, 5.0);
+    public void testEliminarProducto() throws PersistenciaException {
+        Long id = 1L;
 
-         when(productoDAOMock.obtenerProductoPorId(1L)).thenReturn(productoExistente);
+        gestorProductos.eliminarProducto(id);
 
-        gestorProductos.eliminarProducto(1L);
+        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
-        verify(productoDAOMock, times(1)).obtenerProductoPorId(1L);
-        verify(productoDAOMock, times(1)).eliminarProducto(1L);
+        verify(productoDAOMock).eliminarProducto(anyLong());
+        verify(productoDAOMock).eliminarProducto(longArgumentCaptor.capture());
+        assertEquals(1L, longArgumentCaptor.getValue());
     }
 
     /**
@@ -173,13 +183,16 @@ public class GestorProductosTest {
      * invoca correctamente al DAO con el ID inexistente.
      */
     @Test
-    public void testEliminarProductoQueNoExiste() throws PersistenciaException, NegocioException {
-        when(productoDAOMock.obtenerProductoPorId(999L)).thenReturn(null);
+    public void testEliminarProductoQueNoExiste() throws PersistenciaException {
+        Long idInexistente = 999L;
 
-        assertThrows(NegocioException.class, () -> gestorProductos.eliminarProducto(999L));
+        gestorProductos.eliminarProducto(idInexistente);
 
-        verify(productoDAOMock, times(1)).obtenerProductoPorId(999L);
-        verify(productoDAOMock, never()).eliminarProducto(anyLong());
+        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+
+        verify(productoDAOMock).eliminarProducto(anyLong());
+        verify(productoDAOMock).eliminarProducto(longArgumentCaptor.capture());
+        assertEquals(idInexistente, longArgumentCaptor.getValue());
     }
 
     /**
@@ -187,17 +200,17 @@ public class GestorProductosTest {
      * conversiones y se obtenga el producto correcto.
      */
     @Test
-    public void testObtenerProductoPorId() throws PersistenciaException, NegocioException {
+    public void testObtenerProductoPorId() throws PersistenciaException {
         ProductoDTO productoDTO = new ProductoDTO("Producto de Prueba", "Categoria A", false, null, 5.0);
         Producto producto = new Producto("Producto de Prueba", "Categoria A", false, null, 5.0);
 
         when(productoDAOMock.obtenerProductoPorId(anyLong())).thenReturn(producto);
-        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
+        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
 
         ProductoDTO resultadoDTO = gestorProductos.obtenerProductoPorId(1L);
 
         verify(productoDAOMock, times(1)).obtenerProductoPorId(1L);
-        verify(conversionesMock, times(1)).entidadADTO(producto, false);
+        verify(conversionesMock, times(1)).entidadADTO(producto);
 
         assertNotNull(resultadoDTO);
         assertEquals("Producto de Prueba", resultadoDTO.getNombre());
@@ -208,12 +221,15 @@ public class GestorProductosTest {
      * resultado sea nulo si no se encuentra el producto.
      */
     @Test
-    public void testObtenerProductoPorId_Inexistente() throws PersistenciaException, NegocioException {
-        when(productoDAOMock.obtenerProductoPorId(999L)).thenReturn(null);
+    public void testObtenerProductoPorId_Inexistente() throws PersistenciaException {
+        long idInexistente = 9999L;
 
-        assertThrows(NegocioException.class, () -> gestorProductos.obtenerProductoPorId(999L));
+        when(productoDAOMock.obtenerProductoPorId(idInexistente)).thenReturn(null);
 
-        verify(productoDAOMock, times(1)).obtenerProductoPorId(999L);
+        ProductoDTO resultado = gestorProductos.obtenerProductoPorId(idInexistente);
+
+        assertNull(resultado);
+        verify(productoDAOMock, times(1)).obtenerProductoPorId(idInexistente);
     }
 
     /**
@@ -239,7 +255,7 @@ public class GestorProductosTest {
             Producto producto = new Producto("Producto E", "Categoria E", true, compra, 35.0);
 
             when(conversionesMock.dtoAEntidad(productoDTO)).thenReturn(producto);
-            when(conversionesMock.entidadADTO(producto, false)).thenReturn(productoDTO);
+            when(conversionesMock.entidadADTO(producto)).thenReturn(productoDTO);
             when(productoDAOMock.agregarProducto(any(Producto.class))).thenReturn(producto);
 
             when(productoDAOMock.obtenerProductoPorCaracteristicas("Producto E", "Categoria E", true, 35.0, compraDTO.getId())).thenReturn(producto);
@@ -262,15 +278,71 @@ public class GestorProductosTest {
      * Verifica que el resultado sea nulo si no se encuentra el producto.
      */
     @Test
-    public void testObtenerProductoPorCaracteristicasInexistentes() throws PersistenciaException, NegocioException {
-         when(productoDAOMock.obtenerProductoPorCaracteristicas("Inexistente", "Categoría X", true, 5.0, 999L))
-            .thenReturn(null);
+    public void testObtenerProductoPorCaracteristicasInexistentes() throws PersistenciaException {
+        // Se simula que no se encuentra un producto con las características especificadas
+        when(productoDAOMock.obtenerProductoPorCaracteristicas("Producto Inexistente", "Categoria Inexistente", true, 100.0, 999L)).thenReturn(null);
 
-        assertThrows(NegocioException.class, () -> gestorProductos.obtenerProductoPorCaracteristicas(
-            "Inexistente", "Categoría X", true, 5.0, 999L
-        ));
+        ProductoDTO resultado = gestorProductos.obtenerProductoPorCaracteristicas("Producto Inexistente", "Categoria Inexistente", true, 100.0, 999L);
 
-        verify(productoDAOMock, times(1)).obtenerProductoPorCaracteristicas("Inexistente", "Categoría X", true, 5.0, 999L);
+        // Verificación
+        assertNull(resultado);
+
+        // Verificación de que el método fue invocado correctamente
+        verify(productoDAOMock, times(1)).obtenerProductoPorCaracteristicas("Producto Inexistente", "Categoria Inexistente", true, 100.0, 999L);
+    }
+
+    /**
+     * Verifica la obtención de todos los productos existentes. Simula una lista
+     * de productos y comprueba la correcta interacción con el DAO.
+     */
+    @Test
+    public void testObtenerTodosLosProductos() throws PersistenciaException {
+        // Se crean datos de prueba
+        Producto producto1 = new Producto("Producto F", "Categoria F", false, null, 40.0);
+        Producto producto2 = new Producto("Producto G", "Categoria G", false, null, 45.0);
+        ProductoDTO productoDTO1 = new ProductoDTO("Producto F", "Categoria F", false, null, 40.0);
+        ProductoDTO productoDTO2 = new ProductoDTO("Producto G", "Categoria G", false, null, 45.0);
+
+        // Se simula que el DAO retorna una lista de productos
+        when(productoDAOMock.obtenerTodosLosProductos()).thenReturn(Arrays.asList(producto1, producto2));
+
+        // Se simula la conversión de Producto a ProductoDTO
+        when(conversionesMock.entidadADTO(any(Producto.class)))
+                .thenReturn(productoDTO1)
+                .thenReturn(productoDTO2);
+
+        // Se llama al método bajo prueba
+        List<ProductoDTO> resultado = gestorProductos.obtenerTodosLosProductos();
+
+        // Se verifica las interacciones con los mocks
+        verify(productoDAOMock, times(1)).obtenerTodosLosProductos();
+        verify(conversionesMock, times(2)).entidadADTO(any(Producto.class));
+
+        // Se verifica el resultado
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        assertTrue(resultado.stream().anyMatch(producto -> producto.getNombre().equals("Producto F")));
+        assertTrue(resultado.stream().anyMatch(producto -> producto.getNombre().equals("Producto G")));
+    }
+
+    /**
+     * Verifica la obtención de todos los productos cuando no existen productos.
+     * Simula una lista vacía y comprueba la correcta interacción con el DAO.
+     */
+    @Test
+    public void testObtenerTodosLosProductosSinProductos() throws PersistenciaException {
+        // Se simula que el método del DAO devuelve una lista vacía
+        when(productoDAOMock.obtenerTodosLosProductos()).thenReturn(Collections.emptyList());
+
+        // Se llama al método bajo prueba
+        List<ProductoDTO> resultado = gestorProductos.obtenerTodosLosProductos();
+
+        // Verificaciones
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+
+        // Se verifica que el método del DAO fue invocado correctamente
+        verify(productoDAOMock, times(1)).obtenerTodosLosProductos();
     }
 
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package PruebasComponentes;
 
 import Conexion.Conexion;
@@ -25,17 +21,20 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Esta clase permite realizar pruebas unitarias con el Producto.
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class ProductoDAOTest {
+
     IProductoDAO productoDAO;
     ICompraDAO compraDAO;
     IConexion conexion;
-    
+
     public ProductoDAOTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
         System.setProperty("modoPrueba", "true");
@@ -45,45 +44,52 @@ public class ProductoDAOTest {
     public static void tearDownClass() {
         System.clearProperty("modoPrueba");
     }
-    
+
     @BeforeEach
     public void setUp() {
         conexion = Conexion.getInstance();
         productoDAO = new ProductoDAO(conexion);
         compraDAO = new CompraDAO(conexion);
     }
-    
+
     @AfterEach
     public void tearDown() throws PersistenciaException {
         limpiarBaseDeDatos();
     }
-    
+
+    /**
+     * Permite borrar los datos agregados en la base de datos.
+     *
+     * @throws PersistenciaException Se lanza en caso de que faller alguna
+     * conexión.
+     */
     private void limpiarBaseDeDatos() throws PersistenciaException {
-         // Obtener todos los productos y eliminarlos
         ICompraDAO compraDAO = new CompraDAO(conexion);
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
         for (Producto producto : productos) {
             productoDAO.eliminarProducto(producto.getId());
         }
-        
+
         IClienteDAO clienteDAO = new ClienteDAO(conexion);
         List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
-        for(Cliente cliente : clientes){
+        for (Cliente cliente : clientes) {
             clienteDAO.eliminarCliente(cliente.getId());
         }
-        
-        // Obtener todas las compras y eliminarlas
+
         List<Compra> compras = compraDAO.obtenerTodasLasCompras();
         for (Compra compra : compras) {
             compraDAO.eliminarCompra(compra.getId());
         }
-
-       
     }
-    
+
+    /**
+     * Permite probar la adición de un nuevo producto.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al agregar el
+     * producto.
+     */
     @Test
     public void testAgregarProducto() throws PersistenciaException {
-        
         Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
 
         Producto resultado = productoDAO.agregarProducto(producto);
@@ -91,7 +97,14 @@ public class ProductoDAOTest {
         assertNotNull(resultado);
         assertEquals("Papel", resultado.getNombre());
     }
-    
+
+    /**
+     * Permite probar la obtención de un producto por su ID.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al obtener el
+     * producto.
+     */
+    @Test
     public void testObtenerProductoPorId() throws PersistenciaException {
         Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
         productoDAO.agregarProducto(producto);
@@ -101,7 +114,13 @@ public class ProductoDAOTest {
         assertNotNull(resultado);
         assertEquals(producto.getId(), resultado.getId());
     }
-    
+
+    /**
+     * Permite probar la obtención de todos los productos registrados.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al obtener los
+     * productos.
+     */
     @Test
     public void testObtenerTodosLosProductos() throws PersistenciaException {
         productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", null, 6.0));
@@ -112,7 +131,13 @@ public class ProductoDAOTest {
         assertNotNull(productos);
         assertTrue(productos.size() >= 2);
     }
-    
+
+    /**
+     * Permite probar la actualización de un producto.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al actualizar el
+     * producto.
+     */
     @Test
     public void testActualizarProducto() throws PersistenciaException {
         Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
@@ -124,7 +149,13 @@ public class ProductoDAOTest {
         assertNotNull(resultado);
         assertEquals("Papel Nuevo", resultado.getNombre());
     }
-    
+
+    /**
+     * Permite probar la eliminación de un producto.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al eliminar el
+     * producto.
+     */
     @Test
     public void testEliminarProducto() throws PersistenciaException {
         Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
@@ -136,8 +167,14 @@ public class ProductoDAOTest {
         assertEquals(producto.getId(), eliminado.getId());
         assertNull(productoDAO.obtenerProductoPorId(producto.getId()));
     }
-    
-     @Test
+
+    /**
+     * Permite probar el filtrado de productos por categoría en una compra.
+     *
+     * @throws PersistenciaException Se lanza en caso de error al filtrar los
+     * productos.
+     */
+    @Test
     public void testFiltrarPorCategoria() throws PersistenciaException {
         Compra compra1 = new Compra();
         compraDAO.agregarCompra(compra1);
@@ -150,7 +187,5 @@ public class ProductoDAOTest {
         assertNotNull(productosFiltrados);
         assertEquals(2, productosFiltrados.size());
     }
-
-   
 
 }

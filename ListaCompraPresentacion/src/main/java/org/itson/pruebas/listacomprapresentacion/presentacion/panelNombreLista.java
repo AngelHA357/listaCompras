@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
@@ -9,13 +5,13 @@ import DTOs.CompraDTO;
 import Exceptions.NegocioException;
 import Subsistemas.IGestorCompras;
 import Subsistemas.GestorCompras;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
+ * Panel que permite agregar una lista nuevo.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class panelNombreLista extends javax.swing.JPanel {
 
@@ -24,7 +20,12 @@ public class panelNombreLista extends javax.swing.JPanel {
     private IGestorCompras gestorCompras;
 
     /**
-     * Creates new form panelNombreLista
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame menu inicio y el cliente. Además inicializa el valor del
+     * frame principal y el cliente. También crea la instancia GestorCompras.
+     *
+     * @param menuInicio Frame de menu inicio donde se pintará este panel.
+     * @param cliente Cliente actual.
      */
     public panelNombreLista(frmMenuInicio menuInicio, ClienteDTO cliente) {
         this.menuInicio = menuInicio;
@@ -97,6 +98,13 @@ public class panelNombreLista extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que nos permite crear una lista de compras con un nombre nuevo.
+     * Utiliza métodos que verifican que el nombre de la lista no sea igual a
+     * alguno existente.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
 
         String compraS = txtNombreLista.getText();
@@ -111,7 +119,7 @@ public class panelNombreLista extends javax.swing.JPanel {
                 try {
                     compraDTO = gestorCompras.agregarCompra(compra);
                 } catch (NegocioException ex) {
-                    Logger.getLogger(panelNombreLista.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.getMessage());
                 }
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
                 menuInicio.mostrarPanel(agregarProducto);
@@ -119,7 +127,7 @@ public class panelNombreLista extends javax.swing.JPanel {
                 try {
                     compraDTO = gestorCompras.agregarCompra(compra);
                 } catch (NegocioException ex) {
-                    Logger.getLogger(panelNombreLista.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println(ex.getMessage());
                 }
                 panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
                 menuInicio.mostrarPanel(agregarProducto);

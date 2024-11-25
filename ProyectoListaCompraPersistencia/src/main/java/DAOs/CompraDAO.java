@@ -7,7 +7,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public class CompraDAO implements ICompraDAO {
 
     private final IConexion conexion;
@@ -16,6 +19,13 @@ public class CompraDAO implements ICompraDAO {
         this.conexion = conexion;
     }
 
+    /**
+     * Método para agregar una nueva compra.
+     *
+     * @param compra Compra a agregar.
+     * @return Compra agregada.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Compra agregarCompra(Compra compra) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -34,6 +44,13 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
+    /**
+     * Método para obtener una compra por su ID.
+     *
+     * @param id ID de la compra a buscar.
+     * @return Compra encontrada.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Compra obtenerCompraPorId(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -46,6 +63,12 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
+    /**
+     * Método para obtener todas las compras.
+     *
+     * @return Lista de todas las compras.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public List<Compra> obtenerTodasLasCompras() throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -59,6 +82,13 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
+    /**
+     * Método para actualizar una compra existente.
+     *
+     * @param compra Compra con los nuevos datos.
+     * @return Compra actualizada.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Compra actualizarCompra(Compra compra) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -77,6 +107,12 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
+    /**
+     * Método para eliminar una compra por su ID.
+     *
+     * @param id ID de la compra a eliminar.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public void eliminarCompra(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -97,6 +133,13 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
+    /**
+     * Método para obtener todas las compras de un cliente.
+     *
+     * @param clienteId ID del cliente.
+     * @return Lista de compras del cliente.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public List<Compra> obtenerComprasPorCliente(Long clienteId) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -111,6 +154,14 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
+    /**
+     * Método para obtener una compra por nombre y cliente.
+     *
+     * @param nombre Nombre de la compra.
+     * @param clienteId ID del cliente.
+     * @return Compra correspondiente al nombre y cliente especificados.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Compra obtenerCompraPorNombreYCliente(String nombre, Long clienteId) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();

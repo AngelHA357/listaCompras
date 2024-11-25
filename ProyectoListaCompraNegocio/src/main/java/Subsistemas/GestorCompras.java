@@ -20,7 +20,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class GestorCompras implements IGestorCompras {
 
@@ -28,146 +29,169 @@ public class GestorCompras implements IGestorCompras {
     private final ICompraDAO compraDAO;
     private final CompraConversiones compraConversiones;
 
+    /**
+     * Constructor que inicializa la conexión a la base de datos, un objeto de
+     * acceso a datos de compras y un objeto de conversión de compras.
+     *
+     * Este constructor obteniene la instancia de conexión, y se crea un
+     * CompraDAO para interactuar con la base de datos. También se inicializa un
+     * objeto CompraConversiones para realizar conversiones entre entidades y
+     * DTOs.
+     */
     public GestorCompras() {
         conexion = Conexion.getInstance();
         this.compraDAO = new CompraDAO(conexion);
         this.compraConversiones = new CompraConversiones();
     }
 
+    /**
+     * Incializa el objeto compraDAO y el objeto de Conversiones mediante la
+     * inyeccion de dependencias, este constructor es útil para la elaboración
+     * de pruebas unitarias.
+     *
+     * @param compraDAO Objeto que implementa la interfaz ICompraDAO.
+     * @param compraConversiones Objeto de la clase CompraConversiones.
+     */
     public GestorCompras(ICompraDAO compraDAO, CompraConversiones compraConversiones) {
         this.compraDAO = compraDAO;
         this.compraConversiones = compraConversiones;
     }
 
+    /**
+     * Método para agregar una nueva compra al sistema.
+     *
+     * @param compraDTO Objeto de tipo CompraDTO que contiene los datos de la
+     * compra.
+     * @return La compra agregada.
+     * @throws NegocioException Si ocurre un error al agregar la compra.
+     */
     @Override
     public CompraDTO agregarCompra(CompraDTO compraDTO) throws NegocioException {
-        // Validar que el nombre de la compra no sea nulo o vacío
         if (compraDTO.getNombreCompra() == null || compraDTO.getNombreCompra().isBlank()) {
-            throw new NegocioException("El nombre de la compra no puede ser nulo o estar en blanco");
+            throw new NegocioException("El nombre no puede ser nulo o estar en blanco");
         }
-
-        // Validar que el cliente asociado no sea nulo
-        if (compraDTO.getCliente() == null) {
-            throw new NegocioException("El cliente asociado a la compra no puede ser nulo");
-        }
-
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
         try {
             return compraConversiones.entidadADTO(compraDAO.agregarCompra(compra));
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al agregar la compra");
         }
+        return null;
     }
 
+    /**
+     * Método para obtener una compra por su ID.
+     *
+     * @param id ID de la compra.
+     * @return La compra encontrada o null si no se encuentra.
+     */
     @Override
-    public CompraDTO obtenerCompraPorId(Long id) throws NegocioException {
-        if (id == null || id <= 0) {
-            throw new NegocioException("El ID de la compra debe ser un valor positivo");
-        }
+    public CompraDTO obtenerCompraPorId(Long id) {
         try {
             Compra compra = compraDAO.obtenerCompraPorId(id);
-            if (compra == null) {
-                throw new PersistenciaException("No se encontró la compra con el ID proporcionado");
-            }
             return compraConversiones.entidadADTO(compra);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener la compra: " + ex.getMessage());
         }
+        return null;
     }
 
+    /**
+     * Método para obtener todas las compras registradas en el sistema.
+     *
+     * @return Lista de todas las compras.
+     */
     @Override
-    public List<CompraDTO> obtenerTodasLasCompras() throws NegocioException {
+    public List<CompraDTO> obtenerTodasLasCompras() {
         try {
             List<Compra> compras = compraDAO.obtenerTodasLasCompras();
             List<CompraDTO> comprasDTO = new ArrayList<>();
+
             for (Compra compra : compras) {
-                comprasDTO.add(compraConversiones.entidadADTO(compra));
+                CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
+                comprasDTO.add(compraDTO);
             }
+
             return comprasDTO;
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener las compras");
         }
+        return null;
     }
 
+    /**
+     * Método para actualizar una compra existente.
+     *
+     * @param compraDTO Objeto CompraDTO con los datos actualizados.
+     * @return La compra actualizada.
+     */
     @Override
-    public CompraDTO actualizarCompra(CompraDTO compraDTO) throws NegocioException {
-        // Validar que el ID de la compra no sea nulo
-        if (compraDTO.getId() == null || compraDTO.getId() <= 0) {
-            throw new NegocioException("El ID de la compra debe ser válido");
-        }
-
-        // Validar que el nombre de la compra no sea nulo o vacío
-        if (compraDTO.getNombreCompra() == null || compraDTO.getNombreCompra().isBlank()) {
-            throw new NegocioException("El nombre de la compra no puede ser nulo o estar en blanco");
-        }
-
-        // Validar que el cliente asociado no sea nulo
-        if (compraDTO.getCliente() == null) {
-            throw new NegocioException("El cliente asociado a la compra no puede ser nulo");
-        }
-
+    public CompraDTO actualizarCompra(CompraDTO compraDTO) {
         Compra compra = compraConversiones.dtoAEntidad(compraDTO);
+        CompraDTO compraActualizada;
         try {
-            return compraConversiones.entidadADTO(compraDAO.actualizarCompra(compra));
+            return compraActualizada = compraConversiones.entidadADTO(compraDAO.actualizarCompra(compra));
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al actualizar la compra");
         }
+        return null;
     }
 
+    /**
+     * Método para eliminar una compra del sistema.
+     *
+     * @param id ID de la compra a eliminar.
+     */
     @Override
-    public void eliminarCompra(Long id) throws NegocioException {
-        if (id == null || id <= 0) {
-            throw new NegocioException("El ID de la compra debe ser un valor positivo");
-        }
+    public void eliminarCompra(Long id) {
         try {
-            // Verificar si la compra existe antes de eliminarla
-            Compra compra = compraDAO.obtenerCompraPorId(id);
-            if (compra == null) {
-                throw new PersistenciaException("No se puede eliminar porque no se encontró la compra con el ID proporcionado");
-            }
             compraDAO.eliminarCompra(id);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al eliminar la compra: " + ex.getMessage());
         }
     }
 
+    /**
+     * Método para obtener todas las compras realizadas por un cliente
+     * específico.
+     *
+     * @param clienteId ID del cliente.
+     * @return Lista de compras realizadas por el cliente.
+     */
     @Override
-    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId) throws NegocioException {
-        if (clienteId == null || clienteId <= 0) {
-            throw new NegocioException("El ID del cliente debe ser un valor positivo");
-        }
+    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId) {
         try {
             List<Compra> compras = compraDAO.obtenerComprasPorCliente(clienteId);
             List<CompraDTO> comprasDTO = new ArrayList<>();
+
             for (Compra compra : compras) {
-                comprasDTO.add(compraConversiones.entidadADTO(compra));
+                CompraDTO compraDTO = compraConversiones.entidadADTO(compra);
+                comprasDTO.add(compraDTO);
             }
+
             return comprasDTO;
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener las compras del cliente");
         }
+        return null;
     }
 
+    /**
+     * Método para obtener una compra específica por su nombre y el ID del
+     * cliente.
+     *
+     * @param nombre Nombre de la compra.
+     * @param clienteId ID del cliente.
+     * @return La compra correspondiente o null si no se encuentra.
+     */
     @Override
-    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) throws NegocioException {
-        if (nombre == null || nombre.isBlank()) {
-            throw new NegocioException("El nombre de la compra no puede ser nulo o estar en blanco");
-        }
-        if (clienteId == null || clienteId <= 0) {
-            throw new NegocioException("El ID del cliente debe ser un valor positivo");
-        }
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) {
         try {
             Compra compra = compraDAO.obtenerCompraPorNombreYCliente(nombre, clienteId);
             return compraConversiones.entidadADTO(compra);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener la compra por nombre y cliente");
         }
+        return null;
     }
 }

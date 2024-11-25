@@ -7,6 +7,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 /**
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ * 
  * Singleton para manejar la conexión con JPA
  */
 public class Conexion implements IConexion {

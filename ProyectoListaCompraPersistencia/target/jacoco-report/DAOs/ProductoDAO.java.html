@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ProyectoListaCompraPersistencia</a> &gt; <a href="index.source.html" class="el_package">DAOs</a> &gt; <span class="el_source">ProductoDAO.java</span></div><h1>ProductoDAO.java</h1><pre class="source lang-java linenums">package DAOs;
+
+import Conexion.IConexion;
+import Entidades.Producto;
+import Exceptions.PersistenciaException;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
+public class ProductoDAO implements IProductoDAO {
+
+    private final IConexion conexion;
+
+<span class="fc" id="L19">    public ProductoDAO(IConexion conexion) {</span>
+<span class="fc" id="L20">        this.conexion = conexion;</span>
+<span class="fc" id="L21">    }</span>
+
+    /**
+     * Método para crear un producto
+     *
+     * @param producto
+     * @return Producto agregado.
+     * @throws PersistenciaException
+     */
+    @Override
+    public Producto agregarProducto(Producto producto) throws PersistenciaException {
+<span class="fc" id="L32">        EntityManager em = null;</span>
+<span class="fc" id="L33">        EntityTransaction tx = null;</span>
+        try {
+<span class="fc" id="L35">            em = conexion.crearConexion();</span>
+<span class="fc" id="L36">            tx = em.getTransaction();</span>
+<span class="fc" id="L37">            tx.begin();</span>
+<span class="fc" id="L38">            em.persist(producto); // Inserta el producto en la base de datos</span>
+<span class="fc" id="L39">            tx.commit();</span>
+<span class="fc" id="L40">            return em.find(Producto.class, producto.getId());</span>
+<span class="nc" id="L41">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L42" title="All 4 branches missed.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
+<span class="nc" id="L43">                tx.rollback(); // Deshacer la transacción en caso de error</span>
+            }
+<span class="nc" id="L45">            throw new PersistenciaException(&quot;Error al agregar el producto: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L48">                em.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Método para obtener un producto por su ID
+     *
+     * @param id
+     * @return Producto concreto.
+     * @throws PersistenciaException
+     */
+    @Override
+    public Producto obtenerProductoPorId(Long id) throws PersistenciaException {
+<span class="fc" id="L62">        EntityManager em = null;</span>
+        try {
+<span class="fc" id="L64">            em = conexion.crearConexion();</span>
+<span class="fc" id="L65">            return em.find(Producto.class, id); // Busca el producto por su ID</span>
+<span class="nc" id="L66">        } catch (Exception e) {</span>
+<span class="nc" id="L67">            throw new PersistenciaException(&quot;Error al obtener el producto por ID: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L70">                em.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Método para obtener todos los productos
+     *
+     * @return Lista de Productos.
+     * @throws PersistenciaException
+     */
+    @Override
+    public List&lt;Producto&gt; obtenerTodosLosProductos() throws PersistenciaException {
+<span class="fc" id="L83">        EntityManager em = null;</span>
+        try {
+<span class="fc" id="L85">            em = conexion.crearConexion();</span>
+<span class="fc" id="L86">            Query query = em.createQuery(&quot;SELECT p FROM Producto p&quot;); // Consulta para obtener todos los productos</span>
+<span class="fc" id="L87">            return query.getResultList();</span>
+<span class="nc" id="L88">        } catch (Exception e) {</span>
+<span class="nc" id="L89">            throw new PersistenciaException(&quot;Error al obtener todos los productos: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L92">                em.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Método para actualizar un producto existente
+     *
+     * @param producto
+     * @return Producto actualizado.
+     * @throws PersistenciaException
+     */
+    @Override
+    public Producto actualizarProducto(Producto producto) throws PersistenciaException {
+<span class="fc" id="L106">        EntityManager em = null;</span>
+<span class="fc" id="L107">        EntityTransaction tx = null;</span>
+        try {
+<span class="fc" id="L109">            em = conexion.crearConexion();</span>
+<span class="fc" id="L110">            tx = em.getTransaction();</span>
+<span class="fc" id="L111">            tx.begin();</span>
+<span class="fc" id="L112">            em.merge(producto); // Actualiza el producto</span>
+<span class="fc" id="L113">            tx.commit();</span>
+<span class="fc" id="L114">            return em.find(Producto.class, producto.getId());</span>
+<span class="nc" id="L115">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
+<span class="nc" id="L117">                tx.rollback(); // Deshacer la transacción en caso de error</span>
+            }
+<span class="nc" id="L119">            throw new PersistenciaException(&quot;Error al actualizar el producto: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L122">                em.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Método para eliminar un producto por su ID
+     *
+     * @param id
+     * @return Producto que se elimino.
+     * @throws PersistenciaException
+     */
+    @Override
+    public Producto eliminarProducto(Long id) throws PersistenciaException {
+<span class="fc" id="L136">        EntityManager em = null;</span>
+<span class="fc" id="L137">        EntityTransaction tx = null;</span>
+<span class="fc" id="L138">        Producto productoEliminado = null;</span>
+        try {
+<span class="fc" id="L140">            em = conexion.crearConexion();</span>
+<span class="fc" id="L141">            tx = em.getTransaction();</span>
+<span class="fc" id="L142">            tx.begin();</span>
+<span class="fc" id="L143">            productoEliminado = em.find(Producto.class, id);</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">            if (productoEliminado != null) {</span>
+<span class="fc" id="L145">                em.remove(productoEliminado); // Elimina el producto si existe</span>
+            }
+<span class="fc" id="L147">            tx.commit();</span>
+<span class="nc" id="L148">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L149" title="All 4 branches missed.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
+<span class="nc" id="L150">                tx.rollback(); // Deshacer la transacción en caso de error</span>
+            }
+<span class="nc" id="L152">            throw new PersistenciaException(&quot;Error al eliminar el producto: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L155">                em.close();</span>
+            }
+        }
+<span class="fc" id="L158">        return productoEliminado;</span>
+    }
+
+    /**
+     * Método para obtener los productos de una categoría determinada
+     *
+     * @param categoria
+     * @param compraId
+     * @return Lista de Productos.
+     * @throws PersistenciaException
+     */
+    @Override
+    public List&lt;Producto&gt; filtrarPorCategoriaYCompraId(String categoria, Long compraId) throws PersistenciaException {
+<span class="fc" id="L171">        EntityManager em = null;</span>
+        try {
+<span class="fc" id="L173">            em = conexion.crearConexion();</span>
+<span class="fc" id="L174">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.categoria = :categoria AND p.compra.id = :compraId&quot;);</span>
+<span class="fc" id="L175">            query.setParameter(&quot;categoria&quot;, categoria);</span>
+<span class="fc" id="L176">            query.setParameter(&quot;compraId&quot;, compraId);</span>
+<span class="fc" id="L177">            return query.getResultList();</span>
+<span class="nc" id="L178">        } catch (Exception e) {</span>
+<span class="nc" id="L179">            throw new PersistenciaException(&quot;Error al filtrar productos por categoría y compra: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L182">                em.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Método para obtener los productos de una compra según su id
+     *
+     * @param compraId
+     * @return Lista de Productos.
+     * @throws PersistenciaException
+     */
+    @Override
+    public List&lt;Producto&gt; obtenerProductosPorCompraId(Long compraId) throws PersistenciaException {
+<span class="nc" id="L196">        EntityManager em = null;</span>
+        try {
+<span class="nc" id="L198">            em = conexion.crearConexion();</span>
+<span class="nc" id="L199">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.compra.id = :compraId&quot;);</span>
+<span class="nc" id="L200">            query.setParameter(&quot;compraId&quot;, compraId);</span>
+<span class="nc" id="L201">            return query.getResultList();</span>
+<span class="nc" id="L202">        } catch (Exception e) {</span>
+<span class="nc" id="L203">            throw new PersistenciaException(&quot;Error al obtener los productos por ID de compra: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (em != null) {</span>
+<span class="nc" id="L206">                em.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Método para obtener un producto por todas sus características.
+     *
+     * @param nombre
+     * @param categoria
+     * @param comprado
+     * @param cantidad
+     * @param compraId
+     * @return Producto concreto.
+     * @throws PersistenciaException
+     */
+    @Override
+    public Producto obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws PersistenciaException {
+<span class="nc" id="L224">        EntityManager em = null;</span>
+        try {
+<span class="nc" id="L226">            em = conexion.crearConexion();</span>
+<span class="nc" id="L227">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.nombre = :nombre AND p.categoria = :categoria &quot;</span>
+                    + &quot;AND p.comprado = :comprado AND p.cantidad = :cantidad AND p.compra.id = :compraId&quot;);
+<span class="nc" id="L229">            query.setParameter(&quot;nombre&quot;, nombre);</span>
+<span class="nc" id="L230">            query.setParameter(&quot;categoria&quot;, categoria);</span>
+<span class="nc" id="L231">            query.setParameter(&quot;comprado&quot;, comprado);</span>
+<span class="nc" id="L232">            query.setParameter(&quot;cantidad&quot;, cantidad);</span>
+<span class="nc" id="L233">            query.setParameter(&quot;compraId&quot;, compraId);</span>
+<span class="nc" id="L234">            List&lt;Producto&gt; resultados = query.getResultList();</span>
+
+            // Retornamos el primer producto encontrado o null si no hay coincidencias
+<span class="nc bnc" id="L237" title="All 2 branches missed.">            return resultados.isEmpty() ? null : resultados.get(0);</span>
+<span class="nc" id="L238">        } catch (Exception e) {</span>
+<span class="nc" id="L239">            throw new PersistenciaException(&quot;Error al obtener el producto por características: &quot; + e.getMessage(), e);</span>
+        } finally {
+<span class="nc bnc" id="L241" title="All 2 branches missed.">            if (em != null) {</span>
+<span class="nc" id="L242">                em.close();</span>
+            }
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Validadores.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ListaCompraPresentacion</a> &gt; <a href="index.source.html" class="el_package">org.itson.pruebas.listacomprapresentacion.validadores</a> &gt; <span class="el_source">Validadores.java</span></div><h1>Validadores.java</h1><pre class="source lang-java linenums">package org.itson.pruebas.listacomprapresentacion.validadores;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Clase que permite generar expresiones regulares para validar campos de texto.
+ *
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
+ */
+<span class="nc" id="L12">public class Validadores {</span>
+
+    /**
+     * Valida si el nombre proporcionado cumple con el formato permitido.
+     *
+     * @param nombre Nombre a validar.
+     * @return true si el nombre es válido, false de lo contrario.
+     */
+    public boolean validaNombre(String nombre) {
+<span class="nc" id="L21">        Pattern patron = Pattern.compile(&quot;^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$&quot;);</span>
+<span class="nc" id="L22">        Matcher matcher = patron.matcher(nombre);</span>
+
+<span class="nc" id="L24">        return matcher.matches();</span>
+    }
+
+    /**
+     * Valida si el apellido proporcionado cumple con el formato permitido.
+     *
+     * @param apellido Apellido a validar.
+     * @return true si el apellido es válido, false de lo contrario.
+     */
+    public boolean validaApellido(String apellido) {
+<span class="nc" id="L34">        Pattern patron = Pattern.compile(&quot;^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$&quot;);</span>
+<span class="nc" id="L35">        Matcher matcher = patron.matcher(apellido);</span>
+
+<span class="nc" id="L37">        return matcher.matches();</span>
+    }
+
+    /**
+     * Valida si el nombre de usuario proporcionado cumple con el formato
+     * permitido.
+     *
+     * @param usuario Nombre de usuario a validar.
+     * @return true si el nombre de usuario es válido, false de lo contrario.
+     */
+    public boolean validaUsuario(String usuario) {
+<span class="nc" id="L48">        Pattern patron = Pattern.compile(&quot;^[A-Za-z0-9]+$&quot;);</span>
+<span class="nc" id="L49">        Matcher matcher = patron.matcher(usuario);</span>
+
+<span class="nc" id="L51">        return matcher.matches();</span>
+    }
+
+    /**
+     * Valida si la contraseña proporcionada cumple con el formato permitido.
+     * Debe contener al menos una letra mayúscula, una letra minúscula y un
+     * número.
+     *
+     * @param contrasena Contraseña a validar.
+     * @return true si la contraseña es válida, false de lo contrario.
+     */
+    public boolean validaContrasena(String contrasena) {
+<span class="nc" id="L63">        Pattern patron = Pattern.compile(&quot;^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).+$&quot;);</span>
+<span class="nc" id="L64">        Matcher matcher = patron.matcher(contrasena);</span>
+
+<span class="nc" id="L66">        return matcher.matches();</span>
+    }
+
+    public boolean validarCantidad(String cantidad) {
+<span class="nc" id="L70">        Pattern patron = Pattern.compile(&quot;\\d+(\\.\\d+)?&quot;);</span>
+<span class="nc" id="L71">        Matcher matcher = patron.matcher(cantidad);</span>
+
+<span class="nc" id="L73">        return matcher.matches();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

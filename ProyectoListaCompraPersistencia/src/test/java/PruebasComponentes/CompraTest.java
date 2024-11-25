@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package PruebasComponentes;
 
 import Entidades.Compra;
@@ -14,43 +10,52 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Esta clase permite realizar pruebas unitarias con el Producto al agregarlo a
+ * una compra.
  *
- * @author JoseH
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class CompraTest {
-    
+
     public CompraTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
     }
-    
+
     @AfterEach
     public void tearDown() {
     }
-    
+
+    /**
+     * Permite probar la adición de un producto a una compra existente.
+     */
     @Test
     public void agregarProductoACompra() {
         Compra compra = new Compra();
 
         Producto producto = new Producto("Papel", "Higiene Personal", compra, 6.0);
         compra.agregarProducto(producto);
-        
+
         assertEquals(1, compra.getProductos().size());
         assertEquals(producto, compra.getProductos().get(0));
-
-        assertEquals(compra, producto.getCompra()); 
+        assertEquals(compra, producto.getCompra());
     }
-    
+
+    /**
+     * Permite probar la adición de un producto a una compra nula, lo que
+     * debería lanzar una NullPointerException.
+     */
     @Test
     public void agregarProductoACompraNula() {
         Compra compra = null;
@@ -60,7 +65,10 @@ public class CompraTest {
             compra.agregarProducto(producto);
         });
     }
-    
+
+    /**
+     * Permite probar la adición de múltiples productos a una compra.
+     */
     @Test
     public void agregarMultiplesProductosACompra() {
         Compra compra = new Compra();
@@ -75,6 +83,5 @@ public class CompraTest {
         assertEquals(producto1, compra.getProductos().get(0));
         assertEquals(producto2, compra.getProductos().get(1));
     }
-    
 
 }

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompraDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ProyectoListaCompraPersistencia</a> &gt; <a href="index.source.html" class="el_package">DAOs</a> &gt; <span class="el_source">CompraDAO.java</span></div><h1>CompraDAO.java</h1><pre class="source lang-java linenums">package DAOs;
+
+import Conexion.IConexion;
+import Entidades.Compra;
+import Exceptions.PersistenciaException;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
+public class CompraDAO implements ICompraDAO {
+
+    private final IConexion conexion;
+
+<span class="fc" id="L18">    public CompraDAO(IConexion conexion) {</span>
+<span class="fc" id="L19">        this.conexion = conexion;</span>
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Método para agregar una nueva compra.
+     *
+     * @param compra Compra a agregar.
+     * @return Compra agregada.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Compra agregarCompra(Compra compra) throws PersistenciaException {
+<span class="fc" id="L31">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L33">            em.getTransaction().begin();</span>
+<span class="fc" id="L34">            em.persist(compra);</span>
+<span class="fc" id="L35">            em.getTransaction().commit();</span>
+<span class="fc" id="L36">            return em.find(Compra.class, compra.getId());</span>
+<span class="nc" id="L37">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (em.getTransaction().isActive()) {</span>
+<span class="nc" id="L39">                em.getTransaction().rollback();</span>
+            }
+<span class="nc" id="L41">            throw new PersistenciaException(&quot;Error al agregar compra&quot;, e);</span>
+        } finally {
+<span class="fc" id="L43">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para obtener una compra por su ID.
+     *
+     * @param id ID de la compra a buscar.
+     * @return Compra encontrada.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Compra obtenerCompraPorId(Long id) throws PersistenciaException {
+<span class="fc" id="L56">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L58">            return em.find(Compra.class, id);</span>
+<span class="nc" id="L59">        } catch (Exception e) {</span>
+<span class="nc" id="L60">            throw new PersistenciaException(&quot;Error al obtener compra por ID&quot;, e);</span>
+        } finally {
+<span class="fc" id="L62">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para obtener todas las compras.
+     *
+     * @return Lista de todas las compras.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public List&lt;Compra&gt; obtenerTodasLasCompras() throws PersistenciaException {
+<span class="fc" id="L74">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L76">            Query query = em.createQuery(&quot;SELECT c FROM Compra c&quot;);</span>
+<span class="fc" id="L77">            return query.getResultList();</span>
+<span class="nc" id="L78">        } catch (Exception e) {</span>
+<span class="nc" id="L79">            throw new PersistenciaException(&quot;Error al obtener todas las compras&quot;, e);</span>
+        } finally {
+<span class="fc" id="L81">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para actualizar una compra existente.
+     *
+     * @param compra Compra con los nuevos datos.
+     * @return Compra actualizada.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Compra actualizarCompra(Compra compra) throws PersistenciaException {
+<span class="fc" id="L94">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L96">            em.getTransaction().begin();</span>
+<span class="fc" id="L97">            Compra compraActualizada = em.merge(compra);</span>
+<span class="fc" id="L98">            em.getTransaction().commit();</span>
+<span class="fc" id="L99">            return compraActualizada;</span>
+<span class="nc" id="L100">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">            if (em.getTransaction().isActive()) {</span>
+<span class="nc" id="L102">                em.getTransaction().rollback();</span>
+            }
+<span class="nc" id="L104">            throw new PersistenciaException(&quot;Error al actualizar compra&quot;, e);</span>
+        } finally {
+<span class="fc" id="L106">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para eliminar una compra por su ID.
+     *
+     * @param id ID de la compra a eliminar.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public void eliminarCompra(Long id) throws PersistenciaException {
+<span class="fc" id="L118">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="fc" id="L120">            em.getTransaction().begin();</span>
+<span class="fc" id="L121">            Compra compra = em.find(Compra.class, id);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            if (compra != null) {</span>
+<span class="fc" id="L123">                em.remove(compra);</span>
+            }
+<span class="fc" id="L125">            em.getTransaction().commit();</span>
+<span class="nc" id="L126">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (em.getTransaction().isActive()) {</span>
+<span class="nc" id="L128">                em.getTransaction().rollback();</span>
+            }
+<span class="nc" id="L130">            throw new PersistenciaException(&quot;Error al eliminar compra&quot;, e);</span>
+        } finally {
+<span class="fc" id="L132">            em.close();</span>
+        }
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Método para obtener todas las compras de un cliente.
+     *
+     * @param clienteId ID del cliente.
+     * @return Lista de compras del cliente.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public List&lt;Compra&gt; obtenerComprasPorCliente(Long clienteId) throws PersistenciaException {
+<span class="nc" id="L145">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="nc" id="L147">            Query query = em.createQuery(&quot;SELECT c FROM Compra c WHERE c.cliente.id = :clienteId&quot;);</span>
+<span class="nc" id="L148">            query.setParameter(&quot;clienteId&quot;, clienteId);</span>
+<span class="nc" id="L149">            return query.getResultList();</span>
+<span class="nc" id="L150">        } catch (Exception e) {</span>
+<span class="nc" id="L151">            throw new PersistenciaException(&quot;Error al obtener compras por cliente&quot;, e);</span>
+        } finally {
+<span class="nc" id="L153">            em.close();</span>
+        }
+    }
+
+    /**
+     * Método para obtener una compra por nombre y cliente.
+     *
+     * @param nombre Nombre de la compra.
+     * @param clienteId ID del cliente.
+     * @return Compra correspondiente al nombre y cliente especificados.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Override
+    public Compra obtenerCompraPorNombreYCliente(String nombre, Long clienteId) throws PersistenciaException {
+<span class="nc" id="L167">        EntityManager em = conexion.crearConexion();</span>
+        try {
+<span class="nc" id="L169">            Query query = em.createQuery(&quot;SELECT c FROM Compra c WHERE c.nombre = :nombre AND c.cliente.id = :clienteId&quot;);</span>
+<span class="nc" id="L170">            query.setParameter(&quot;nombre&quot;, nombre);</span>
+<span class="nc" id="L171">            query.setParameter(&quot;clienteId&quot;, clienteId);</span>
+
+<span class="nc" id="L173">            return (Compra) query.getSingleResult();</span>
+<span class="nc" id="L174">        } catch (NoResultException e) {</span>
+<span class="nc" id="L175">            return null;</span>
+<span class="nc" id="L176">        } catch (Exception e) {</span>
+<span class="nc" id="L177">            throw new PersistenciaException(&quot;Error al obtener compra por nombre y cliente&quot;, e);</span>
+        } finally {
+<span class="nc" id="L179">            em.close();</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

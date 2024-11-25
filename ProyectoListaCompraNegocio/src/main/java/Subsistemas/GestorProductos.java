@@ -20,7 +20,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class GestorProductos implements IGestorProductos {
 
@@ -28,17 +29,42 @@ public class GestorProductos implements IGestorProductos {
     private final IProductoDAO productoDAO;
     private final ProductosConversiones conversiones;
 
+    /**
+     * Constructor que inicializa la conexión a la base de datos, un objeto de
+     * acceso a datos de productos y un objeto de conversión de productos.
+     *
+     * Este constructor obteniene la instancia de conexión, y se crea un
+     * ProductoDAO para interactuar con la base de datos. También se inicializa
+     * un objeto ProductosConversiones para realizar conversiones entre
+     * entidades y DTOs.
+     */
     public GestorProductos() {
         conexion = Conexion.getInstance();
         this.productoDAO = new ProductoDAO(conexion);
         this.conversiones = new ProductosConversiones();
     }
 
+    /**
+     * Incializa el objeto productoDAO y el objeto de Conversiones mediante la
+     * inyeccion de dependencias, este constructor es útil para la elaboración
+     * de pruebas unitarias.
+     *
+     * @param productoDAO Objeto que implementa la interfaz IProductoDAO.
+     * @param conversiones Objeto de la clase ProductosConversiones.
+     */
     public GestorProductos(IProductoDAO productoDAO, ProductosConversiones conversiones) {
         this.productoDAO = productoDAO;
         this.conversiones = conversiones;
     }
 
+    /**
+     * Método para agregar un nuevo producto al sistema.
+     *
+     * @param productoDTO Objeto ProductoDTO que contiene los datos del
+     * producto.
+     * @return El producto agregado.
+     * @throws NegocioException Si ocurre un error durante la operación.
+     */
     @Override
     public ProductoDTO agregarProducto(ProductoDTO productoDTO) throws NegocioException {
         if (productoDTO.getNombre() == null || productoDTO.getNombre().isBlank()) {
@@ -50,96 +76,112 @@ public class GestorProductos implements IGestorProductos {
         if (productoDTO.getCantidad() == null || productoDTO.getCantidad() <= 0) {
             throw new NegocioException("La cantidad del producto no puede ser nula o menor o igual a cero");
         }
-        if (productoDTO.getCompra() == null) {
-            throw new NegocioException("El producto debe estar asociado a una compra válida");
-        }
 
         Producto producto = conversiones.dtoAEntidad(productoDTO);
 
         try {
             Producto productoAgregado = productoDAO.agregarProducto(producto);
-            return conversiones.entidadADTO(productoAgregado, false);
+            return conversiones.entidadADTO(productoAgregado);
+
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al agregar el producto");
+            return null;
         }
     }
 
+    /**
+     * Método para obtener un producto por su ID.
+     *
+     * @param id ID del producto.
+     * @return El producto encontrado o null si no se encuentra.
+     */
     @Override
-    public ProductoDTO obtenerProductoPorId(Long id) throws NegocioException {
+    public ProductoDTO obtenerProductoPorId(Long id) {
         try {
             Producto producto = productoDAO.obtenerProductoPorId(id);
-            if (producto == null) {
-                throw new NegocioException("No se encontró el producto con ID: " + id);
-            }
-            return conversiones.entidadADTO(producto, false);
+            return conversiones.entidadADTO(producto);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener el producto");
         }
+        return null;
     }
 
+    /**
+     * Método para obtener todos los productos del sistema.
+     *
+     * @return Lista de todos los productos.
+     */
     @Override
-    public List<ProductoDTO> obtenerTodosLosProductos() throws NegocioException {
+    public List<ProductoDTO> obtenerTodosLosProductos() {
         try {
             List<Producto> productos = productoDAO.obtenerTodosLosProductos();
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
                 productosDTO.add(productoDTO);
             }
 
             return productosDTO;
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener los productos");
         }
+        return null;
     }
 
+    /**
+     * Método para actualizar un producto existente.
+     *
+     * @param productoDTO Objeto ProductoDTO con los datos actualizados del
+     * producto.
+     * @return El producto actualizado.
+     */
     @Override
-    public ProductoDTO actualizarProducto(ProductoDTO productoDTO) throws NegocioException {
+    public ProductoDTO actualizarProducto(ProductoDTO productoDTO) {
+        Producto producto = conversiones.dtoAEntidad(productoDTO);
         try {
-            Producto productoExistente = productoDAO.obtenerProductoPorId(productoDTO.getId());
-            if (productoExistente == null) {
-                throw new NegocioException("No se puede actualizar un producto inexistente con ID: " + productoDTO.getId());
-            }
-
-            Producto producto = conversiones.dtoAEntidad(productoDTO);
             Producto productoActualizado = productoDAO.actualizarProducto(producto);
-            return conversiones.entidadADTO(productoActualizado, false);
+            return conversiones.entidadADTO(productoActualizado);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al actualizar el producto");
+            return null;
         }
     }
 
+    /**
+     * Método para eliminar un producto por su ID.
+     *
+     * @param id ID del producto a eliminar.
+     */
     @Override
-    public void eliminarProducto(Long id) throws NegocioException {
+    public void eliminarProducto(Long id) {
         try {
-            Producto productoExistente = productoDAO.obtenerProductoPorId(id);
-            if (productoExistente == null) {
-                throw new NegocioException("No se puede eliminar un producto inexistente con ID: " + id);
-            }
-
             productoDAO.eliminarProducto(id);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al eliminar el producto");
         }
     }
 
+    /**
+     * Método para obtener un producto basado en sus características
+     * específicas.
+     *
+     * @param nombre Nombre del producto.
+     * @param categoria Categoría del producto.
+     * @param comprado Estado de si el producto ha sido comprado o no.
+     * @param cantidad Cantidad del producto.
+     * @param compraId ID de la compra a la que pertenece el producto.
+     * @return El producto que coincide con las características dadas o null si
+     * no se encuentra.
+     */
     @Override
-    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws NegocioException {
+    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) {
         try {
             Producto producto = productoDAO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);
-            if (producto == null) {
-                throw new NegocioException("No se encontró el producto con las características especificadas");
-            }
-            return conversiones.entidadADTO(producto, false);
+            return conversiones.entidadADTO(producto);
         } catch (PersistenciaException ex) {
             Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener el producto");
         }
+        return null;
     }
 }

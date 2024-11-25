@@ -6,7 +6,10 @@ import Exceptions.PersistenciaException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
+/**
+ * 
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345. 
+ */
 public class ClienteDAO implements IClienteDAO {
 
     private final IConexion conexion;
@@ -15,6 +18,13 @@ public class ClienteDAO implements IClienteDAO {
         this.conexion = conexion;
     }
 
+    /**
+     * Método para agregar un nuevo cliente.
+     *
+     * @param cliente Cliente a agregar.
+     * @return Cliente agregado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Cliente agregarCliente(Cliente cliente) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -34,6 +44,13 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Método para obtener un cliente por su ID.
+     *
+     * @param id ID del cliente a buscar.
+     * @return Cliente encontrado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Cliente obtenerClientePorId(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -46,6 +63,12 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Método para obtener todos los clientes.
+     *
+     * @return Lista de todos los clientes.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public List<Cliente> obtenerTodosLosClientes() throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -59,6 +82,13 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Método para actualizar un cliente existente.
+     *
+     * @param cliente Cliente con los nuevos datos.
+     * @return Cliente actualizado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Cliente actualizarCliente(Cliente cliente) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -78,6 +108,13 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
+    /**
+     * Método para eliminar un cliente por su ID.
+     *
+     * @param id ID del cliente a eliminar.
+     * @return Cliente eliminado.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Cliente eliminarCliente(Long id) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();
@@ -100,6 +137,14 @@ public class ClienteDAO implements IClienteDAO {
         return clienteEliminado;
     }
 
+    /**
+     * Método para obtener un cliente por su usuario y contraseña.
+     *
+     * @param usuario Nombre de usuario del cliente.
+     * @param contrasenia Contraseña del cliente.
+     * @return Cliente que coincide con las credenciales proporcionadas.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
     @Override
     public Cliente obtenerClientePorUsuarioYContrasena(String usuario, String contrasenia) throws PersistenciaException {
         EntityManager em = conexion.crearConexion();

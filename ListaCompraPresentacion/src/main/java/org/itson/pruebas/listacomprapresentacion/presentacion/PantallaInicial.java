@@ -1,20 +1,18 @@
-
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
-import java.awt.BorderLayout;
-
 /**
+ * Frame que muestra la pantalla inicial de la aplicación.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class PantallaInicial extends javax.swing.JFrame {
 
     /**
-     * Creates new form PantallaInicial
+     * Constructor por defecto
      */
     public PantallaInicial() {
         initComponents();
-
     }
 
     /**
@@ -118,21 +116,30 @@ public class PantallaInicial extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que nos permite acceder al frame de inicio de sesión una vez el
+     * botón es presionado.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         frmInicioSesion inicioSesion = new frmInicioSesion(this);
         inicioSesion.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
+    /**
+     * Método que nos permite acceder al frame de registrarse una vez el botón
+     * es presionado.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
         frmRegistrarse registrarse = new frmRegistrarse(this);
         registrarse.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

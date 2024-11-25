@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class FiltroPorCategoria implements IFiltroPorCategoria {
 
@@ -27,17 +28,43 @@ public class FiltroPorCategoria implements IFiltroPorCategoria {
     private final IProductoDAO productoDAO;
     private final ProductosConversiones conversiones;
 
+    /**
+     * Constructor que inicializa la conexión a la base de datos, un objeto de
+     * acceso a datos de productos y un objeto de conversión de productos.
+     *
+     * Este constructor obteniene la instancia de conexión, y se crea un
+     * ProductoDAO para interactuar con la base de datos. También se inicializa
+     * un objeto ProductosConversiones para realizar conversiones entre
+     * entidades y DTOs.
+     */
     public FiltroPorCategoria() {
         conexion = Conexion.getInstance();
         this.productoDAO = new ProductoDAO(conexion);
         this.conversiones = new ProductosConversiones();
     }
-    
-    public FiltroPorCategoria(IProductoDAO productoDAO, ProductosConversiones conversiones){
+
+    /**
+     * Incializa el objeto productoDAO y el objeto de Conversiones mediante la
+     * inyeccion de dependencias, este constructor es útil para la elaboración
+     * de pruebas unitarias.
+     *
+     * @param productoDAO Objeto que implementa la interfaz IProductoDAO.
+     * @param conversiones Objeto de la clase ProductosConversiones.
+     */
+    public FiltroPorCategoria(IProductoDAO productoDAO, ProductosConversiones conversiones) {
         this.productoDAO = productoDAO;
         this.conversiones = conversiones;
     }
 
+    /**
+     * Método para filtrar productos de una compra específica por categoría.
+     *
+     * @param categoria Categoría de los productos a filtrar.
+     * @param compraId ID de la compra de la que se quieren filtrar los
+     * productos.
+     * @return Lista de productos que pertenecen a la categoría y compra
+     * especificada.
+     */
     @Override
     public List<ProductoDTO> filtrarPorCategoriaYCompraId(String categoria, Long compraId) {
         try {
@@ -45,7 +72,7 @@ public class FiltroPorCategoria implements IFiltroPorCategoria {
             List<ProductoDTO> productosDTO = new ArrayList<>();
 
             for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
+                ProductoDTO productoDTO = conversiones.entidadADTO(producto);
                 productosDTO.add(productoDTO);
             }
 

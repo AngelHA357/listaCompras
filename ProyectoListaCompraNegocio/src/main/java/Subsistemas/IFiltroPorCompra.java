@@ -5,15 +5,22 @@
 package Subsistemas;
 
 import DTOs.ProductoDTO;
-import Exceptions.NegocioException;
 import java.util.List;
 
 /**
  *
- * @author IJCF
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public interface IFiltroPorCompra {
 
-    public List<ProductoDTO> obtenerProductosFiltrarPorCompra(Long idCompra) throws NegocioException;
+    /**
+     * Método para obtener productos asociados a una compra específica.
+     *
+     * @param idCompra ID de la compra de la que se quieren obtener los
+     * productos.
+     * @return Lista de productos que pertenecen a la compra especificada.
+     */
+    public List<ProductoDTO> obtenerProductosFiltrarPorCompra(Long idCompra);
 
 }

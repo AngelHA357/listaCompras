@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import Subsistemas.IGestorClientes;
@@ -18,8 +14,10 @@ import javax.swing.JOptionPane;
 import org.itson.pruebas.listacomprapresentacion.validadores.Validadores;
 
 /**
+ * Frame que muestra la pantalla de inicio de sesión.
  *
- * @author victo
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345.
  */
 public class frmInicioSesion extends javax.swing.JFrame {
 
@@ -27,7 +25,11 @@ public class frmInicioSesion extends javax.swing.JFrame {
     private IGestorClientes gestorClientes;
 
     /**
-     * Creates new form frmInicioSesion
+     * Método constructor que nos permite crear el frame y además recibe el
+     * valor del frame principal. Además inicializa el valor del frame principal
+     * y se crea la instancia de un gestorClientes.
+     *
+     * @param pantallaInicial Frame inicial.
      */
     public frmInicioSesion(PantallaInicial pantallaInicial) {
         this.pantallaInicial = pantallaInicial;
@@ -37,6 +39,10 @@ public class frmInicioSesion extends javax.swing.JFrame {
         lblRegistrar();
     }
 
+    /**
+     * Permite agregarle acciones de botón a un label. Permite abrir el frame de
+     * registrarse.
+     */
     private void lblRegistrar() {
 
         lblRegistrarse.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -222,6 +228,12 @@ public class frmInicioSesion extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Método que nos permite iniciar sesión con el usuario registrado y abre el
+     * frame del menú de inicio.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         Validadores validador = new Validadores();
 
@@ -254,6 +266,11 @@ public class frmInicioSesion extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
+    /**
+     * Método que nos permite regresar a la pantalla inicial.
+     *
+     * @param evt Evento al hacer clic en el botón.
+     */
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         pantallaInicial.setVisible(true);
         dispose();

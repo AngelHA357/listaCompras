@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cliente.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ProyectoListaCompraPersistencia</a> &gt; <a href="index.source.html" class="el_package">Entidades</a> &gt; <span class="el_source">Cliente.java</span></div><h1>Cliente.java</h1><pre class="source lang-java linenums">package Entidades;
+
+import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
+public class Cliente implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; 
+
+    @Column(name = &quot;nombre&quot;)
+    private String nombre;
+    
+    @Column(name = &quot;apellido_paterno&quot;)
+    private String apellidoPaterno;
+    
+    @Column(name = &quot;apellido_materno&quot;)
+    private String apellidoMaterno;
+    
+    @Column(name = &quot;usuario&quot;)
+    private String usuario;
+    
+    @Column(name = &quot;contrasenia&quot;)
+    private String contrasenia;
+
+    
+    @OneToMany(mappedBy = &quot;cliente&quot;,  cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List&lt;Compra&gt; compras;
+
+
+<span class="fc" id="L40">    public Cliente() {</span>
+<span class="fc" id="L41">    }</span>
+
+<span class="fc" id="L43">    public Cliente(String nombre, String apellidoPaterno, String apellidoMaterno, String usuario, String contrasenia) {</span>
+<span class="fc" id="L44">        this.nombre = nombre;</span>
+<span class="fc" id="L45">        this.apellidoPaterno = apellidoPaterno;</span>
+<span class="fc" id="L46">        this.apellidoMaterno = apellidoMaterno;</span>
+<span class="fc" id="L47">        this.usuario = usuario;</span>
+<span class="fc" id="L48">        this.contrasenia = contrasenia;</span>
+<span class="fc" id="L49">    }</span>
+
+    public Long getId() {  // El ID ahora es Long
+<span class="fc" id="L52">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L56">        this.id = id;</span>
+<span class="nc" id="L57">    }</span>
+
+    public String getNombre() {
+<span class="fc" id="L60">        return nombre;</span>
+    }
+
+    public void setNombre(String nombre) {
+<span class="nc" id="L64">        this.nombre = nombre;</span>
+<span class="nc" id="L65">    }</span>
+
+    public String getApellidoPaterno() {
+<span class="fc" id="L68">        return apellidoPaterno;</span>
+    }
+
+    public void setApellidoPaterno(String apellidoPaterno) {
+<span class="nc" id="L72">        this.apellidoPaterno = apellidoPaterno;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getApellidoMaterno() {
+<span class="fc" id="L76">        return apellidoMaterno;</span>
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+<span class="nc" id="L80">        this.apellidoMaterno = apellidoMaterno;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getUsuario() {
+<span class="fc" id="L84">        return usuario;</span>
+    }
+
+    public void setUsuario(String usuario) {
+<span class="fc" id="L88">        this.usuario = usuario;</span>
+<span class="fc" id="L89">    }</span>
+
+    public String getContrasenia() {
+<span class="fc" id="L92">        return contrasenia;</span>
+    }
+
+    public void setContrasenia(String contrasenia) {
+<span class="fc" id="L96">        this.contrasenia = contrasenia;</span>
+<span class="fc" id="L97">    }</span>
+
+    public List&lt;Compra&gt; getCompras() {
+<span class="nc" id="L100">        return compras;</span>
+    }
+
+    public void setCompras(List&lt;Compra&gt; compras) {
+<span class="nc" id="L104">        this.compras = compras;</span>
+<span class="nc" id="L105">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
