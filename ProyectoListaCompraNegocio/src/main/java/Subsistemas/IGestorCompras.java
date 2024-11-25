@@ -14,17 +14,17 @@ import java.util.List;
  */
 public interface IGestorCompras {
 
-    public CompraDTO agregarCompra(CompraDTO compraDTO)  throws NegocioException;
+    public CompraDTO agregarCompra(CompraDTO compraDTO) throws NegocioException;
 
-    public CompraDTO obtenerCompraPorId(Long id);
+    public CompraDTO obtenerCompraPorId(Long id) throws NegocioException;
 
-    public List<CompraDTO> obtenerTodasLasCompras();
+    public List<CompraDTO> obtenerTodasLasCompras() throws NegocioException;
 
-    public CompraDTO actualizarCompra(CompraDTO compraDTO);
+    public CompraDTO actualizarCompra(CompraDTO compraDTO)throws NegocioException;
 
-    public void eliminarCompra(Long id);
+    public void eliminarCompra(Long id ) throws NegocioException;
 
-    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId);
+    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId) throws NegocioException;
 
-    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId);
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) throws NegocioException;
 }

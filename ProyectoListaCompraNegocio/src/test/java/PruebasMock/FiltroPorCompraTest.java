@@ -1,4 +1,4 @@
-package Pruebas;
+package PruebasMock;
 
 import Conversiones.CompraConversiones;
 import Conversiones.ProductosConversiones;
@@ -120,7 +120,7 @@ public class FiltroPorCompraTest {
      * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
-    public void testFiltrarPorCompraInexistente() throws PersistenciaException {
+    public void testFiltrarPorCompraInexistente() throws PersistenciaException, NegocioException {
         Long compraIdInexistente = 999L;
 
         // Se simula que no se encuentran productos para la compra inexistente

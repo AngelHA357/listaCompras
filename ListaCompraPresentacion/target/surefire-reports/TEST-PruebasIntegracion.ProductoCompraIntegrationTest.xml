@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasIntegracion.ProductoCompraIntegrationTest" time="1.986" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasIntegracion.ProductoCompraIntegrationTest" time="4.883" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="user.country" value="ES"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\JoseH\AppData\Local\Temp\surefire10074213624613899301\surefirebooter-20241008045118912_3.jar C:\Users\JoseH\AppData\Local\Temp\surefire10074213624613899301 2024-10-08T04-51-18_689-jvmRun1 surefire-20241008045118912_1tmp surefire_0-20241008045118912_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\JoseH\AppData\Local\Temp\surefire12936567636384673138\surefirebooter-20241008110521107_3.jar C:\Users\JoseH\AppData\Local\Temp\surefire12936567636384673138 2024-10-08T11-05-20_606-jvmRun1 surefire-20241008110521107_1tmp surefire_0-20241008110521107_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="test" value="PruebasIntegracion.**.*Test"/>
     <property name="surefire.test.class.path" value="C:\Users\JoseH\OneDrive\Documentos\GitHub\listaCompras\ListaCompraPresentacion\target\test-classes;C:\Users\JoseH\OneDrive\Documentos\GitHub\listaCompras\ListaCompraPresentacion\target\classes;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraNegocio\1.0-SNAPSHOT\ProyectoListaCompraNegocio-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraPersistencia\1.0-SNAPSHOT\ProyectoListaCompraPersistencia-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa\2.7.12\org.eclipse.persistence.jpa-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\jakarta.persistence\2.2.3\jakarta.persistence-2.2.3.jar;C:\Users\JoseH\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\JoseH\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.core\2.7.12\org.eclipse.persistence.core-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.asm\9.4.0\org.eclipse.persistence.asm-9.4.0.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.antlr\2.7.12\org.eclipse.persistence.antlr-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa.jpql\2.7.12\org.eclipse.persistence.jpa.jpql-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.moxy\2.7.12\org.eclipse.persistence.moxy-2.7.12.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraDTOs\1.0-SNAPSHOT\ProyectoListaCompraDTOs-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\JoseH\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\JoseH\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.0\junit-jupiter-params-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\JoseH\AppData\Local\Temp\surefire10074213624613899301\surefirebooter-20241008045118912_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\JoseH\AppData\Local\Temp\surefire12936567636384673138\surefirebooter-20241008110521107_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
@@ -60,12 +60,12 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testObtenerProductosPorCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="1.516">
-    <system-out><![CDATA[[EL Info]: 2024-10-08 04:51:20.304--ServerSession(252738640)--EclipseLink, version: Eclipse Persistence Services - 2.7.12.v20230209-e5c4074ef3
+  <testcase name="testObtenerProductosPorCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="3.874">
+    <system-out><![CDATA[[EL Info]: 2024-10-08 11:05:24.093--ServerSession(1111613684)--EclipseLink, version: Eclipse Persistence Services - 2.7.12.v20230209-e5c4074ef3
 ]]></system-out>
   </testcase>
-  <testcase name="testComprobacionProductosListaComprasYCategorias" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.112">
-    <system-err><![CDATA[oct 08, 2024 4:51:21 A. M. Subsistemas.GestorProductos actualizarProducto
+  <testcase name="testComprobacionProductosListaComprasYCategorias" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.23">
+    <system-err><![CDATA[oct 08, 2024 11:05:26 A. M. Subsistemas.GestorProductos actualizarProducto
 SEVERE: null
 Exceptions.PersistenciaException: Error al actualizar el producto: An instance of a null PK has been incorrectly provided for this find operation.
 	at DAOs.ProductoDAO.actualizarProducto(ProductoDAO.java:91)
@@ -145,12 +145,12 @@ Caused by: java.lang.IllegalArgumentException: An instance of a null PK has been
 
 ]]></system-err>
   </testcase>
-  <testcase name="testObtenerProductosPorCompraId" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.074"/>
-  <testcase name="testAgregarProductoYCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.043"/>
-  <testcase name="testEliminarProductoYVerificarEnCompras" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.03"/>
-  <testcase name="testActualizarProductoYVerificarEnCompras" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.038"/>
-  <testcase name="testValidarArticulosMarcadosComoComprados" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.084">
-    <system-err><![CDATA[oct 08, 2024 4:51:21 A. M. Subsistemas.GestorProductos actualizarProducto
+  <testcase name="testObtenerProductosPorCompraId" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.111"/>
+  <testcase name="testAgregarProductoYCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.147"/>
+  <testcase name="testEliminarProductoYVerificarEnCompras" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.067"/>
+  <testcase name="testActualizarProductoYVerificarEnCompras" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.081"/>
+  <testcase name="testValidarArticulosMarcadosComoComprados" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.14">
+    <system-err><![CDATA[oct 08, 2024 11:05:27 A. M. Subsistemas.GestorProductos actualizarProducto
 SEVERE: null
 Exceptions.PersistenciaException: Error al actualizar el producto: An instance of a null PK has been incorrectly provided for this find operation.
 	at DAOs.ProductoDAO.actualizarProducto(ProductoDAO.java:91)
@@ -230,5 +230,5 @@ Caused by: java.lang.IllegalArgumentException: An instance of a null PK has been
 
 ]]></system-err>
   </testcase>
-  <testcase name="testCambiarEstadoProducto" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.049"/>
+  <testcase name="testCambiarEstadoProducto" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.155"/>
 </testsuite>

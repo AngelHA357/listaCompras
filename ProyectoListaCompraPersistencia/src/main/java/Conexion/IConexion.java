@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 public interface IConexion {
 
     public EntityManager crearConexion() throws PersistenciaException;
-
+    public void rollback() throws PersistenciaException;
+    
 
 }

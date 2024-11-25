@@ -3,6 +3,7 @@ package Conexion;
 import Exceptions.PersistenciaException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 /**
@@ -10,15 +11,13 @@ import javax.persistence.Persistence;
  */
 public class Conexion implements IConexion {
 
-    // Atributo estático para la instancia Singleton de EntityManagerFactory
     private static EntityManagerFactory entityManagerFactory;
     private static Conexion instance;
+    private EntityManager entityManager; // Atributo para almacenar el EntityManager actual
 
-    // Constructor privado para evitar instanciación desde fuera
     private Conexion() {
     }
 
-    // Método para obtener una única instancia de EntityManagerFactory
     private static EntityManagerFactory getEntityManagerFactory() throws PersistenciaException {
         if (entityManagerFactory == null) {
             try {
@@ -29,7 +28,7 @@ public class Conexion implements IConexion {
         }
         return entityManagerFactory;
     }
-    
+
     public static Conexion getInstance() {
         if (instance == null) {
             instance = new Conexion();
@@ -39,14 +38,32 @@ public class Conexion implements IConexion {
 
     @Override
     public EntityManager crearConexion() throws PersistenciaException {
-        // Usamos la única instancia de EntityManagerFactory para crear el EntityManager
-        return getEntityManagerFactory().createEntityManager();
+        if (entityManager == null || !entityManager.isOpen()) {
+            entityManager = getEntityManagerFactory().createEntityManager();
+        }
+        return entityManager;
     }
 
-    // Método para cerrar la EntityManagerFactory cuando ya no se necesite
+    
     public static void cerrarConexion() {
         if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
             entityManagerFactory.close();
+        }
+    }
+
+    @Override
+    public void rollback() throws PersistenciaException {
+        if (entityManager != null) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+            } catch (Exception e) {
+                throw new PersistenciaException("Error al realizar rollback: " + e.getMessage(), e);
+            }
+        } else {
+            throw new PersistenciaException("No hay una conexión activa para realizar rollback.");
         }
     }
 }

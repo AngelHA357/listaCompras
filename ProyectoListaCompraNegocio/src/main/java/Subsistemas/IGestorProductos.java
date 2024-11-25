@@ -16,14 +16,14 @@ public interface IGestorProductos {
 
     public ProductoDTO agregarProducto(ProductoDTO productoDTO) throws NegocioException;
 
-    public ProductoDTO obtenerProductoPorId(Long id);
+    public ProductoDTO obtenerProductoPorId(Long id) throws NegocioException;
 
-    public List<ProductoDTO> obtenerTodosLosProductos();
+    public List<ProductoDTO> obtenerTodosLosProductos() throws NegocioException;
 
-    public ProductoDTO actualizarProducto(ProductoDTO productoDTO);
+    public ProductoDTO actualizarProducto(ProductoDTO productoDTO) throws NegocioException;
 
-    public void eliminarProducto(Long id);
+    public void eliminarProducto(Long id) throws NegocioException;
 
-    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId);
+    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws NegocioException;
 
 }

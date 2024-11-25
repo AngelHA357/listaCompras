@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
-package Pruebas;
+package PruebasMock;
 
 import Conversiones.CompraConversiones;
 import DAOs.CompraDAO;
@@ -28,7 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -134,7 +137,7 @@ public class GestorComprasTest {
      * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
-    public void testObtenerCompraPorId() throws PersistenciaException {
+    public void testObtenerCompraPorId() throws PersistenciaException, NegocioException {
         // Se crea un CompraDTO de prueba
         CompraDTO compraDTO = new CompraDTO("Compra de Prueba", null);
         Compra compra = new Compra("Compra de Prueba", null);
@@ -170,14 +173,14 @@ public class GestorComprasTest {
     public void testObtenerCompraPorId_Inexistente() throws PersistenciaException {
         long idInexistente = 9999L;
 
-        // Se simula que el DAO no encuentra la compra
-        when(compraDAOMock.obtenerCompraPorId(idInexistente)).thenReturn(null);
+        // Configura el mock para lanzar una excepción al intentar obtener una compra inexistente
+        when(compraDAOMock.obtenerCompraPorId(idInexistente))
+                .thenThrow(new PersistenciaException("Compra no encontrada"));
 
-        // Se llama al método bajo prueba
-        CompraDTO resultado = gestorCompras.obtenerCompraPorId(idInexistente);
+        // Verifica que se lanza la excepción esperada
+        assertThrows(NegocioException.class, () -> gestorCompras.obtenerCompraPorId(idInexistente));
 
-        assertNull(resultado);
-
+        // Verifica que se llamó al método obtenerCompraPorId del DAO
         verify(compraDAOMock, times(1)).obtenerCompraPorId(idInexistente);
     }
 
@@ -187,7 +190,7 @@ public class GestorComprasTest {
      * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
-    public void testObtenerTodasLasCompras() throws PersistenciaException {
+    public void testObtenerTodasLasCompras() throws PersistenciaException, NegocioException {
         // Se simulan varias Compras
         List<Compra> compras = Arrays.asList(
                 new Compra("Compra 1", null),
@@ -223,7 +226,7 @@ public class GestorComprasTest {
      * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
-    public void testObtenerTodasLasCompras_Vacio() throws PersistenciaException {
+    public void testObtenerTodasLasCompras_Vacio() throws PersistenciaException, NegocioException {
         // Se simula que no hay compras en el DAO
         when(compraDAOMock.obtenerTodasLasCompras()).thenReturn(Collections.emptyList());
 
@@ -241,17 +244,26 @@ public class GestorComprasTest {
      * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
-    public void testEliminarCompra() throws PersistenciaException {
-        // Se simula el ID de una compra
-        Long id = 1L;
+    public void testEliminarCompra() throws PersistenciaException, NegocioException {
+        // Simula un ID válido
+        Long idValido = 1L;
 
-        gestorCompras.eliminarCompra(id);
+        // Simula una compra existente
+        Compra compraMock = new Compra();
+        compraMock.setId(idValido);
+        when(compraDAOMock.obtenerCompraPorId(idValido)).thenReturn(compraMock);
 
-        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        // Configura el mock para no lanzar excepción en la eliminación
+        doNothing().when(compraDAOMock).eliminarCompra(idValido);
 
-        verify(compraDAOMock).eliminarCompra(anyLong());
-        verify(compraDAOMock).eliminarCompra(longArgumentCaptor.capture());
-        assertEquals(1L, longArgumentCaptor.getValue());
+        // Llama al método eliminarCompra
+        gestorCompras.eliminarCompra(idValido);
+
+        // Verifica que se llamó a obtenerCompraPorId
+        verify(compraDAOMock).obtenerCompraPorId(idValido);
+
+        // Verifica que se llamó a eliminarCompra con el ID correcto
+        verify(compraDAOMock).eliminarCompra(idValido);
     }
 
     /**
@@ -261,16 +273,20 @@ public class GestorComprasTest {
      */
     @Test
     public void testEliminarCompra_Inexistente() throws PersistenciaException {
-        // Se simula el ID de una compra inexistente
+        // Simula un ID inexistente
         long idInexistente = 9999L;
 
-        // Se llama al método eliminarCompra con un ID inexistente
-        gestorCompras.eliminarCompra(idInexistente);
+        // Configura el mock para devolver null al intentar obtener la compra
+        when(compraDAOMock.obtenerCompraPorId(idInexistente)).thenReturn(null);
 
-        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(compraDAOMock).eliminarCompra(anyLong());
-        verify(compraDAOMock).eliminarCompra(longArgumentCaptor.capture());
-        assertEquals(idInexistente, longArgumentCaptor.getValue());
+        // Verifica que se lanza la excepción esperada
+        assertThrows(NegocioException.class, () -> gestorCompras.eliminarCompra(idInexistente));
+
+        // Verifica que se llamó al método obtenerCompraPorId del DAO
+        verify(compraDAOMock).obtenerCompraPorId(idInexistente);
+
+        // Verifica que no se llamó al método eliminarCompra
+        verify(compraDAOMock, never()).eliminarCompra(idInexistente);
     }
 
 }
