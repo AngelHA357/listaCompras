@@ -3,6 +3,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
+import Exceptions.NegocioException;
 import Subsistemas.IFiltroPorCompra;
 import Subsistemas.FiltroPorCompra;
 import Subsistemas.IGestorCompras;
@@ -12,6 +13,8 @@ import Subsistemas.GestorProductos;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
@@ -40,7 +43,7 @@ public class panelListaCompras extends javax.swing.JPanel {
      * @param menuInicio Frame de menu inicio donde se pintará este panel.
      * @param cliente Cliente actual.
      */
-    public panelListaCompras(frmMenuInicio menuInicio, ClienteDTO cliente) {
+    public panelListaCompras(frmMenuInicio menuInicio, ClienteDTO cliente) throws NegocioException {
         this.menuInicio = menuInicio;
         this.cliente = cliente;
         this.compra = new CompraDTO();
@@ -68,7 +71,7 @@ public class panelListaCompras extends javax.swing.JPanel {
     /**
      * Permite llenar la tabla con las listas de compras que tiene un cliente.
      */
-    private void mostrarListaCompras() {
+    private void mostrarListaCompras() throws NegocioException {
         DefaultTableModel modelo = (DefaultTableModel) tblListaCompras.getModel();
         modelo.setRowCount(0);
 
@@ -197,16 +200,20 @@ public class panelListaCompras extends javax.swing.JPanel {
         int filaSeleccionada = tblListaCompras.getSelectedRow();
 
         if (filaSeleccionada != -1) {
-            Object[] datosFila = new Object[tblListaCompras.getColumnCount()];
-
-            for (int i = 0; i < tblListaCompras.getColumnCount(); i++) {
-                datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);
+            try {
+                Object[] datosFila = new Object[tblListaCompras.getColumnCount()];
+                
+                for (int i = 0; i < tblListaCompras.getColumnCount(); i++) {
+                    datosFila[i] = tblListaCompras.getValueAt(filaSeleccionada, i);
+                }
+                compra.setNombreCompra(datosFila[0].toString());
+                CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
+                
+                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraSelec);
+                menuInicio.mostrarPanel(agregarProducto);
+            } catch (NegocioException ex) {
+                Logger.getLogger(panelListaCompras.class.getName()).log(Level.SEVERE, null, ex);
             }
-            compra.setNombreCompra(datosFila[0].toString());
-            CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
-
-            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraSelec);
-            menuInicio.mostrarPanel(agregarProducto);
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione una lista de compras", "Atención", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -232,16 +239,20 @@ public class panelListaCompras extends javax.swing.JPanel {
 
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar esta lista?", "Atención", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
-                compra.setNombreCompra(datosFila[0].toString());
-                CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
-                List<ProductoDTO> productosAsociados = filtroCompra.obtenerProductosFiltrarPorCompra(compraSelec.getId());
-                for (ProductoDTO productoAsociado : productosAsociados) {
-                    productoAsociado = gestorProductos.obtenerProductoPorCaracteristicas(productoAsociado.getNombre(), productoAsociado.getCategoria(), productoAsociado.isComprado(),
-                            productoAsociado.getCantidad(), compraSelec.getId());
-                    gestorProductos.eliminarProducto(productoAsociado.getId());
+                try {
+                    compra.setNombreCompra(datosFila[0].toString());
+                    CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compra.getNombreCompra(), cliente.getId());
+                    List<ProductoDTO> productosAsociados = filtroCompra.obtenerProductosFiltrarPorCompra(compraSelec.getId());
+                    for (ProductoDTO productoAsociado : productosAsociados) {
+                        productoAsociado = gestorProductos.obtenerProductoPorCaracteristicas(productoAsociado.getNombre(), productoAsociado.getCategoria(), productoAsociado.isComprado(),
+                                productoAsociado.getCantidad(), compraSelec.getId());
+                        gestorProductos.eliminarProducto(productoAsociado.getId());
+                    }
+                    gestorCompras.eliminarCompra(compraSelec.getId());
+                    mostrarListaCompras();
+                } catch (NegocioException ex) {
+                    Logger.getLogger(panelListaCompras.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                gestorCompras.eliminarCompra(compraSelec.getId());
-                mostrarListaCompras();
             }
 
         } else {

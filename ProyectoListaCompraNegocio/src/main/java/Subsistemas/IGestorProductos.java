@@ -31,14 +31,14 @@ public interface IGestorProductos {
      * @param id ID del producto.
      * @return El producto encontrado o null si no se encuentra.
      */
-    public ProductoDTO obtenerProductoPorId(Long id);
+    public ProductoDTO obtenerProductoPorId(Long id) throws NegocioException;
 
     /**
      * Método para obtener todos los productos del sistema.
      *
      * @return Lista de todos los productos.
      */
-    public List<ProductoDTO> obtenerTodosLosProductos();
+    public List<ProductoDTO> obtenerTodosLosProductos() throws NegocioException;
 
     /**
      * Método para actualizar un producto existente.
@@ -47,14 +47,14 @@ public interface IGestorProductos {
      * producto.
      * @return El producto actualizado.
      */
-    public ProductoDTO actualizarProducto(ProductoDTO productoDTO);
+    public ProductoDTO actualizarProducto(ProductoDTO productoDTO) throws NegocioException;
 
     /**
      * Método para eliminar un producto por su ID.
      *
      * @param id ID del producto a eliminar.
      */
-    public void eliminarProducto(Long id);
+    public void eliminarProducto(Long id) throws NegocioException;
 
     /**
      * Método para obtener un producto basado en sus características
@@ -68,6 +68,6 @@ public interface IGestorProductos {
      * @return El producto que coincide con las características dadas o null si
      * no se encuentra.
      */
-    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId);
+    public ProductoDTO obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws NegocioException;
 
 }

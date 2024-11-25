@@ -27,41 +27,17 @@ public class GestorClientes implements IGestorClientes {
     private final IClienteDAO clienteDAO;
     private final ClientesConversiones conversiones;
 
-    /**
-     * Constructor que inicializa la conexión a la base de datos, un objeto de
-     * acceso a datos de clientes y un objeto de conversión de clientes.
-     *
-     * Este constructor obteniene la instancia de conexión, y se crea un
-     * ClienteDao para interactuar con la base de datos. También se inicializa
-     * un objeto ClientesConversiones para realizar conversiones entre entidades
-     * y DTOs.
-     */
     public GestorClientes() {
         conexion = Conexion.getInstance();
         this.clienteDAO = new ClienteDAO(conexion);
         this.conversiones = new ClientesConversiones();
     }
 
-    /**
-     * Incializa el objeto clienteDAO y el objeto de Conversiones mediante la
-     * inyeccion de dependencias, este constructor es útil para la elaboración
-     * de pruebas unitarias.
-     *
-     * @param clienteDAO Objeto que implementa la interfaz IClienteDAO.
-     * @param conversiones Objeto de la clase ClientesConversiones.
-     */
     public GestorClientes(IClienteDAO clienteDAO, ClientesConversiones conversiones) {
         this.clienteDAO = clienteDAO;
         this.conversiones = conversiones;
     }
 
-    /**
-     * Método para agregar un nuevo cliente.
-     *
-     * @param clienteDTO Datos del cliente a agregar.
-     * @return ClienteDTO con los detalles del cliente agregado.
-     * @throws NegocioException Si ocurre algún error en la lógica de negocio.
-     */
     @Override
     public ClienteDTO agregarCliente(ClienteDTO clienteDTO) throws NegocioException {
         if (clienteDTO.getNombre() == null || clienteDTO.getNombre().isBlank()) {
@@ -90,15 +66,6 @@ public class GestorClientes implements IGestorClientes {
         }
     }
 
-    /**
-     * Método para encontrar un cliente utilizando su usuario y contraseña.
-     *
-     * @param usuario Nombre de usuario del cliente.
-     * @param contrasena Contraseña del cliente.
-     * @return ClienteDTO con los detalles del cliente encontrado.
-     * @throws NegocioException Si el cliente no existe o si ocurre algún error
-     * en la lógica de negocio.
-     */
     @Override
     public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasenia) throws NegocioException {
         if (usuario == null || usuario.isBlank()) {

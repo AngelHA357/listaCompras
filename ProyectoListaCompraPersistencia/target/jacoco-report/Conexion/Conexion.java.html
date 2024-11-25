@@ -3,6 +3,7 @@
 import Exceptions.PersistenciaException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 /**
@@ -12,44 +13,60 @@ import javax.persistence.Persistence;
  */
 public class Conexion implements IConexion {
 
-    // Atributo estático para la instancia Singleton de EntityManagerFactory
     private static EntityManagerFactory entityManagerFactory;
     private static Conexion instance;
+    private EntityManager entityManager; // Atributo para almacenar el EntityManager actual
 
-    // Constructor privado para evitar instanciación desde fuera
     private Conexion() {
     }
 
-    // Método para obtener una única instancia de EntityManagerFactory
     private static EntityManagerFactory getEntityManagerFactory() throws PersistenciaException {
-<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (entityManagerFactory == null) {</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (entityManagerFactory == null) {</span>
             try {
-<span class="fc" id="L27">                entityManagerFactory = Persistence.createEntityManagerFactory(&quot;conexionPU&quot;);</span>
-<span class="nc" id="L28">            } catch (Exception e) {</span>
-<span class="nc" id="L29">                throw new PersistenciaException(&quot;Error al crear EntityManagerFactory: &quot; + e.getMessage(), e);</span>
-<span class="fc" id="L30">            }</span>
+<span class="fc" id="L26">                entityManagerFactory = Persistence.createEntityManagerFactory(&quot;conexionPU&quot;);</span>
+<span class="nc" id="L27">            } catch (Exception e) {</span>
+<span class="nc" id="L28">                throw new PersistenciaException(&quot;Error al crear EntityManagerFactory: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L29">            }</span>
         }
-<span class="fc" id="L32">        return entityManagerFactory;</span>
+<span class="fc" id="L31">        return entityManagerFactory;</span>
     }
 
     public static Conexion getInstance() {
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (instance == null) {</span>
-<span class="fc" id="L37">            instance = new Conexion();</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L36">            instance = new Conexion();</span>
         }
-<span class="fc" id="L39">        return instance;</span>
+<span class="fc" id="L38">        return instance;</span>
     }
 
     @Override
     public EntityManager crearConexion() throws PersistenciaException {
-        // Usamos la única instancia de EntityManagerFactory para crear el EntityManager
-<span class="fc" id="L45">        return getEntityManagerFactory().createEntityManager();</span>
+<span class="pc bpc" id="L43" title="1 of 4 branches missed.">        if (entityManager == null || !entityManager.isOpen()) {</span>
+<span class="fc" id="L44">            entityManager = getEntityManagerFactory().createEntityManager();</span>
+        }
+<span class="fc" id="L46">        return entityManager;</span>
     }
 
-    // Método para cerrar la EntityManagerFactory cuando ya no se necesite
+    
     public static void cerrarConexion() {
-<span class="nc bnc" id="L50" title="All 4 branches missed.">        if (entityManagerFactory != null &amp;&amp; entityManagerFactory.isOpen()) {</span>
-<span class="nc" id="L51">            entityManagerFactory.close();</span>
+<span class="nc bnc" id="L51" title="All 4 branches missed.">        if (entityManagerFactory != null &amp;&amp; entityManagerFactory.isOpen()) {</span>
+<span class="nc" id="L52">            entityManagerFactory.close();</span>
         }
-<span class="nc" id="L53">    }</span>
+<span class="nc" id="L54">    }</span>
+
+    @Override
+    public void rollback() throws PersistenciaException {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (entityManager != null) {</span>
+<span class="nc" id="L59">            EntityTransaction transaction = entityManager.getTransaction();</span>
+            try {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">                if (transaction.isActive()) {</span>
+<span class="nc" id="L62">                    transaction.rollback();</span>
+                }
+<span class="nc" id="L64">            } catch (Exception e) {</span>
+<span class="nc" id="L65">                throw new PersistenciaException(&quot;Error al realizar rollback: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L66">            }</span>
+<span class="nc" id="L67">        } else {</span>
+<span class="nc" id="L68">            throw new PersistenciaException(&quot;No hay una conexión activa para realizar rollback.&quot;);</span>
+        }
+<span class="nc" id="L70">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

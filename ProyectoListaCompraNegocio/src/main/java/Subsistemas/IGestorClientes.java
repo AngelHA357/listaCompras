@@ -32,5 +32,5 @@ public interface IGestorClientes {
      * @throws NegocioException Si el cliente no existe o si ocurre algún error
      * en la lógica de negocio.
      */
-    public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasena) throws NegocioException;
+     public ClienteDTO encontrarClientePorUsuarioYContrasena(String usuario, String contrasena) throws NegocioException;
 }

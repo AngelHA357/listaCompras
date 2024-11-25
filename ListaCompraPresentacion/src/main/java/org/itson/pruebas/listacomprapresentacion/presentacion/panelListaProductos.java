@@ -2,6 +2,7 @@ package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.CompraDTO;
 import DTOs.ProductoDTO;
+import Exceptions.NegocioException;
 import Subsistemas.IFiltroPorCategoria;
 import Subsistemas.FiltroPorCategoria;
 import Subsistemas.IFiltroPorCompra;
@@ -15,6 +16,8 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -48,7 +51,7 @@ public class panelListaProductos extends javax.swing.JPanel {
      * @param menuInicio Frame de menu inicio donde se pintará este panel.
      * @param compra Compra actual.
      */
-    public panelListaProductos(frmMenuInicio menuInicio, CompraDTO compra) {
+    public panelListaProductos(frmMenuInicio menuInicio, CompraDTO compra) throws NegocioException {
         this.menuInicio = menuInicio;
         this.compra = compra;
         gestorProductos = new GestorProductos();
@@ -75,16 +78,29 @@ public class panelListaProductos extends javax.swing.JPanel {
     /**
      * Permite llenar la tabla con las listas de productos que tiene una compra.
      */
-    private void mostrarListaProductos() {
-        tblListaProductos.setModel(modelo);
-        modelo.setRowCount(0);
+    private void mostrarListaProductos() throws NegocioException {
+    tblListaProductos.setModel(modelo);
+    modelo.setRowCount(0);
+    
+    try {
         List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId());
-        if (listaProductoCliente != null) {
+        
+        // Si la lista no es null y tiene elementos, los agregamos a la tabla
+        if (listaProductoCliente != null && !listaProductoCliente.isEmpty()) {
             listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado()}));
         }
-        realizarAccionCheckbox();
-        aplicarColorFilas();
+        // Si la lista está vacía, simplemente dejamos la tabla vacía (no es un error)
+        
+    } catch (Exception e) {
+        // Si ocurre algún error que no sea relacionado con lista vacía, lo registramos
+        Logger.getLogger(panelListaProductos.class.getName()).log(Level.INFO, 
+            "La compra {0} no tiene productos asociados - Esto es normal para compras nuevas", 
+            compra.getId());
     }
+
+    realizarAccionCheckbox();
+    aplicarColorFilas();
+}
 
     /**
      * Permite que el checkBox cambie el estado de producto como comprado.
@@ -95,17 +111,25 @@ public class panelListaProductos extends javax.swing.JPanel {
                 int row = e.getFirstRow();
                 boolean comprado = (Boolean) modelo.getValueAt(row, 3);
                 if (comprado) {
-                    ProductoDTO productoBuscar = new ProductoDTO();
-                    productoBuscar.setNombre(modelo.getValueAt(row, 0).toString());
-                    productoBuscar.setCantidad(Double.valueOf(modelo.getValueAt(row, 1).toString()));
-                    productoBuscar.setCategoria(modelo.getValueAt(row, 2).toString());
-                    productoBuscar.setComprado(false);
-
-                    ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
-
-                    productoSelec.setComprado(comprado);
-                    productoSelec.setCompra(compra);
-                    gestorProductos.actualizarProducto(productoSelec);
+                    try {
+                        ProductoDTO productoBuscar = new ProductoDTO();
+                        productoBuscar.setNombre(modelo.getValueAt(row, 0).toString());
+                        productoBuscar.setCantidad(Double.valueOf(modelo.getValueAt(row, 1).toString()));
+                        productoBuscar.setCategoria(modelo.getValueAt(row, 2).toString());
+                        productoBuscar.setComprado(false);
+                        
+                        ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+                        
+                        productoSelec.setComprado(comprado);
+                        productoSelec.setCompra(compra);
+                        try {
+                            gestorProductos.actualizarProducto(productoSelec);
+                        } catch (NegocioException ex) {
+                            Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } catch (NegocioException ex) {
+                        Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -188,22 +212,26 @@ public class panelListaProductos extends javax.swing.JPanel {
                     int filaSeleccionada = tblListaProductos.getSelectedRow();
 
                     if (filaSeleccionada != -1) {
-                        Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
-
-                        for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
-                            datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+                        try {
+                            Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
+                            
+                            for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
+                                datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
+                            }
+                            
+                            ProductoDTO productoBuscar = new ProductoDTO();
+                            productoBuscar.setNombre(datosFila[0].toString());
+                            productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
+                            productoBuscar.setCategoria(datosFila[2].toString());
+                            productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
+                            ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+                            productoSelec.setCompra(compra);
+                            
+                            panelDatosProducto actualizarDatosProducto = new panelDatosProducto(menuInicio, compra, productoSelec, true);
+                            menuInicio.mostrarPanel(actualizarDatosProducto);
+                        } catch (NegocioException ex) {
+                            Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
                         }
-
-                        ProductoDTO productoBuscar = new ProductoDTO();
-                        productoBuscar.setNombre(datosFila[0].toString());
-                        productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
-                        productoBuscar.setCategoria(datosFila[2].toString());
-                        productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
-                        ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
-                        productoSelec.setCompra(compra);
-
-                        panelDatosProducto actualizarDatosProducto = new panelDatosProducto(menuInicio, compra, productoSelec, true);
-                        menuInicio.mostrarPanel(actualizarDatosProducto);
                     }
                 }
             }
@@ -407,15 +435,19 @@ public class panelListaProductos extends javax.swing.JPanel {
 
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de borrar este producto?", "Atención", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
-                ProductoDTO productoBuscar = new ProductoDTO();
-                productoBuscar.setNombre(datosFila[0].toString());
-                productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
-                productoBuscar.setCategoria(datosFila[2].toString());
-                productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
-
-                ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
-                gestorProductos.eliminarProducto(productoSelec.getId());
-                mostrarListaProductos();
+                try {
+                    ProductoDTO productoBuscar = new ProductoDTO();
+                    productoBuscar.setNombre(datosFila[0].toString());
+                    productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
+                    productoBuscar.setCategoria(datosFila[2].toString());
+                    productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
+                    
+                    ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
+                    gestorProductos.eliminarProducto(productoSelec.getId());
+                    mostrarListaProductos();
+                } catch (NegocioException ex) {
+                    Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
         } else {
@@ -450,7 +482,11 @@ public class panelListaProductos extends javax.swing.JPanel {
      * @param evt Evento al hacer clic en el botón.
      */
     private void btnMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodoActionPerformed
-        mostrarListaProductos();
+        try {
+            mostrarListaProductos();
+        } catch (NegocioException ex) {
+            Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_btnMostrarTodoActionPerformed
 

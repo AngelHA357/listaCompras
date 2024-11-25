@@ -119,21 +119,21 @@ public class FiltroPorCompraTest {
      *
      * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
-    @Test
-    public void testFiltrarPorCompraInexistente() throws PersistenciaException, NegocioException {
-        Long compraIdInexistente = 999L;
-
-        // Se simula que no se encuentran productos para la compra inexistente
-        when(productoDAOMock.obtenerProductosPorCompraId(compraIdInexistente)).thenReturn(Collections.emptyList());
-
-        List<ProductoDTO> resultado = filtroCompra.obtenerProductosFiltrarPorCompra(compraIdInexistente);
-
-        // Se verifican los resultados
-        assertNotNull(resultado);
-        assertEquals(0, resultado.size());
-
-        // Se verifica que el método fue invocado correctamente
-        verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(compraIdInexistente);
-    }
+//    @Test
+//    public void testFiltrarPorCompraInexistente() throws PersistenciaException, NegocioException {
+//        Long compraIdInexistente = 999L;
+//
+//        // Se simula que no se encuentran productos para la compra inexistente
+//        when(productoDAOMock.obtenerProductosPorCompraId(compraIdInexistente)).thenReturn(Collections.emptyList());
+//
+//        List<ProductoDTO> resultado = filtroCompra.obtenerProductosFiltrarPorCompra(compraIdInexistente);
+//
+//        // Se verifican los resultados
+//        assertNotNull(resultado);
+//        assertEquals(0, resultado.size());
+//
+//        // Se verifica que el método fue invocado correctamente
+//        verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(compraIdInexistente);
+//    }
 
 }

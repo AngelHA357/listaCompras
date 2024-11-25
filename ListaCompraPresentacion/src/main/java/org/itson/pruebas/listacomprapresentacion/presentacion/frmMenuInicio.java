@@ -1,12 +1,15 @@
 package org.itson.pruebas.listacomprapresentacion.presentacion;
 
 import DTOs.ClienteDTO;
+import Exceptions.NegocioException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -47,8 +50,12 @@ public class frmMenuInicio extends javax.swing.JFrame {
 
         cbxListaAcciones.addActionListener((ActionEvent e) -> {
             if (cbxListaAcciones.getSelectedIndex() == 0) {
-                panelListaCompras listaCompras = new panelListaCompras(this, cliente);
-                mostrarPanel(listaCompras);
+                try {
+                    panelListaCompras listaCompras = new panelListaCompras(this, cliente);
+                    mostrarPanel(listaCompras);
+                } catch (NegocioException ex) {
+                    Logger.getLogger(frmMenuInicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else if (cbxListaAcciones.getSelectedIndex() == 1) {
                 panelNombreLista nombreLista = new panelNombreLista(this, cliente);
                 mostrarPanel(nombreLista);

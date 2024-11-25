@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasIntegracion.ProductoCompraIntegrationTest" time="4.883" tests="8" errors="0" skipped="0" failures="0">
+=======
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.95" tests="8" errors="0" skipped="0" failures="0">
+>>>>>>> parent of b2742b0 (Implementación de jacoco y pitest correctamente)
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -14,8 +18,13 @@
     <property name="java.vm.specification.version" value="21"/>
     <property name="user.country" value="ES"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
+<<<<<<< HEAD
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
     <property name="sun.java.command" value="C:\Users\JoseH\AppData\Local\Temp\surefire12936567636384673138\surefirebooter-20241008110521107_3.jar C:\Users\JoseH\AppData\Local\Temp\surefire12936567636384673138 2024-10-08T11-05-20_606-jvmRun1 surefire-20241008110521107_1tmp surefire_0-20241008110521107_2tmp"/>
+=======
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-22\bin"/>
+    <property name="sun.java.command" value="C:\Users\victo\AppData\Local\Temp\surefire728668458474919311\surefirebooter-20241008155354985_3.jar C:\Users\victo\AppData\Local\Temp\surefire728668458474919311 2024-10-08T15-53-54_884-jvmRun1 surefire-20241008155354985_1tmp surefire_0-20241008155354985_2tmp"/>
+>>>>>>> parent of b2742b0 (Implementación de jacoco y pitest correctamente)
     <property name="jdk.debug" value="release"/>
     <property name="test" value="PruebasIntegracion.**.*Test"/>
     <property name="surefire.test.class.path" value="C:\Users\JoseH\OneDrive\Documentos\GitHub\listaCompras\ListaCompraPresentacion\target\test-classes;C:\Users\JoseH\OneDrive\Documentos\GitHub\listaCompras\ListaCompraPresentacion\target\classes;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraNegocio\1.0-SNAPSHOT\ProyectoListaCompraNegocio-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraPersistencia\1.0-SNAPSHOT\ProyectoListaCompraPersistencia-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa\2.7.12\org.eclipse.persistence.jpa-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\jakarta.persistence\2.2.3\jakarta.persistence-2.2.3.jar;C:\Users\JoseH\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\JoseH\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.core\2.7.12\org.eclipse.persistence.core-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.asm\9.4.0\org.eclipse.persistence.asm-9.4.0.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.antlr\2.7.12\org.eclipse.persistence.antlr-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa.jpql\2.7.12\org.eclipse.persistence.jpa.jpql-2.7.12.jar;C:\Users\JoseH\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.moxy\2.7.12\org.eclipse.persistence.moxy-2.7.12.jar;C:\Users\JoseH\.m2\repository\com\mycompany\ProyectoListaCompraDTOs\1.0-SNAPSHOT\ProyectoListaCompraDTOs-1.0-SNAPSHOT.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\JoseH\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\JoseH\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.0\junit-jupiter-params-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\JoseH\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;"/>
@@ -31,7 +40,11 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
+<<<<<<< HEAD
     <property name="surefire.real.class.path" value="C:\Users\JoseH\AppData\Local\Temp\surefire12936567636384673138\surefirebooter-20241008110521107_3.jar"/>
+=======
+    <property name="surefire.real.class.path" value="C:\Users\victo\AppData\Local\Temp\surefire728668458474919311\surefirebooter-20241008155354985_3.jar"/>
+>>>>>>> parent of b2742b0 (Implementación de jacoco y pitest correctamente)
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
@@ -60,6 +73,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
+<<<<<<< HEAD
   <testcase name="testObtenerProductosPorCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="3.874">
     <system-out><![CDATA[[EL Info]: 2024-10-08 11:05:24.093--ServerSession(1111613684)--EclipseLink, version: Eclipse Persistence Services - 2.7.12.v20230209-e5c4074ef3
 ]]></system-out>
@@ -231,4 +245,17 @@ Caused by: java.lang.IllegalArgumentException: An instance of a null PK has been
 ]]></system-err>
   </testcase>
   <testcase name="testCambiarEstadoProducto" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.155"/>
+=======
+  <testcase name="testObtenerProductosPorCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.749">
+    <system-out><![CDATA[[EL Info]: 2024-10-08 15:53:55.657--ServerSession(57241990)--EclipseLink, version: Eclipse Persistence Services - 2.7.12.v20230209-e5c4074ef3
+]]></system-out>
+  </testcase>
+  <testcase name="testComprobacionProductosListaComprasYCategorias" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.042"/>
+  <testcase name="testObtenerProductosPorCompraId" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.026"/>
+  <testcase name="testAgregarProductoYCompra" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.022"/>
+  <testcase name="testEliminarProductoYVerificarEnCompras" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.016"/>
+  <testcase name="testActualizarProductoYVerificarEnCompras" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.02"/>
+  <testcase name="testValidarArticulosMarcadosComoComprados" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.026"/>
+  <testcase name="testCambiarEstadoProducto" classname="PruebasIntegracion.ProductoCompraIntegrationTest" time="0.026"/>
+>>>>>>> parent of b2742b0 (Implementación de jacoco y pitest correctamente)
 </testsuite>

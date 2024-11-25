@@ -5,6 +5,8 @@ import DTOs.CompraDTO;
 import Exceptions.NegocioException;
 import Subsistemas.IGestorCompras;
 import Subsistemas.GestorCompras;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -108,33 +110,42 @@ public class panelNombreLista extends javax.swing.JPanel {
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
 
         String compraS = txtNombreLista.getText();
-        if (compraS.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un nombre para la lista.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
-        } else {
-            CompraDTO compra = new CompraDTO(compraS, cliente);
-            CompraDTO compraDTO = null;
+    if (compraS.isBlank()) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingrese un nombre para la lista.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-            CompraDTO compraSelec = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
-            if (compraSelec == null) {
-                try {
-                    compraDTO = gestorCompras.agregarCompra(compra);
-                } catch (NegocioException ex) {
-                    System.err.println(ex.getMessage());
-                }
-                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
-                menuInicio.mostrarPanel(agregarProducto);
-            } else if (!compraS.equals(compraSelec.getNombreCompra())) {
-                try {
-                    compraDTO = gestorCompras.agregarCompra(compra);
-                } catch (NegocioException ex) {
-                    System.err.println(ex.getMessage());
-                }
-                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraDTO);
-                menuInicio.mostrarPanel(agregarProducto);
-            } else {
-                JOptionPane.showMessageDialog(this, "Este nombre ya existe", "Nombre existente", JOptionPane.INFORMATION_MESSAGE);
-            }
+    try {
+        // Verificar si ya existe una compra con ese nombre
+        CompraDTO compraExistente = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
+        
+        if (compraExistente != null) {
+            JOptionPane.showMessageDialog(this, "Este nombre ya existe", "Nombre existente", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
+
+        // Si no existe, crear la nueva compra
+        CompraDTO nuevaCompra = new CompraDTO(compraS, cliente);
+        CompraDTO compraGuardada = gestorCompras.agregarCompra(nuevaCompra);
+        
+        if (compraGuardada != null) {
+            // Quitar el try-catch interno ya que no necesitamos manejar el error aquí
+            // Una lista vacía no es un error
+            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraGuardada);
+            menuInicio.mostrarPanel(agregarProducto);
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Error al guardar la compra", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (NegocioException ex) {
+        Logger.getLogger(panelNombreLista.class.getName()).log(Level.SEVERE, "Error al procesar la compra", ex);
+        JOptionPane.showMessageDialog(this, 
+            "Error al procesar la compra: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
 
 
     }//GEN-LAST:event_btnContinuarActionPerformed

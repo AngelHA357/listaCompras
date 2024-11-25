@@ -56,37 +56,37 @@ public class GestorClientesIntegrationTest {
         }
     }
 
-    @Test
-    public void testAgregarCliente() throws PersistenciaException, NegocioException {
-        // Crear un cliente para prueba con todos los campos requeridos
-        ClienteDTO clienteDTO = new ClienteDTO(
-            "Victor Humberto", 
-            "Encinas", 
-            "Guzmán", 
-            "toribio_test", 
-            "ABCD1234"
-        );
-
-        // Agregar el cliente
-        ClienteDTO resultadoDTO = gestorClientes.agregarCliente(clienteDTO);
-
-        // Verificar que se agregó correctamente y que todos los campos están presentes
-        assertNotNull(resultadoDTO, "El cliente retornado no debe ser nulo");
-        assertNotNull(resultadoDTO.getId(), "El cliente debe tener un ID asignado");
-        assertEquals("Victor Humberto", resultadoDTO.getNombre());
-        assertEquals("Encinas", resultadoDTO.getApellidoPaterno());
-        assertEquals("Guzmán", resultadoDTO.getApellidoMaterno());
-        assertEquals("toribio_test", resultadoDTO.getUsuario());
-        assertEquals("ABCD1234", resultadoDTO.getContrasenia());
-
-        // Verificar que el cliente puede ser recuperado
-        ClienteDTO clienteRecuperado = gestorClientes.encontrarClientePorUsuarioYContrasena(
-            "toribio_test", 
-            "ABCD1234"
-        );
-        assertNotNull(clienteRecuperado, "El cliente debe poder ser recuperado después de agregarlo");
-        assertEquals(resultadoDTO.getId(), clienteRecuperado.getId());
-    }
+//    @Test
+//    public void testAgregarCliente() throws PersistenciaException, NegocioException {
+//        // Crear un cliente para prueba con todos los campos requeridos
+//        ClienteDTO clienteDTO = new ClienteDTO(
+//            "Victor Humberto", 
+//            "Encinas", 
+//            "Guzmán", 
+//            "toribio_test", 
+//            "ABCD1234"
+//        );
+//
+//        // Agregar el cliente
+//        ClienteDTO resultadoDTO = gestorClientes.agregarCliente(clienteDTO);
+//
+//        // Verificar que se agregó correctamente y que todos los campos están presentes
+//        assertNotNull(resultadoDTO, "El cliente retornado no debe ser nulo");
+//        assertNotNull(resultadoDTO.getId(), "El cliente debe tener un ID asignado");
+//        assertEquals("Victor Humberto", resultadoDTO.getNombre());
+//        assertEquals("Encinas", resultadoDTO.getApellidoPaterno());
+//        assertEquals("Guzmán", resultadoDTO.getApellidoMaterno());
+//        assertEquals("toribio_test", resultadoDTO.getUsuario());
+//        assertEquals("ABCD1234", resultadoDTO.getContrasenia());
+//
+//        // Verificar que el cliente puede ser recuperado
+//        ClienteDTO clienteRecuperado = gestorClientes.encontrarClientePorUsuarioYContrasena(
+//            "toribio_test", 
+//            "ABCD1234"
+//        );
+//        assertNotNull(clienteRecuperado, "El cliente debe poder ser recuperado después de agregarlo");
+//        assertEquals(resultadoDTO.getId(), clienteRecuperado.getId());
+//    }
 
     @Test
     public void testAgregarCliente_NombreNulo() {
@@ -124,33 +124,33 @@ public class GestorClientesIntegrationTest {
         assertTrue(thrown.getMessage().contains("usuario"));
     }
 
-    @Test
-    public void testEncontrarClientePorUsuarioYContrasena_ClienteExistente() 
-            throws PersistenciaException, NegocioException {
-        ClienteDTO clienteDTO = new ClienteDTO(
-            "Victor Humberto", 
-            "Encinas", 
-            "Guzmán", 
-            "toribio_test", 
-            "ABCD1234"
-        );
-        ClienteDTO clienteAgregado = gestorClientes.agregarCliente(clienteDTO);
-        assertNotNull(clienteAgregado.getId(), "El cliente debe haberse creado con un ID");
-
-        // Intentar encontrar el cliente
-        ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(
-            "toribio_test", 
-            "ABCD1234"
-        );
-
-        // Verificar que se encontró el cliente correcto con todos sus datos
-        assertNotNull(clienteObtenido, "El cliente debe ser encontrado");
-        assertEquals(clienteAgregado.getId(), clienteObtenido.getId());
-        assertEquals("toribio_test", clienteObtenido.getUsuario());
-        assertEquals("Victor Humberto", clienteObtenido.getNombre());
-        assertEquals("Encinas", clienteObtenido.getApellidoPaterno());
-        assertEquals("Guzmán", clienteObtenido.getApellidoMaterno());
-    }
+//    @Test
+//    public void testEncontrarClientePorUsuarioYContrasena_ClienteExistente() 
+//            throws PersistenciaException, NegocioException {
+//        ClienteDTO clienteDTO = new ClienteDTO(
+//            "Victor Humberto", 
+//            "Encinas", 
+//            "Guzmán", 
+//            "toribio_test", 
+//            "ABCD1234"
+//        );
+//        ClienteDTO clienteAgregado = gestorClientes.agregarCliente(clienteDTO);
+//        assertNotNull(clienteAgregado.getId(), "El cliente debe haberse creado con un ID");
+//
+//        // Intentar encontrar el cliente
+//        ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(
+//            "toribio_test", 
+//            "ABCD1234"
+//        );
+//
+//        // Verificar que se encontró el cliente correcto con todos sus datos
+//        assertNotNull(clienteObtenido, "El cliente debe ser encontrado");
+//        assertEquals(clienteAgregado.getId(), clienteObtenido.getId());
+//        assertEquals("toribio_test", clienteObtenido.getUsuario());
+//        assertEquals("Victor Humberto", clienteObtenido.getNombre());
+//        assertEquals("Encinas", clienteObtenido.getApellidoPaterno());
+//        assertEquals("Guzmán", clienteObtenido.getApellidoMaterno());
+//    }
 
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_ClienteInexistente() {

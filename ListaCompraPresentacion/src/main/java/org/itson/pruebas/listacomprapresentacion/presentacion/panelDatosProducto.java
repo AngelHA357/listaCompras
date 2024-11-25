@@ -223,18 +223,26 @@ public class panelDatosProducto extends javax.swing.JPanel {
         if (validarCamposLlenos()) {
             if (validador.validarCantidad(txtCantidad.getText())) {
 
-                if (isUpdating) {
-                    actualizarDatos();
-                } else {
-                    try {
-                        guardarProducto();
-                    } catch (NegocioException ex) {
-                        Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    if (isUpdating) {
+                        try {
+                            actualizarDatos();
+                        } catch (NegocioException ex) {
+                            Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        try {
+                            guardarProducto();
+                        } catch (NegocioException ex) {
+                            Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
+                    
+                    panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+                    menuInicio.mostrarPanel(agregarProducto);
+                } catch (NegocioException ex) {
+                    Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
-                menuInicio.mostrarPanel(agregarProducto);
             } else {
                 JOptionPane.showMessageDialog(this, "Ingrese un valor numérico válido en la cantidad.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
             }
@@ -248,8 +256,12 @@ public class panelDatosProducto extends javax.swing.JPanel {
      * @param evt Evento al hacer clic en el botón.
      */
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
-        menuInicio.mostrarPanel(agregarProducto);
+        try {
+            panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+            menuInicio.mostrarPanel(agregarProducto);
+        } catch (NegocioException ex) {
+            Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     /**
@@ -274,7 +286,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
     /**
      * Permite actualizar un producto de una lista de compras.
      */
-    private void actualizarDatos() {
+    private void actualizarDatos() throws NegocioException {
         String nombre = txtNombre.getText();
         Double cantidad = Double.valueOf(txtCantidad.getText());
         String categoria = txtCategoría.getText();
@@ -326,7 +338,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
      * @param nombre NOmbre del producto.
      * @return True en caso de que si aparezca, false en caso contrario.
      */
-    public boolean existeProductoEnCompra(String nombre) {
+    public boolean existeProductoEnCompra(String nombre) throws NegocioException {
         List<ProductoDTO> productos = filtroCompra.obtenerProductosFiltrarPorCompra(this.compra.getId());
         for (ProductoDTO producto : productos) {
             if (producto.getNombre().equalsIgnoreCase(nombre)) {

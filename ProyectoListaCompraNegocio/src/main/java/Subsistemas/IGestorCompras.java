@@ -31,14 +31,14 @@ public interface IGestorCompras {
      * @param id ID de la compra.
      * @return La compra encontrada o null si no se encuentra.
      */
-    public CompraDTO obtenerCompraPorId(Long id);
+    public CompraDTO obtenerCompraPorId(Long id) throws NegocioException;
 
     /**
      * Método para obtener todas las compras registradas en el sistema.
      *
      * @return Lista de todas las compras.
      */
-    public List<CompraDTO> obtenerTodasLasCompras();
+    public List<CompraDTO> obtenerTodasLasCompras() throws NegocioException;
 
     /**
      * Método para actualizar una compra existente.
@@ -46,14 +46,14 @@ public interface IGestorCompras {
      * @param compraDTO Objeto CompraDTO con los datos actualizados.
      * @return La compra actualizada.
      */
-    public CompraDTO actualizarCompra(CompraDTO compraDTO);
+    public CompraDTO actualizarCompra(CompraDTO compraDTO) throws NegocioException;
 
     /**
      * Método para eliminar una compra del sistema.
      *
      * @param id ID de la compra a eliminar.
      */
-    public void eliminarCompra(Long id);
+    public void eliminarCompra(Long id) throws NegocioException;
 
     /**
      * Método para obtener todas las compras realizadas por un cliente
@@ -62,7 +62,7 @@ public interface IGestorCompras {
      * @param clienteId ID del cliente.
      * @return Lista de compras realizadas por el cliente.
      */
-    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId);
+    public List<CompraDTO> obtenerComprasPorCliente(Long clienteId) throws NegocioException;
 
     /**
      * Método para obtener una compra específica por su nombre y el ID del
@@ -72,5 +72,5 @@ public interface IGestorCompras {
      * @param clienteId ID del cliente.
      * @return La compra correspondiente o null si no se encuentra.
      */
-    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId);
+    public CompraDTO obtenerCompraPorNombreYCliente(String nombre, Long clienteId) throws NegocioException;
 }

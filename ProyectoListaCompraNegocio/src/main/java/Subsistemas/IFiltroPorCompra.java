@@ -5,6 +5,7 @@
 package Subsistemas;
 
 import DTOs.ProductoDTO;
+import Exceptions.NegocioException;
 import java.util.List;
 
 /**
@@ -20,7 +21,8 @@ public interface IFiltroPorCompra {
      * @param idCompra ID de la compra de la que se quieren obtener los
      * productos.
      * @return Lista de productos que pertenecen a la compra especificada.
+     * @throws Exceptions.NegocioException
      */
-    public List<ProductoDTO> obtenerProductosFiltrarPorCompra(Long idCompra);
+    public List<ProductoDTO> obtenerProductosFiltrarPorCompra(Long idCompra) throws NegocioException;
 
 }

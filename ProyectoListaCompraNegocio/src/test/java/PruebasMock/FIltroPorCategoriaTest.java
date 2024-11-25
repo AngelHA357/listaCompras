@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345 .
+ * @author victo
  */
 public class FIltroPorCategoriaTest {
 
@@ -79,14 +79,15 @@ public class FIltroPorCategoriaTest {
         // Se simula que el DAO retorna una lista de productos
         when(productoDAOMock.filtrarPorCategoriaYCompraId(anyString(), anyLong())).thenReturn(Arrays.asList(producto));
 
-        when(conversionesMock.entidadADTO(any(Producto.class))).thenReturn(productoDTO);
+        // Se simula la conversión de Producto a ProductoDTO
+        when(conversionesMock.entidadADTO(any(Producto.class), anyBoolean())).thenReturn(productoDTO);
 
         // Se llama al método bajo prueba
         List<ProductoDTO> resultado = filtroProducto.filtrarPorCategoriaYCompraId("Categoria C", 1L);
 
         // Se verifican las interacciones con los mocks
         verify(productoDAOMock, times(1)).filtrarPorCategoriaYCompraId("Categoria C", 1L);
-        verify(conversionesMock, times(1)).entidadADTO(producto);
+        verify(conversionesMock, times(1)).entidadADTO(producto, false);
 
         // Se verifica el resultado
         assertNotNull(resultado);
