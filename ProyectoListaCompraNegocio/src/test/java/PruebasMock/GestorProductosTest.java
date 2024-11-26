@@ -1,4 +1,3 @@
-
 package PruebasMock;
 
 import Conversiones.ProductosConversiones;
@@ -21,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -37,7 +38,6 @@ public class GestorProductosTest {
     private IGestorProductos gestorProductos;
     private IProductoDAO productoDAOMock;
     private ProductosConversiones conversionesMock;
-    
 
     @BeforeAll
     public static void setUpClass() {
@@ -118,10 +118,10 @@ public class GestorProductosTest {
     public void testActualizarProducto() throws PersistenciaException, NegocioException {
         ProductoDTO productoDTO = new ProductoDTO("Producto Original", "Categoria A", false, null, 5.0);
         productoDTO.setId(1L);
-        
+
         Producto productoExistente = new Producto("Producto Original", "Categoria A", false, null, 5.0);
         productoExistente.setId(1L);
-        
+
         Producto productoActualizado = new Producto("Producto Actualizado", "Categoria A", false, null, 10.0);
         productoActualizado.setId(1L);
 
@@ -155,8 +155,8 @@ public class GestorProductosTest {
         when(productoDAOMock.obtenerProductoPorId(999L)).thenReturn(null);
 
         NegocioException thrown = assertThrows(
-            NegocioException.class,
-            () -> gestorProductos.actualizarProducto(productoDTO)
+                NegocioException.class,
+                () -> gestorProductos.actualizarProducto(productoDTO)
         );
 
         assertEquals("No se puede actualizar un producto inexistente con ID: 999", thrown.getMessage());
@@ -211,4 +211,80 @@ public class GestorProductosTest {
         assertNotNull(resultadoDTO);
         assertEquals("Producto de Prueba", resultadoDTO.getNombre());
     }
+
+    /**
+     * Prueba la eliminación de un producto inexistente. Verifica que se lanza
+     * una excepción de negocio si el producto no existe.
+     *
+     * @throws PersistenciaException si ocurre un error al acceder a la capa de
+     * persistencia.
+     * @throws NegocioException si se intenta eliminar un producto inexistente.
+     */
+    @Test
+    public void testEliminarProductoInexistente() throws PersistenciaException, NegocioException {
+        long idProductoInexistente = 999L;
+        when(productoDAOMock.obtenerProductoPorId(idProductoInexistente)).thenReturn(null);
+
+        NegocioException exception = assertThrows(
+                NegocioException.class,
+                () -> gestorProductos.eliminarProducto(idProductoInexistente)
+        );
+
+        assertEquals("No se puede eliminar un producto inexistente con ID: 999", exception.getMessage());
+        verify(productoDAOMock, times(1)).obtenerProductoPorId(idProductoInexistente);
+        verify(productoDAOMock, never()).eliminarProducto(anyLong());
+    }
+
+    /**
+     * Prueba la obtención de un producto existente por sus características.
+     * Verifica que se realicen las conversiones y se obtenga el producto
+     * correcto.
+     *
+     * @throws PersistenciaException si ocurre un error al acceder a la capa de
+     * persistencia.
+     * @throws NegocioException si se producen problemas en la lógica de negocio
+     * durante la operación.
+     */
+    @Test
+    public void testObtenerProductoExistentePorCaracteristicas() throws PersistenciaException, NegocioException {
+        ProductoDTO productoDTO = new ProductoDTO("Producto de Prueba", "Categoria A", false, null, 5d);
+        Producto producto = new Producto("Producto de Prueba", "Categoria A", false, null, 5d);
+
+        when(productoDAOMock.obtenerProductoPorCaracteristicas(any(), any(), anyBoolean(), any(), isNull())).thenReturn(producto);
+        when(conversionesMock.entidadADTO(eq(producto), anyBoolean())).thenReturn(productoDTO);
+
+        ProductoDTO resultadoDTO = gestorProductos.obtenerProductoPorCaracteristicas(
+                productoDTO.getNombre(), productoDTO.getCategoria(), productoDTO.isComprado(), productoDTO.getCantidad(), null
+        );
+
+        assertNotNull(resultadoDTO);
+        assertEquals(productoDTO.getNombre(), resultadoDTO.getNombre());
+        verify(productoDAOMock, times(1)).obtenerProductoPorCaracteristicas(any(), any(), anyBoolean(), any(), isNull());
+        verify(conversionesMock, times(1)).entidadADTO(eq(producto), anyBoolean());
+    }
+
+    /**
+     * Prueba la obtención de un producto inexistente por características.
+     * Verifica que se devuelva null cuando no se encuentra el producto.
+     *
+     * @throws PersistenciaException si ocurre un error al acceder a la capa de
+     * persistencia.
+     * @throws NegocioException si se producen problemas en la lógica de negocio
+     * durante la operación.
+     */
+    @Test
+    public void testObtenerProductoInexistentePorCaracteristicas() throws PersistenciaException, NegocioException {
+        ProductoDTO productoDTO = new ProductoDTO("Producto Inexistente", "Categoria X", false, null, 5d);
+        when(productoDAOMock.obtenerProductoPorCaracteristicas(any(), any(), anyBoolean(), any(), isNull())).thenReturn(null);
+
+        assertThrows(
+                NegocioException.class,
+                () -> gestorProductos.obtenerProductoPorCaracteristicas(
+                        productoDTO.getNombre(), productoDTO.getCategoria(), productoDTO.isComprado(), productoDTO.getCantidad(), null)
+        );
+
+        verify(productoDAOMock, times(1)).obtenerProductoPorCaracteristicas(any(), any(), anyBoolean(), any(), isNull());
+        verify(conversionesMock, never()).entidadADTO(any(), anyBoolean());
+    }
+
 }

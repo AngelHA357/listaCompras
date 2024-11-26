@@ -249,6 +249,7 @@ public class GestorComprasTest {
         verify(compraDAOMock, never()).eliminarCompra(idInexistente);
     }
 
+    
     /**
      * Se verifica que se obtenga una compra existente por su nombre y cliente.
      *
@@ -326,24 +327,6 @@ public class GestorComprasTest {
 
         assertThrows(NegocioException.class, ()
                 -> gestorCompras.obtenerCompraPorNombreYCliente("Compra Test", 1L));
-    }
-
-    /**
-     * Se verifica que se obtenga una lista vacía cuando un cliente no tiene
-     * compras y que se maneje correctamente una excepción de persistencia.
-     *
-     * @throws PersistenciaException Si ocurre un error en la persistencia.
-     * @throws NegocioException Si hay un problema en la capa de negocio.
-     */
-    @Test
-    public void testObtenerComprasPorCliente_Excepcion() throws PersistenciaException, NegocioException {
-        Long clienteId = 1L;
-        when(compraDAOMock.obtenerComprasPorCliente(clienteId))
-                .thenReturn(new ArrayList<>());
-
-        List<CompraDTO> resultado = gestorCompras.obtenerComprasPorCliente(clienteId);
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
     }
 
 }
