@@ -17,6 +17,7 @@ import Entidades.Producto;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,13 +38,13 @@ public class FiltroPorCompra implements IFiltroPorCompra {
         conexion = Conexion.getInstance();
         this.productoDAO = new ProductoDAO(conexion);
         this.conversiones = new ProductosConversiones();
-        this.compraDAO = new CompraDAO(conexion); 
+        this.compraDAO = new CompraDAO(conexion);
     }
 
-    public FiltroPorCompra(IProductoDAO productoDAO, ProductosConversiones conversiones) {
+    public FiltroPorCompra(IProductoDAO productoDAO, ProductosConversiones conversiones, ICompraDAO compraDAO) {
         this.productoDAO = productoDAO;
         this.conversiones = conversiones;
-        this.compraDAO = new CompraDAO(conexion); 
+        this.compraDAO = compraDAO;
     }
 
     @Override
@@ -53,26 +54,21 @@ public class FiltroPorCompra implements IFiltroPorCompra {
         }
 
         try {
-            // Verificar que la compra exista
             Compra compra = compraDAO.obtenerCompraPorId(compraId);
             if (compra == null) {
                 throw new NegocioException("No existe una compra con el ID proporcionado: " + compraId);
             }
 
-            // Obtener productos asociados a la compra
             List<Producto> productos = productoDAO.obtenerProductosPorCompraId(compraId);
-
             if (productos == null || productos.isEmpty()) {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
 
-            // Convertir los productos a DTO
             List<ProductoDTO> productosDTO = new ArrayList<>();
             for (Producto producto : productos) {
                 ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
                 productosDTO.add(productoDTO);
             }
-
             return productosDTO;
 
         } catch (PersistenciaException ex) {
@@ -80,4 +76,5 @@ public class FiltroPorCompra implements IFiltroPorCompra {
             throw new NegocioException("Error al obtener los productos de la compra");
         }
     }
+
 }

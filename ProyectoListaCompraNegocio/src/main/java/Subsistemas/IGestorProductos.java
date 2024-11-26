@@ -34,13 +34,6 @@ public interface IGestorProductos {
     public ProductoDTO obtenerProductoPorId(Long id) throws NegocioException;
 
     /**
-     * Método para obtener todos los productos del sistema.
-     *
-     * @return Lista de todos los productos.
-     */
-    public List<ProductoDTO> obtenerTodosLosProductos() throws NegocioException;
-
-    /**
      * Método para actualizar un producto existente.
      *
      * @param productoDTO Objeto ProductoDTO con los datos actualizados del

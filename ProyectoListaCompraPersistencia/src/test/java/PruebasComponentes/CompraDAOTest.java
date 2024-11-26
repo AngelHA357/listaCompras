@@ -151,24 +151,4 @@ public class CompraDAOTest {
         assertTrue(compras.size() >= 2);
     }
 
-    /**
-     * Permite probar la actualización de una compra existente.
-     *
-     * @throws PersistenciaException Se lanza en caso de error al actualizar la
-     * compra.
-     */
-    @Test
-    public void testActualizarCompra() throws PersistenciaException {
-        Compra compraOriginal = new Compra("Compra Inicial", null);
-        compraDAO.agregarCompra(compraOriginal);
-
-        compraOriginal.setNombre("Compra Actualizada");
-
-        Compra compraActualizada = compraDAO.actualizarCompra(compraOriginal);
-
-        assertNotNull(compraActualizada);
-        assertEquals(compraOriginal.getId(), compraActualizada.getId());
-        assertEquals("Compra Actualizada", compraActualizada.getNombre());
-    }
- 
 }

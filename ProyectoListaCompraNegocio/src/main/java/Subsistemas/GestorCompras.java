@@ -93,31 +93,6 @@ public class GestorCompras implements IGestorCompras {
         }
     }
 
-    @Override
-    public CompraDTO actualizarCompra(CompraDTO compraDTO) throws NegocioException {
-        // Validar que el ID de la compra no sea nulo
-        if (compraDTO.getId() == null || compraDTO.getId() <= 0) {
-            throw new NegocioException("El ID de la compra debe ser válido");
-        }
-
-        // Validar que el nombre de la compra no sea nulo o vacío
-        if (compraDTO.getNombreCompra() == null || compraDTO.getNombreCompra().isBlank()) {
-            throw new NegocioException("El nombre de la compra no puede ser nulo o estar en blanco");
-        }
-
-        // Validar que el cliente asociado no sea nulo
-        if (compraDTO.getCliente() == null) {
-            throw new NegocioException("El cliente asociado a la compra no puede ser nulo");
-        }
-
-        Compra compra = compraConversiones.dtoAEntidad(compraDTO);
-        try {
-            return compraConversiones.entidadADTO(compraDAO.actualizarCompra(compra));
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(GestorCompras.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al actualizar la compra");
-        }
-    }
 
     @Override
     public void eliminarCompra(Long id) throws NegocioException {
@@ -171,4 +146,6 @@ public class GestorCompras implements IGestorCompras {
             throw new NegocioException("Error al obtener la compra por nombre y cliente");
         }
     }
+    
+    
 }

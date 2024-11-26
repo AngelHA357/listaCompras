@@ -24,23 +24,28 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345 .
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class FiltroPorCompraTest {
 
     private IFiltroPorCompra filtroCompra;
+    private ICompraDAO compraDAOMock;
     private IProductoDAO productoDAOMock;
     private ProductosConversiones conversionesMock;
 
@@ -56,10 +61,11 @@ public class FiltroPorCompraTest {
 
     @BeforeEach
     public void setUp() throws PersistenciaException {
+        compraDAOMock = mock(ICompraDAO.class);
         productoDAOMock = mock(ProductoDAO.class);
         conversionesMock = mock(ProductosConversiones.class);
 
-        filtroCompra = new FiltroPorCompra(productoDAOMock, conversionesMock);
+        filtroCompra = new FiltroPorCompra(productoDAOMock, conversionesMock, compraDAOMock);
     }
 
     @AfterEach
@@ -75,12 +81,10 @@ public class FiltroPorCompraTest {
     @Test
     public void testFiltrarPorCompra() throws PersistenciaException {
         try {
-            // Se crean mocks necesarios
             ICompraDAO compraDAOMock = mock(ICompraDAO.class);
             CompraConversiones conversionesCompra = mock(CompraConversiones.class);
             IGestorCompras compraBO = new GestorCompras(compraDAOMock, conversionesCompra);
 
-            // Se crea una CompraDTO de prueba
             CompraDTO compraDTO = new CompraDTO("Compra", null);
             Compra compra = new Compra("Compra", null);
             when(conversionesCompra.dtoAEntidad(compraDTO)).thenReturn(compra);
@@ -88,7 +92,6 @@ public class FiltroPorCompraTest {
             when(conversionesCompra.entidadADTO(compra)).thenReturn(compraDTO);
             compraDTO = compraBO.agregarCompra(compraDTO);
 
-            // Se crean los productos asociados a la compra
             ProductoDTO productoDTO1 = new ProductoDTO("Producto C", "Categoria D", false, compraDTO, 25.0);
             ProductoDTO productoDTO2 = new ProductoDTO("Producto D", "Categoria D", false, compraDTO, 30.0);
             Producto producto1 = new Producto("Producto C", "Categoria D", false, compra, 25.0);
@@ -96,17 +99,13 @@ public class FiltroPorCompraTest {
 
             when(conversionesMock.dtoAEntidad(productoDTO1)).thenReturn(producto1);
             when(conversionesMock.dtoAEntidad(productoDTO2)).thenReturn(producto2);
-
-            // Se simula el filtro por compra
             when(productoDAOMock.obtenerProductosPorCompraId(anyLong())).thenReturn(Arrays.asList(producto1, producto2));
 
             List<ProductoDTO> resultado = filtroCompra.obtenerProductosFiltrarPorCompra(1L);
 
-            // Se verifican los resultados
             assertNotNull(resultado);
             assertEquals(2, resultado.size());
 
-            // Se verifica que el método fue invocado correctamente
             verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(1L);
         } catch (NegocioException ex) {
             Logger.getLogger(FiltroPorCompraTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,22 +117,23 @@ public class FiltroPorCompraTest {
      * lista vacía para una compra inexistente.
      *
      * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si ocurre un error de negocio.
      */
-//    @Test
-//    public void testFiltrarPorCompraInexistente() throws PersistenciaException, NegocioException {
-//        Long compraIdInexistente = 999L;
-//
-//        // Se simula que no se encuentran productos para la compra inexistente
-//        when(productoDAOMock.obtenerProductosPorCompraId(compraIdInexistente)).thenReturn(Collections.emptyList());
-//
-//        List<ProductoDTO> resultado = filtroCompra.obtenerProductosFiltrarPorCompra(compraIdInexistente);
-//
-//        // Se verifican los resultados
-//        assertNotNull(resultado);
-//        assertEquals(0, resultado.size());
-//
-//        // Se verifica que el método fue invocado correctamente
-//        verify(productoDAOMock, times(1)).obtenerProductosPorCompraId(compraIdInexistente);
-//    }
+    @Test
+    public void testFiltrarPorCompraInexistente() throws PersistenciaException, NegocioException {
+        Long compraIdInexistente = 999L;
+
+        when(compraDAOMock.obtenerCompraPorId(compraIdInexistente)).thenReturn(null);
+
+        NegocioException thrown = assertThrows(
+                NegocioException.class,
+                () -> filtroCompra.obtenerProductosFiltrarPorCompra(compraIdInexistente),
+                "Debe lanzar NegocioException cuando la compra no existe"
+        );
+
+        assertEquals("No existe una compra con el ID proporcionado: 999", thrown.getMessage());
+
+        verify(productoDAOMock, never()).obtenerProductosPorCompraId(compraIdInexistente);
+    }
 
 }

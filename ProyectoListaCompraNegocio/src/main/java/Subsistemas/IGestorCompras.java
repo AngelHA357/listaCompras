@@ -40,13 +40,6 @@ public interface IGestorCompras {
      */
     public List<CompraDTO> obtenerTodasLasCompras() throws NegocioException;
 
-    /**
-     * Método para actualizar una compra existente.
-     *
-     * @param compraDTO Objeto CompraDTO con los datos actualizados.
-     * @return La compra actualizada.
-     */
-    public CompraDTO actualizarCompra(CompraDTO compraDTO) throws NegocioException;
 
     /**
      * Método para eliminar una compra del sistema.

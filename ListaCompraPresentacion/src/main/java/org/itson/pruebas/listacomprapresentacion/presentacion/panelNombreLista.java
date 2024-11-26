@@ -116,7 +116,6 @@ public class panelNombreLista extends javax.swing.JPanel {
     }
 
     try {
-        // Verificar si ya existe una compra con ese nombre
         CompraDTO compraExistente = gestorCompras.obtenerCompraPorNombreYCliente(compraS, cliente.getId());
         
         if (compraExistente != null) {
@@ -124,13 +123,10 @@ public class panelNombreLista extends javax.swing.JPanel {
             return;
         }
 
-        // Si no existe, crear la nueva compra
         CompraDTO nuevaCompra = new CompraDTO(compraS, cliente);
         CompraDTO compraGuardada = gestorCompras.agregarCompra(nuevaCompra);
         
         if (compraGuardada != null) {
-            // Quitar el try-catch interno ya que no necesitamos manejar el error aquí
-            // Una lista vacía no es un error
             panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compraGuardada);
             menuInicio.mostrarPanel(agregarProducto);
         } else {

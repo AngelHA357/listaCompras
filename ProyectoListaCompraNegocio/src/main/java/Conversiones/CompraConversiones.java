@@ -33,7 +33,7 @@ public class CompraConversiones {
         if (compraDTO.getId() != null) {
             compra.setId(compraDTO.getId());
         }
-        
+
         compra.setNombre(compraDTO.getNombreCompra());
 
         if (compraDTO.getProductos() != null) {

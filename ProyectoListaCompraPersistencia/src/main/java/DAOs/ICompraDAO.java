@@ -36,15 +36,6 @@ public interface ICompraDAO {
     public List<Compra> obtenerTodasLasCompras() throws PersistenciaException;
 
     /**
-     * Método para actualizar una compra existente.
-     *
-     * @param compra Compra con los nuevos datos.
-     * @return Compra actualizada.
-     * @throws PersistenciaException Si ocurre un error en la persistencia.
-     */
-    public Compra actualizarCompra(Compra compra) throws PersistenciaException;
-
-    /**
      * Método para eliminar una compra por su ID.
      *
      * @param id ID de la compra a eliminar.

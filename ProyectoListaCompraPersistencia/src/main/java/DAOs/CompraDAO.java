@@ -82,30 +82,6 @@ public class CompraDAO implements ICompraDAO {
         }
     }
 
-    /**
-     * Método para actualizar una compra existente.
-     *
-     * @param compra Compra con los nuevos datos.
-     * @return Compra actualizada.
-     * @throws PersistenciaException Si ocurre un error en la persistencia.
-     */
-    @Override
-    public Compra actualizarCompra(Compra compra) throws PersistenciaException {
-        EntityManager em = conexion.crearConexion();
-        try {
-            em.getTransaction().begin();
-            Compra compraActualizada = em.merge(compra);
-            em.getTransaction().commit();
-            return compraActualizada;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw new PersistenciaException("Error al actualizar compra", e);
-        } finally {
-            em.close();
-        }
-    }
 
     /**
      * Método para eliminar una compra por su ID.

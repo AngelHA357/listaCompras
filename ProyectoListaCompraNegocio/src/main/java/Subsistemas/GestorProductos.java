@@ -80,23 +80,6 @@ public class GestorProductos implements IGestorProductos {
         }
     }
 
-    @Override
-    public List<ProductoDTO> obtenerTodosLosProductos() throws NegocioException {
-        try {
-            List<Producto> productos = productoDAO.obtenerTodosLosProductos();
-            List<ProductoDTO> productosDTO = new ArrayList<>();
-
-            for (Producto producto : productos) {
-                ProductoDTO productoDTO = conversiones.entidadADTO(producto, false);
-                productosDTO.add(productoDTO);
-            }
-
-            return productosDTO;
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(GestorProductos.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Error al obtener los productos");
-        }
-    }
 
     @Override
     public ProductoDTO actualizarProducto(ProductoDTO productoDTO) throws NegocioException {

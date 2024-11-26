@@ -128,18 +128,15 @@ public class GestorClientesTest {
         String usuario = "toribio";
         String contrasenia = "ABCD1234";
 
-        // Se crean un ClienteDTO y un Cliente de prueba
-        ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
+       ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
 
         // Se simula que el DAO encuentra el cliente por usuario y contraseña
         when(clienteDAOMock.obtenerClientePorUsuarioYContrasena(usuario, contrasenia)).thenReturn(cliente);
         when(conversionesMock.convertirEntidadADTO(cliente)).thenReturn(clienteDTO);
 
-        // Se llama al método bajo prueba
         ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
 
-        // Se verifica que se encontró el cliente correcto y que la conversión se realizó
         assertNotNull(clienteObtenido);
         assertEquals(usuario, clienteObtenido.getUsuario());
         assertEquals(contrasenia, clienteObtenido.getContrasenia());
@@ -161,16 +158,11 @@ public class GestorClientesTest {
         String usuario = "usuarioInexistente";
         String contrasenia = "contraseniaErronea";
 
-        // Se simula que el DAO no encuentra ningún cliente
         when(clienteDAOMock.obtenerClientePorUsuarioYContrasena(usuario, contrasenia)).thenReturn(null);
 
-        // Se llama al método bajo prueba
         ClienteDTO clienteObtenido = gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
 
-        // Se verifica que el método retorne null cuando no se encuentra el cliente
         assertNull(clienteObtenido);
-
-        // Se verifica que el mock del DAO fue invocado correctamente
         verify(clienteDAOMock, times(1)).obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
     }
 

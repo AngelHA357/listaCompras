@@ -7,7 +7,9 @@ package PruebasMock;
 import Conversiones.CompraConversiones;
 import DAOs.CompraDAO;
 import DAOs.ICompraDAO;
+import DTOs.ClienteDTO;
 import DTOs.CompraDTO;
+import Entidades.Cliente;
 import Entidades.Compra;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
@@ -17,17 +19,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,7 +37,8 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345 .
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class GestorComprasTest {
 
@@ -70,37 +71,27 @@ public class GestorComprasTest {
      * Se verifica que el método agregarCompra agrega una compra correctamente.
      *
      * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si ocurre un error con los objetos de negocio.
      */
     @Test
-    public void testAgregarCompra() throws PersistenciaException {
-        try {
-            // Se crea un CompraDTO de prueba
-            CompraDTO compraDTO = new CompraDTO("Compra de Prueba", null);
+    public void testAgregarCompra() throws PersistenciaException, NegocioException {
+        ClienteDTO clienteDTO = new ClienteDTO("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        CompraDTO compraDTO = new CompraDTO("Compra de Prueba", clienteDTO);
 
-            // Se simula la conversión de CompraDTO a Compra
-            Compra compra = new Compra("Compra de Prueba", null);
-            when(conversionesMock.dtoAEntidad(any(CompraDTO.class))).thenReturn(compra);
+        Cliente cliente = new Cliente();
+        Compra compra = new Compra("Compra de Prueba", cliente);
 
-            // Se simula que el DAO guarda la compra y devuelve la entidad
-            when(compraDAOMock.agregarCompra(any(Compra.class))).thenReturn(compra);
+        when(conversionesMock.dtoAEntidad(any(CompraDTO.class))).thenReturn(compra);
+        when(compraDAOMock.agregarCompra(any(Compra.class))).thenReturn(compra);
+        when(conversionesMock.entidadADTO(any(Compra.class))).thenReturn(compraDTO);
 
-            // Se simula la conversión de Compra a CompraDTO para el retorno
-            when(conversionesMock.entidadADTO(any(Compra.class))).thenReturn(compraDTO);
+        CompraDTO resultadoDTO = gestorCompras.agregarCompra(compraDTO);
 
-            // Se llama al método bajo prueba
-            CompraDTO resultadoDTO = gestorCompras.agregarCompra(compraDTO);
-
-            // Se verifican las interacciones con los mocks
-            verify(conversionesMock, times(1)).dtoAEntidad(compraDTO);
-            verify(conversionesMock, times(1)).entidadADTO(compra);
-            verify(compraDAOMock, times(1)).agregarCompra(compra);
-
-            // Se verifica que el resultado no sea nulo y sea correcto
-            assertNotNull(resultadoDTO);
-            assertEquals("Compra de Prueba", resultadoDTO.getNombreCompra());
-        } catch (NegocioException ex) {
-            Logger.getLogger(GestorComprasTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        assertNotNull(resultadoDTO);
+        assertEquals("Compra de Prueba", resultadoDTO.getNombreCompra());
+        verify(conversionesMock).dtoAEntidad(compraDTO);
+        verify(conversionesMock).entidadADTO(compra);
+        verify(compraDAOMock).agregarCompra(compra);
     }
 
     /**
@@ -137,27 +128,17 @@ public class GestorComprasTest {
      */
     @Test
     public void testObtenerCompraPorId() throws PersistenciaException, NegocioException {
-        // Se crea un CompraDTO de prueba
         CompraDTO compraDTO = new CompraDTO("Compra de Prueba", null);
         Compra compra = new Compra("Compra de Prueba", null);
 
-        // Se simula la conversión de CompraDTO a Compra
         when(conversionesMock.dtoAEntidad(compraDTO)).thenReturn(compra);
-
-        // Se simula que el DAO retorna la compra al buscar por ID
         when(compraDAOMock.obtenerCompraPorId(anyLong())).thenReturn(compra);
-
-        // Se simula la conversión de Compra a CompraDTO para el retorno
         when(conversionesMock.entidadADTO(compra)).thenReturn(compraDTO);
 
-        // Se llama al método bajo prueba
         CompraDTO resultado = gestorCompras.obtenerCompraPorId(1L);
 
-        // Se verifican las conversiones y la consulta en el DAO
         verify(conversionesMock, times(1)).entidadADTO(compra);
         verify(compraDAOMock, times(1)).obtenerCompraPorId(1L);
-
-        // Se verifica que el resultado no sea nulo y sea correcto
         assertNotNull(resultado);
         assertEquals("Compra de Prueba", resultado.getNombreCompra());
     }
@@ -176,10 +157,7 @@ public class GestorComprasTest {
         when(compraDAOMock.obtenerCompraPorId(idInexistente))
                 .thenThrow(new PersistenciaException("Compra no encontrada"));
 
-        // Verifica que se lanza la excepción esperada
         assertThrows(NegocioException.class, () -> gestorCompras.obtenerCompraPorId(idInexistente));
-
-        // Verifica que se llamó al método obtenerCompraPorId del DAO
         verify(compraDAOMock, times(1)).obtenerCompraPorId(idInexistente);
     }
 
@@ -190,31 +168,27 @@ public class GestorComprasTest {
      */
     @Test
     public void testObtenerTodasLasCompras() throws PersistenciaException, NegocioException {
-        // Se simulan varias Compras
+
         List<Compra> compras = Arrays.asList(
                 new Compra("Compra 1", null),
                 new Compra("Compra 2", null)
         );
 
-        // Se simula que el DAO retorna las compras
+        CompraDTO compraDTO1 = new CompraDTO("Compra 1", null);
+        CompraDTO compraDTO2 = new CompraDTO("Compra 2", null);
+
         when(compraDAOMock.obtenerTodasLasCompras()).thenReturn(compras);
+        when(conversionesMock.entidadADTO(compras.get(0))).thenReturn(compraDTO1);
+        when(conversionesMock.entidadADTO(compras.get(1))).thenReturn(compraDTO2);
 
-        // Se simulan las conversiones manualmente utilizando un ciclo
-        List<CompraDTO> compraDTOs = new ArrayList<>();
-        for (Compra compra : compras) {
-            CompraDTO compraDTO = new CompraDTO(compra.getNombre(), null);
-            compraDTOs.add(compraDTO);
-        }
-
-        // Se llama al método bajo prueba
         List<CompraDTO> resultado = gestorCompras.obtenerTodasLasCompras();
 
-        // Se verifica que la lista no sea nula y tenga el tamaño esperado
         assertNotNull(resultado);
         assertEquals(2, resultado.size());
+        assertEquals("Compra 1", resultado.get(0).getNombreCompra());
+        assertEquals("Compra 2", resultado.get(1).getNombreCompra());
 
-        // Se verifican las interacciones con el DAO
-        verify(compraDAOMock, times(1)).obtenerTodasLasCompras();
+        verify(compraDAOMock).obtenerTodasLasCompras();
         verify(conversionesMock, times(2)).entidadADTO(any(Compra.class));
     }
 
@@ -244,24 +218,17 @@ public class GestorComprasTest {
      */
     @Test
     public void testEliminarCompra() throws PersistenciaException, NegocioException {
-        // Simula un ID válido
         Long idValido = 1L;
 
-        // Simula una compra existente
         Compra compraMock = new Compra();
         compraMock.setId(idValido);
         when(compraDAOMock.obtenerCompraPorId(idValido)).thenReturn(compraMock);
 
-        // Configura el mock para no lanzar excepción en la eliminación
         doNothing().when(compraDAOMock).eliminarCompra(idValido);
 
-        // Llama al método eliminarCompra
         gestorCompras.eliminarCompra(idValido);
 
-        // Verifica que se llamó a obtenerCompraPorId
         verify(compraDAOMock).obtenerCompraPorId(idValido);
-
-        // Verifica que se llamó a eliminarCompra con el ID correcto
         verify(compraDAOMock).eliminarCompra(idValido);
     }
 
@@ -272,20 +239,111 @@ public class GestorComprasTest {
      */
     @Test
     public void testEliminarCompra_Inexistente() throws PersistenciaException {
-        // Simula un ID inexistente
         long idInexistente = 9999L;
 
-        // Configura el mock para devolver null al intentar obtener la compra
         when(compraDAOMock.obtenerCompraPorId(idInexistente)).thenReturn(null);
 
-        // Verifica que se lanza la excepción esperada
         assertThrows(NegocioException.class, () -> gestorCompras.eliminarCompra(idInexistente));
 
-        // Verifica que se llamó al método obtenerCompraPorId del DAO
         verify(compraDAOMock).obtenerCompraPorId(idInexistente);
-
-        // Verifica que no se llamó al método eliminarCompra
         verify(compraDAOMock, never()).eliminarCompra(idInexistente);
+    }
+
+    /**
+     * Se verifica que se obtenga una compra existente por su nombre y cliente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si hay un problema en la capa de negocio.
+     */
+    @Test
+    public void testObtenerCompraPorNombreYCliente_Existente() throws PersistenciaException, NegocioException {
+        String nombreCompra = "Compra Test";
+        Long clienteId = 1L;
+        Compra compra = new Compra();
+        CompraDTO compraDTO = new CompraDTO();
+
+        when(compraDAOMock.obtenerCompraPorNombreYCliente(nombreCompra, clienteId)).thenReturn(compra);
+        when(conversionesMock.entidadADTO(compra)).thenReturn(compraDTO);
+
+        CompraDTO resultado = gestorCompras.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+
+        assertNotNull(resultado);
+        verify(compraDAOMock).obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+    }
+
+    /**
+     * Se verifica que se obtenga correctamente la lista completa de compras de
+     * un cliente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si hay un problema en la capa de negocio.
+     */
+    @Test
+    public void testObtenerComprasPorCliente_ListaCompleta() throws PersistenciaException, NegocioException {
+        Long clienteId = 1L;
+        List<Compra> compras = Arrays.asList(new Compra(), new Compra());
+
+        when(compraDAOMock.obtenerComprasPorCliente(clienteId)).thenReturn(compras);
+        when(conversionesMock.entidadADTO(any(Compra.class))).thenReturn(new CompraDTO());
+
+        List<CompraDTO> resultado = gestorCompras.obtenerComprasPorCliente(clienteId);
+
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        verify(compraDAOMock).obtenerComprasPorCliente(clienteId);
+    }
+
+    /**
+     * Se verifica que no se pueda obtener una compra si los parámetros son
+     * inválidos.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testObtenerCompraPorNombreYCliente_ParametrosInvalidos() throws PersistenciaException {
+        assertThrows(NegocioException.class, ()
+                -> gestorCompras.obtenerCompraPorNombreYCliente(null, 1L));
+
+        assertThrows(NegocioException.class, ()
+                -> gestorCompras.obtenerCompraPorNombreYCliente("", 1L));
+
+        assertThrows(NegocioException.class, ()
+                -> gestorCompras.obtenerCompraPorNombreYCliente("Compra Test", -1L));
+
+        verify(compraDAOMock, never()).obtenerCompraPorNombreYCliente(anyString(), anyLong());
+    }
+
+    /**
+     * Se verifica el manejo de excepciones en caso de un error de persistencia
+     * al obtener una compra.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testObtenerCompraPorNombreYCliente_ErrorPersistencia() throws PersistenciaException {
+        when(compraDAOMock.obtenerCompraPorNombreYCliente(anyString(), anyLong()))
+                .thenThrow(new PersistenciaException("Error de base de datos"));
+
+        assertThrows(NegocioException.class, ()
+                -> gestorCompras.obtenerCompraPorNombreYCliente("Compra Test", 1L));
+    }
+
+    /**
+     * Se verifica que se obtenga una lista vacía cuando un cliente no tiene
+     * compras y que se maneje correctamente una excepción de persistencia.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     * @throws NegocioException Si hay un problema en la capa de negocio.
+     */
+    @Test
+    public void testObtenerComprasPorCliente_Excepcion() throws PersistenciaException, NegocioException {
+        Long clienteId = 1L;
+        when(compraDAOMock.obtenerComprasPorCliente(clienteId))
+                .thenReturn(new ArrayList<>());
+
+        List<CompraDTO> resultado = gestorCompras.obtenerComprasPorCliente(clienteId);
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
     }
 
 }
