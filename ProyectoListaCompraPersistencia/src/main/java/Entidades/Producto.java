@@ -20,7 +20,7 @@ public class Producto implements Serializable {
     @Column(name = "nombre")
     private String nombre;
     
-    @Column(name = "categoria")
+    @Column(name = "categoria", nullable = true)
     private String categoria;
     
     @Column(name = "comprado")

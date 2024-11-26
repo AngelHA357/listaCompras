@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author JoseH
  */
 public class FiltroPorCategoriaIntegrationTest {
-    
+
     private IFiltroPorCategoria filtroProducto;
     private IGestorCompras gestorCompras;
     private IGestorProductos gestorProductos;
@@ -60,14 +60,16 @@ public class FiltroPorCategoriaIntegrationTest {
         gestorCompras = new GestorCompras();
         gestorProductos = new GestorProductos();
         gestorClientes = new GestorClientes();
+        
+        String usuarioUnico = "toribio_test_" + System.currentTimeMillis();
 
         // Crear un cliente para las pruebas
         ClienteDTO clienteDTO = new ClienteDTO(
-            "Victor Humberto", 
-            "Encinas", 
-            "Guzmán", 
-            "toribio_test", 
-            "ABCD1234"
+                "Victor Humberto",
+                "Encinas",
+                "Guzmán",
+                usuarioUnico,
+                "ABCD1234"
         );
         clientePrueba = gestorClientes.agregarCliente(clienteDTO);
         assertNotNull(clientePrueba.getId(), "El cliente debe haberse creado con un ID");
@@ -100,7 +102,6 @@ public class FiltroPorCategoriaIntegrationTest {
         gestorProductos.agregarProducto(producto1);
         gestorProductos.agregarProducto(producto2);
         gestorProductos.agregarProducto(producto3);
-        
 
         // Ejecutar el filtro
         List<ProductoDTO> resultados = filtroProducto.filtrarPorCategoriaYCompraId("Categoria Test", compraDTO.getId());

@@ -59,13 +59,14 @@ public class FiltroPorCompraIntegrationTest {
         gestorCompras = new GestorCompras();
         gestorProductos = new GestorProductos();
         gestorClientes = new GestorClientes();
-
+        
+        String usuarioUnico = "toribio_test_" + System.currentTimeMillis();
         // Crear un cliente para las pruebas
         ClienteDTO clienteDTO = new ClienteDTO(
                 "Victor Humberto",
                 "Encinas",
                 "Guzmán",
-                "toribio_test",
+                usuarioUnico,
                 "ABCD1234"
         );
         clientePrueba = gestorClientes.agregarCliente(clienteDTO);
@@ -151,7 +152,6 @@ public class FiltroPorCompraIntegrationTest {
 //        // Intentar obtener productos de esta compra
 //        assertNull(filtroCompra.obtenerProductosFiltrarPorCompra(compraGuardada.getId()));
 //    }
-
     @Test
     public void testObtenerProductosFiltrarPorCompra_IdCompraNull() {
         assertThrows(NegocioException.class,

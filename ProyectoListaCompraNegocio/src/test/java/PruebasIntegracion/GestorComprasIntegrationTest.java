@@ -44,17 +44,19 @@ public class GestorComprasIntegrationTest {
     }
 
     @BeforeEach
-    public void setUp() throws PersistenciaException, NegocioException {  
+    public void setUp() throws PersistenciaException, NegocioException {
         conexion = Conexion.getInstance();
         gestorCompras = new GestorCompras();
         gestorClientes = new GestorClientes();
+
+        String usuarioUnico = "toribio_test_" + System.currentTimeMillis();
 
         // Crear un cliente para las pruebas
         ClienteDTO clienteDTO = new ClienteDTO(
                 "Victor Humberto",
                 "Encinas",
                 "Guzmán",
-                "toribio_test",
+                usuarioUnico,
                 "ABCD1234"
         );
         clientePrueba = gestorClientes.agregarCliente(clienteDTO);

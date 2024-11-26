@@ -54,12 +54,13 @@ public class GestorProductosIntegrationTest {
         gestorCompras = new GestorCompras();
         gestorClientes = new GestorClientes();
 
+        String usuarioUnico = "toribio_test_" + System.currentTimeMillis();
         // Crear un cliente para las pruebas
         ClienteDTO clienteDTO = new ClienteDTO(
                 "Victor Humberto",
                 "Encinas",
                 "Guzmán",
-                "toribio_test",
+                usuarioUnico,
                 "ABCD1234"
         );
         clientePrueba = gestorClientes.agregarCliente(clienteDTO);
@@ -119,7 +120,7 @@ public class GestorProductosIntegrationTest {
     }
 
     @Test
-    public void testAgregarProducto_CategoriaNula() {
+    public void testAgregarProducto_CategoriaNula() throws PersistenciaException, NegocioException  {
         ProductoDTO productoDTO = new ProductoDTO(
                 "Producto Test",
                 null,
@@ -127,11 +128,14 @@ public class GestorProductosIntegrationTest {
                 compraPrueba,
                 15.0
         );
-
-        assertThrows(NegocioException.class,
-                () -> gestorProductos.agregarProducto(productoDTO),
-                "Debe lanzar NegocioException cuando la categoría es nula"
-        );
+        ProductoDTO resultadoDTO = gestorProductos.agregarProducto(productoDTO);
+        
+        assertNotNull(resultadoDTO, "El producto retornado no debe ser nulo");
+        assertNotNull(resultadoDTO.getId(), "El producto debe tener un ID asignado");
+        assertEquals("Producto Test", resultadoDTO.getNombre());
+        assertEquals(15.0, resultadoDTO.getCantidad());
+        assertNotNull(resultadoDTO.getCompra(), "El producto debe tener una compra asociada");
+        assertEquals(compraPrueba.getId(), resultadoDTO.getCompra().getId());
     }
 
     @Test

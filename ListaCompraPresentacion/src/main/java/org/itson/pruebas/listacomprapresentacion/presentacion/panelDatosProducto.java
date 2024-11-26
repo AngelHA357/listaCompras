@@ -324,7 +324,7 @@ public class panelDatosProducto extends javax.swing.JPanel {
      * @return False si esta vacío, true en caso contrario.
      */
     private boolean validarCamposLlenos() {
-        if (txtNombre.getText().isBlank() || txtCantidad.getText().isBlank() || txtCategoría.getText().isBlank()) {
+        if (txtNombre.getText().isBlank() || txtCantidad.getText().isBlank()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
             return false;
         }

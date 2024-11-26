@@ -87,21 +87,20 @@ public class GestorClientesIntegrationTest {
 //        assertNotNull(clienteRecuperado, "El cliente debe poder ser recuperado después de agregarlo");
 //        assertEquals(resultadoDTO.getId(), clienteRecuperado.getId());
 //    }
-
     @Test
     public void testAgregarCliente_NombreNulo() {
         ClienteDTO clienteDTO = new ClienteDTO(
-            null,  
-            "Encinas", 
-            "Guzmán", 
-            "toribio_test", 
-            "ABCD1234"
+                null,
+                "Encinas",
+                "Guzmán",
+                "toribio_test",
+                "ABCD1234"
         );
 
         NegocioException thrown = assertThrows(
-            NegocioException.class,
-            () -> gestorClientes.agregarCliente(clienteDTO),
-            "Debe lanzar NegocioException cuando el nombre es nulo"
+                NegocioException.class,
+                () -> gestorClientes.agregarCliente(clienteDTO),
+                "Debe lanzar NegocioException cuando el nombre es nulo"
         );
         assertTrue(thrown.getMessage().contains("nombre"));
     }
@@ -109,17 +108,17 @@ public class GestorClientesIntegrationTest {
     @Test
     public void testAgregarCliente_UsuarioNulo() {
         ClienteDTO clienteDTO = new ClienteDTO(
-            "Victor Humberto", 
-            "Encinas", 
-            "Guzmán", 
-            null,  
-            "ABCD1234"
+                "Victor Humberto",
+                "Encinas",
+                "Guzmán",
+                null,
+                "ABCD1234"
         );
 
         NegocioException thrown = assertThrows(
-            NegocioException.class,
-            () -> gestorClientes.agregarCliente(clienteDTO),
-            "Debe lanzar NegocioException cuando el usuario es nulo"
+                NegocioException.class,
+                () -> gestorClientes.agregarCliente(clienteDTO),
+                "Debe lanzar NegocioException cuando el usuario es nulo"
         );
         assertTrue(thrown.getMessage().contains("usuario"));
     }
@@ -151,45 +150,46 @@ public class GestorClientesIntegrationTest {
 //        assertEquals("Encinas", clienteObtenido.getApellidoPaterno());
 //        assertEquals("Guzmán", clienteObtenido.getApellidoMaterno());
 //    }
-
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_ClienteInexistente() {
         assertThrows(NegocioException.class,
-            () -> gestorClientes.encontrarClientePorUsuarioYContrasena(
-                "usuarioInexistente",
-                "contraseniaErronea"
-            ),
-            "Debe lanzar NegocioException cuando el cliente no existe"
+                () -> gestorClientes.encontrarClientePorUsuarioYContrasena(
+                        "usuarioInexistente",
+                        "contraseniaErronea"
+                ),
+                "Debe lanzar NegocioException cuando el cliente no existe"
         );
     }
 
     @Test
-    public void testEncontrarClientePorUsuarioYContrasena_ContrasenaIncorrecta() 
+    public void testEncontrarClientePorUsuarioYContrasena_ContrasenaIncorrecta()
             throws PersistenciaException, NegocioException {
+        String usuarioUnico = "toribio_test_" + System.currentTimeMillis();
+
         ClienteDTO clienteDTO = new ClienteDTO(
-            "Victor Humberto", 
-            "Encinas", 
-            "Guzmán", 
-            "toribio_test", 
-            "ABCD1234"
+                "Victor Humberto",
+                "Encinas",
+                "Guzmán",
+                usuarioUnico,
+                "ABCD1234"
         );
         gestorClientes.agregarCliente(clienteDTO);
 
         // Intentar encontrar el cliente con contraseña incorrecta
         assertThrows(NegocioException.class,
-            () -> gestorClientes.encontrarClientePorUsuarioYContrasena(
-                "toribio_test", 
-                "contraseniaIncorrecta"
-            ),
-            "Debe lanzar NegocioException cuando la contraseña es incorrecta"
+                () -> gestorClientes.encontrarClientePorUsuarioYContrasena(
+                        "toribio_test",
+                        "contraseniaIncorrecta"
+                ),
+                "Debe lanzar NegocioException cuando la contraseña es incorrecta"
         );
     }
 
     @Test
     public void testEncontrarClientePorUsuarioYContrasena_UsuarioNulo() {
         assertThrows(NegocioException.class,
-            () -> gestorClientes.encontrarClientePorUsuarioYContrasena(null, "ABCD1234"),
-            "Debe lanzar NegocioException cuando el usuario es nulo"
+                () -> gestorClientes.encontrarClientePorUsuarioYContrasena(null, "ABCD1234"),
+                "Debe lanzar NegocioException cuando el usuario es nulo"
         );
     }
 }

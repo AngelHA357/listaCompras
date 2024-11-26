@@ -45,9 +45,6 @@ public class GestorProductos implements IGestorProductos {
         if (productoDTO.getNombre() == null || productoDTO.getNombre().isBlank()) {
             throw new NegocioException("El nombre del producto no puede ser nulo o estar en blanco");
         }
-        if (productoDTO.getCategoria() == null || productoDTO.getCategoria().isBlank()) {
-            throw new NegocioException("La categoría del producto no puede ser nula o estar en blanco");
-        }
         if (productoDTO.getCantidad() == null || productoDTO.getCantidad() <= 0) {
             throw new NegocioException("La cantidad del producto no puede ser nula o menor o igual a cero");
         }

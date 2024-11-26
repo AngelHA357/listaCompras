@@ -304,6 +304,8 @@ public class frmRegistrarse extends javax.swing.JFrame {
                 gestorClientes.agregarCliente(cliente);
             } catch (NegocioException ex) {
                 Logger.getLogger(frmRegistrarse.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Error al registrar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             frmInicioSesion inicioSesion = new frmInicioSesion(pantallaInicial);
             inicioSesion.setVisible(true);

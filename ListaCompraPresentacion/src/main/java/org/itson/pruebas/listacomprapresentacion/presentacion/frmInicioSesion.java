@@ -255,6 +255,8 @@ public class frmInicioSesion extends javax.swing.JFrame {
                     }
                 } catch (NegocioException ex) {
                     Logger.getLogger(frmInicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
 
             } else {
