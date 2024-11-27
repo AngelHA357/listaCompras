@@ -28,7 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CompraDAOTest {
 
-    ICompraDAO compraDAO;
+    private ICompraDAO compraDAO;
+    private IClienteDAO clienteDAO;
+    private IProductoDAO productoDAO;
     IConexion conexion;
     private static Long clienteIdCounter = 1000L;
 
@@ -49,9 +51,12 @@ public class CompraDAOTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws PersistenciaException {
         conexion = Conexion.getInstance();
         compraDAO = new CompraDAO(conexion);
+        clienteDAO = new ClienteDAO(conexion);
+        productoDAO = new ProductoDAO(conexion);
+        limpiarBaseDeDatos();
     }
 
     @AfterEach
@@ -59,96 +64,201 @@ public class CompraDAOTest {
         limpiarBaseDeDatos();
     }
 
-    /**
-     * Permite borrar los datos agregados en la base de datos.
-     *
-     * @throws PersistenciaException Se lanza en caso de que faller alguna
-     * conexión.
-     */
     private void limpiarBaseDeDatos() throws PersistenciaException {
-        IProductoDAO productoDAO = new ProductoDAO(conexion);
-        IClienteDAO clienteDAO = new ClienteDAO(conexion);
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
-        for (Producto producto : productos) {
-            productoDAO.eliminarProducto(producto.getId());
+        if (!productos.isEmpty()) {
+            for (Producto producto : productos) {
+                productoDAO.eliminarProducto(producto.getId());
+            }
         }
 
-        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
-        for (Cliente cliente : clientes) {
-            clienteDAO.eliminarCliente(cliente.getId());
-        }
-
+        
         List<Compra> compras = compraDAO.obtenerTodasLasCompras();
-        for (Compra compra : compras) {
-            compraDAO.eliminarCompra(compra.getId());
+        if (!compras.isEmpty()) {
+            for (Compra compra : compras) {
+                compraDAO.eliminarCompra(compra.getId());
+            }
         }
+        
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        if (!clientes.isEmpty()) {
+            for (Cliente cliente : clientes) {
+                clienteDAO.eliminarCliente(cliente.getId());
+            }
 
+        }
     }
 
     /**
-     * Permite probar la adición de una nueva compra.
+     * Se verifica que el método agregarCompra agregue una compra correctamente.
      *
-     * @throws PersistenciaException Se lanza en caso de error al agregar la
-     * compra.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
-    public void agregarCompra() throws PersistenciaException {
-        Compra compra = new Compra("Cosas para el GYM", null);
+    public void testAgregarCompra() throws PersistenciaException {
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente = clienteDAO.agregarCliente(cliente);
 
+        Compra compra = new Compra("Compra de Prueba", cliente);
         Compra resultado = compraDAO.agregarCompra(compra);
 
+        assertNotNull(resultado);
+        assertEquals("Compra de Prueba", resultado.getNombre());
         assertNotNull(resultado.getId());
-        assertEquals("Cosas para el GYM", resultado.getNombre());
+        assertNotNull(resultado.getCliente());
     }
 
     /**
-     * Permite probar la eliminación de una compra existente.
-     *
-     * @throws PersistenciaException Se lanza en caso de error al eliminar la
-     * compra.
+     * Se verifica que se lance una excepción cuando el nombre de la compra es
+     * nulo.
      */
     @Test
-    public void eliminarCompra() throws PersistenciaException {
-        Compra compra = new Compra("EjemploCompra", null);
-        compraDAO.agregarCompra(compra);
-        compraDAO.eliminarCompra(compra.getId());
-        Compra resultado = compraDAO.obtenerCompraPorId(compra.getId());
+    public void testAgregarCompra_NombreNulo() {
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        Compra compra = new Compra(null, cliente);
 
-        assertNull(resultado);
+        assertThrows(PersistenciaException.class, () -> {
+            compraDAO.agregarCompra(compra);
+        }, "Error al agregar compra");
     }
 
     /**
-     * Permite probar la obtención de una compra por su ID.
+     * Se verifica que se lance una excepción cuando el nombre de la compra está
+     * vacío.
+     */
+    @Test
+    public void testAgregarCompra_NombreVacio() {
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        Compra compra = new Compra("", cliente);
+
+        assertThrows(PersistenciaException.class, () -> {
+            compraDAO.agregarCompra(compra);
+        }, "Error al agregar compra");
+    }
+
+    /**
+     * Se verifica que el método obtenerCompraPorId retorne la compra correcta
+     * si existe.
      *
-     * @throws PersistenciaException Se lanza en caso de error al obtener la
-     * compra.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
     public void testObtenerCompraPorId() throws PersistenciaException {
-        Compra compra = new Compra("Compra Test", null);
-        compraDAO.agregarCompra(compra);
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra de Prueba", cliente);
+        compra = compraDAO.agregarCompra(compra);
 
         Compra resultado = compraDAO.obtenerCompraPorId(compra.getId());
 
         assertNotNull(resultado);
-        assertEquals(compra.getId(), resultado.getId());
+        assertEquals("Compra de Prueba", resultado.getNombre());
     }
 
     /**
-     * Permite probar la obtención de todas las compras registradas.
+     * Se verifica que se retorne null al intentar obtener una compra
+     * inexistente.
      *
-     * @throws PersistenciaException Se lanza en caso de error al obtener las
-     * compras.
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testObtenerCompraPorId_Inexistente() throws PersistenciaException {
+        Compra resultado = compraDAO.obtenerCompraPorId(9999L);
+        assertNull(resultado);
+    }
+
+    /**
+     * Se verifica que se obtengan todas las compras correctamente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
      */
     @Test
     public void testObtenerTodasLasCompras() throws PersistenciaException {
-        compraDAO.agregarCompra(new Compra("Compra 1", null));
-        compraDAO.agregarCompra(new Compra("Compra 2", null));
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        compraDAO.agregarCompra(new Compra("Compra 1", cliente));
+        compraDAO.agregarCompra(new Compra("Compra 2", cliente));
 
         List<Compra> compras = compraDAO.obtenerTodasLasCompras();
 
         assertNotNull(compras);
-        assertTrue(compras.size() >= 2);
+        assertEquals(2, compras.size());
     }
 
+    /**
+     * Se verifica que se retorne una lista vacía cuando no hay compras.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testObtenerTodasLasCompras_Vacio() throws PersistenciaException {
+        List<Compra> resultado = compraDAO.obtenerTodasLasCompras();
+        assertTrue(resultado.isEmpty());
+    }
+
+    /**
+     * Se verifica que se elimine una compra correctamente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testEliminarCompra() throws PersistenciaException {
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra de Prueba", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        compraDAO.eliminarCompra(compra.getId());
+        Compra eliminada = compraDAO.obtenerCompraPorId(compra.getId());
+
+        assertNull(eliminada);
+    }
+
+    /**
+     * Se verifica que no se lance excepción al intentar eliminar una compra
+     * inexistente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testEliminarCompra_Inexistente() throws PersistenciaException {
+        compraDAO.eliminarCompra(9999L); // No debería lanzar excepción
+    }
+
+    /**
+     * Se verifica que se obtenga una compra existente por su nombre y cliente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testObtenerCompraPorNombreYCliente_Existente() throws PersistenciaException {
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra Test", cliente);
+        compraDAO.agregarCompra(compra);
+
+        Compra resultado = compraDAO.obtenerCompraPorNombreYCliente("Compra Test", cliente.getId());
+
+        assertNotNull(resultado);
+        assertEquals("Compra Test", resultado.getNombre());
+    }
+
+    /**
+     * Se verifica que se retorne null cuando no se encuentra la compra por
+     * nombre y cliente.
+     *
+     * @throws PersistenciaException Si ocurre un error en la persistencia.
+     */
+    @Test
+    public void testObtenerCompraPorNombreYCliente_NoExiste() throws PersistenciaException {
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra resultado = compraDAO.obtenerCompraPorNombreYCliente("Compra Inexistente", cliente.getId());
+        assertNull(resultado);
+    }
 }

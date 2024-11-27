@@ -44,6 +44,10 @@ public class ClienteDAOTest {
     public void setUp() throws PersistenciaException {
         conexion = Conexion.getInstance();
         clienteDAO = new ClienteDAO(conexion);
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        for (Cliente cliente : clientes) {
+            clienteDAO.eliminarCliente(cliente.getId());
+        }
     }
 
     @AfterEach
@@ -54,7 +58,7 @@ public class ClienteDAOTest {
         }
     }
 
-    /**
+   /**
      * Permite probar que un cliente se agregue correctamente.
      *
      * @throws PersistenciaException Se lanza en caso de que no se pueda agregar
@@ -63,12 +67,48 @@ public class ClienteDAOTest {
     @Test
     public void testAgregarCliente() throws PersistenciaException {
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
-
         Cliente resultado = clienteDAO.agregarCliente(cliente);
 
         assertNotNull(resultado.getId());
         assertEquals("Victor Humberto", resultado.getNombre());
+        assertEquals("Encinas", resultado.getApellidoPaterno());
+        assertEquals("Guzmán", resultado.getApellidoMaterno());
+        assertEquals("toribio", resultado.getUsuario());
+        assertEquals("ABCD1234", resultado.getContrasenia());
+    }
 
+    /**
+     * Permite probar que se lance una excepción al agregar un cliente con usuario nulo.
+     *
+     * @throws PersistenciaException Se lanza cuando el usuario es nulo
+     */
+    @Test
+    public void testAgregarCliente_UsuarioNulo() throws PersistenciaException {
+        Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", null, "ABCD1234");
+        Cliente resultado = clienteDAO.agregarCliente(cliente);
+
+        assertNotNull(resultado.getId());
+        assertEquals("Victor Humberto", resultado.getNombre());
+        assertEquals("Encinas", resultado.getApellidoPaterno());
+        assertEquals("Guzmán", resultado.getApellidoMaterno());
+        assertEquals("ABCD1234", resultado.getContrasenia());
+    }
+
+    /**
+     * Permite probar que se lance una excepción al agregar un cliente con usuario vacío.
+     *
+     * @throws PersistenciaException Se lanza cuando el usuario está vacío
+     */
+    @Test
+    public void testAgregarCliente_UsuarioVacio() throws PersistenciaException{
+        Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "", "ABCD1234");
+        Cliente resultado = clienteDAO.agregarCliente(cliente);
+        
+        assertNotNull(resultado.getId());
+        assertEquals("Victor Humberto", resultado.getNombre());
+        assertEquals("Encinas", resultado.getApellidoPaterno());
+        assertEquals("Guzmán", resultado.getApellidoMaterno());
+        assertEquals("ABCD1234", resultado.getContrasenia());
     }
 
     /**
@@ -78,9 +118,8 @@ public class ClienteDAOTest {
      * cliente.
      */
     @Test
-    public void obtenerClienteExistente() throws PersistenciaException {
+    public void testObtenerClienteExistente() throws PersistenciaException {
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
-
         Cliente clienteAgregado = clienteDAO.agregarCliente(cliente);
 
         Cliente resultado = clienteDAO.obtenerClientePorId(clienteAgregado.getId());
@@ -101,7 +140,7 @@ public class ClienteDAOTest {
      * cliente.
      */
     @Test
-    public void obtenerClienteInexistente() throws PersistenciaException {
+    public void testObtenerClienteInexistente() throws PersistenciaException {
         Cliente cliente = clienteDAO.obtenerClientePorId(Long.MAX_VALUE);
         assertNull(cliente);
     }
@@ -121,6 +160,8 @@ public class ClienteDAOTest {
 
         assertNotNull(clientes);
         assertTrue(clientes.size() >= 2);
+        assertTrue(clientes.stream().anyMatch(c -> c.getUsuario().equals("usuario1")));
+        assertTrue(clientes.stream().anyMatch(c -> c.getUsuario().equals("usuario2")));
     }
 
     /**
@@ -135,17 +176,14 @@ public class ClienteDAOTest {
         String usuario = "wacho" + System.currentTimeMillis();
         String contrasenia = "ABCD1234";
 
-        Cliente cliente = new Cliente();
-        cliente.setUsuario(usuario);
-        cliente.setContrasenia(contrasenia);
-
+        Cliente cliente = new Cliente("Victor", "Encinas", "Guzmán", usuario, contrasenia);
         clienteDAO.agregarCliente(cliente);
 
         Cliente clienteObtenido = clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
 
-        assertNotNull(cliente);
+        assertNotNull(clienteObtenido);
         assertEquals(usuario, clienteObtenido.getUsuario());
-        assertEquals("ABCD1234", clienteObtenido.getContrasenia());
+        assertEquals(contrasenia, clienteObtenido.getContrasenia());
     }
 
     /**
@@ -156,12 +194,54 @@ public class ClienteDAOTest {
      * cliente.
      */
     @Test
-    public void testObtenerClientePorUsuarioYContrasena_ClienteInexistente() throws PersistenciaException {
+    public void testObtenerClientePorUsuarioYContrasena_ClienteInexistente() throws PersistenciaException{
         String usuario = "usuarioInexistente";
         String contrasenia = "contraseñaErronea";
 
         assertThrows(PersistenciaException.class, () -> {
             clienteDAO.obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
+        });
+    }
+
+    /**
+     * Verifica que se lance una excepción cuando el usuario es nulo en
+     * obtenerClientePorUsuarioYContrasena.
+     */
+    @Test
+    public void testObtenerClientePorUsuarioYContrasena_UsuarioNulo() throws PersistenciaException{
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.obtenerClientePorUsuarioYContrasena(null, "ABCD1234");
+        });
+    }
+
+    /**
+     * Verifica que se lance una excepción cuando el usuario está vacío en
+     * obtenerClientePorUsuarioYContrasena.
+     */
+    @Test
+    public void testObtenerClientePorUsuarioYContrasena_UsuarioVacio() throws PersistenciaException{
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.obtenerClientePorUsuarioYContrasena("", "ABCD1234");
+        });
+    }
+
+    /**
+     * Verifica que se lance una excepción cuando la contraseña es nula.
+     */
+    @Test
+    public void testObtenerClientePorUsuarioYContrasena_ContraseniaNula() throws PersistenciaException{
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.obtenerClientePorUsuarioYContrasena("usuario", null);
+        });
+    }
+
+    /**
+     * Verifica que se lance una excepción cuando la contraseña está vacía.
+     */
+    @Test
+    public void testObtenerClientePorUsuarioYContrasena_ContraseniaVacia() throws PersistenciaException{
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.obtenerClientePorUsuarioYContrasena("usuario", "");
         });
     }
 

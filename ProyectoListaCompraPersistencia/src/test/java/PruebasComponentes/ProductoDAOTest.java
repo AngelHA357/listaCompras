@@ -28,8 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ProductoDAOTest {
 
-    IProductoDAO productoDAO;
-    ICompraDAO compraDAO;
+    private IProductoDAO productoDAO;
+    private ICompraDAO compraDAO;
+    private IClienteDAO clienteDAO;
     IConexion conexion;
 
     public ProductoDAOTest() {
@@ -46,10 +47,12 @@ public class ProductoDAOTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws PersistenciaException {
         conexion = Conexion.getInstance();
         productoDAO = new ProductoDAO(conexion);
         compraDAO = new CompraDAO(conexion);
+        clienteDAO = new ClienteDAO(conexion);
+        limpiarBaseDeDatos();
     }
 
     @AfterEach
@@ -64,128 +67,261 @@ public class ProductoDAOTest {
      * conexión.
      */
     private void limpiarBaseDeDatos() throws PersistenciaException {
-        ICompraDAO compraDAO = new CompraDAO(conexion);
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
-        for (Producto producto : productos) {
-            productoDAO.eliminarProducto(producto.getId());
-        }
-
-        IClienteDAO clienteDAO = new ClienteDAO(conexion);
-        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
-        for (Cliente cliente : clientes) {
-            clienteDAO.eliminarCliente(cliente.getId());
+        if (!productos.isEmpty()) {
+            for (Producto producto : productos) {
+                productoDAO.eliminarProducto(producto.getId());
+            }
         }
 
         List<Compra> compras = compraDAO.obtenerTodasLasCompras();
-        for (Compra compra : compras) {
-            compraDAO.eliminarCompra(compra.getId());
+        if (!compras.isEmpty()) {
+            for (Compra compra : compras) {
+                compraDAO.eliminarCompra(compra.getId());
+            }
+        }
+
+        List<Cliente> clientes = clienteDAO.obtenerTodosLosClientes();
+        if (!clientes.isEmpty()) {
+            for (Cliente cliente : clientes) {
+                clienteDAO.eliminarCliente(cliente.getId());
+            }
+
         }
     }
 
     /**
-     * Permite probar la adición de un nuevo producto.
+     * Se verifica que el método agregarProducto agregue un producto
+     * correctamente.
      *
      * @throws PersistenciaException Se lanza en caso de error al agregar el
      * producto.
      */
     @Test
     public void testAgregarProducto() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
 
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        Producto producto = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
         Producto resultado = productoDAO.agregarProducto(producto);
 
         assertNotNull(resultado);
+        assertNotNull(resultado.getId());
         assertEquals("Papel", resultado.getNombre());
+        assertEquals("Higiene Personal", resultado.getCategoria());
+        assertEquals(6.0, resultado.getCantidad());
+        assertEquals(compra.getId(), resultado.getCompra().getId());
+    }
+
+     /**
+     * Se verifica que se maneje correctamente un intento de agregar un producto con nombre nulo.
+     */
+    @Test
+    public void testAgregarProducto_NombreNulo() throws PersistenciaException {
+        Producto producto = new Producto(null, "Higiene Personal", false, null, 6.0);
+        Producto resultado = productoDAO.agregarProducto(producto);
+        assertNotNull(resultado);
+        assertNotNull(resultado.getId());
+        assertEquals("Higiene Personal", resultado.getCategoria());
+        assertEquals(6.0, resultado.getCantidad());
     }
 
     /**
-     * Permite probar la obtención de un producto por su ID.
+     * Se verifica que se maneje correctamente un intento de agregar un producto con nombre vacío.
+     */
+    @Test
+    public void testAgregarProducto_NombreVacio() throws PersistenciaException {
+        Producto producto = new Producto("", "Higiene Personal", false, null, 6.0);
+        Producto resultado = productoDAO.agregarProducto(producto);
+        assertNotNull(resultado);
+        assertNotNull(resultado.getId());
+        assertEquals("Higiene Personal", resultado.getCategoria());
+        assertEquals(6.0, resultado.getCantidad());
+    }
+
+    /**
+     * Se verifica que el método obtenerProductoPorId retorne el producto
+     * correcto.
      *
      * @throws PersistenciaException Se lanza en caso de error al obtener el
      * producto.
      */
     @Test
     public void testObtenerProductoPorId() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
-        productoDAO.agregarProducto(producto);
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        Producto producto = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
+        producto = productoDAO.agregarProducto(producto);
 
         Producto resultado = productoDAO.obtenerProductoPorId(producto.getId());
 
         assertNotNull(resultado);
         assertEquals(producto.getId(), resultado.getId());
+        assertEquals(producto.getNombre(), resultado.getNombre());
+        assertEquals(producto.getCategoria(), resultado.getCategoria());
+        assertEquals(producto.getCantidad(), resultado.getCantidad());
     }
 
     /**
-     * Permite probar la obtención de todos los productos registrados.
-     *
-     * @throws PersistenciaException Se lanza en caso de error al obtener los
-     * productos.
+     * Se verifica que obtenerProductoPorId retorne null para un ID inexistente.
+     */
+    @Test
+    public void testObtenerProductoPorId_NoExiste() throws PersistenciaException {
+        Producto resultado = productoDAO.obtenerProductoPorId(99999L);
+        assertNull(resultado);
+    }
+
+    /**
+     * Se verifica que se obtengan todos los productos correctamente.
      */
     @Test
     public void testObtenerTodosLosProductos() throws PersistenciaException {
-        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", null, 6.0));
-        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", null, 6.0));
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        Producto producto1 = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
+        Producto producto2 = new Producto("Jabón", "Higiene Personal", false, compra, 3.0);
+
+        productoDAO.agregarProducto(producto1);
+        productoDAO.agregarProducto(producto2);
 
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
 
         assertNotNull(productos);
         assertTrue(productos.size() >= 2);
+        assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Papel")));
+        assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Jabón")));
     }
 
     /**
-     * Permite probar la actualización de un producto.
-     *
-     * @throws PersistenciaException Se lanza en caso de error al actualizar el
-     * producto.
+     * Se verifica que obtenerTodosLosProductos retorne una lista vacía cuando
+     * no hay productos.
+     */
+    @Test
+    public void testObtenerTodosLosProductos_SinProductos() throws PersistenciaException {
+        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
+        assertTrue(productos.isEmpty());
+    }
+
+    /**
+     * Se verifica que el método actualizarProducto actualice correctamente.
      */
     @Test
     public void testActualizarProducto() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
-        productoDAO.agregarProducto(producto);
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
 
-        producto.setNombre("Papel Nuevo");
-        Producto resultado = productoDAO.actualizarProducto(producto);
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
 
-        assertNotNull(resultado);
-        assertEquals("Papel Nuevo", resultado.getNombre());
+        Producto producto = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
+        producto = productoDAO.agregarProducto(producto);
+
+        producto.setNombre("Papel Premium");
+        producto.setCantidad(8.0);
+        producto.setComprado(true);
+
+        Producto actualizado = productoDAO.actualizarProducto(producto);
+
+        assertNotNull(actualizado);
+        assertEquals("Papel Premium", actualizado.getNombre());
+        assertEquals(8.0, actualizado.getCantidad());
+        assertTrue(actualizado.isComprado());
     }
 
     /**
-     * Permite probar la eliminación de un producto.
-     *
-     * @throws PersistenciaException Se lanza en caso de error al eliminar el
-     * producto.
+     * Se verifica que el método eliminarProducto elimine correctamente.
      */
     @Test
     public void testEliminarProducto() throws PersistenciaException {
-        Producto producto = new Producto("Papel", "Higiene Personal", null, 6.0);
-        productoDAO.agregarProducto(producto);
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
 
-        Producto eliminado = productoDAO.eliminarProducto(producto.getId());
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
 
-        assertNotNull(eliminado);
-        assertEquals(producto.getId(), eliminado.getId());
-        assertNull(productoDAO.obtenerProductoPorId(producto.getId()));
+        Producto producto = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
+        producto = productoDAO.agregarProducto(producto);
+
+        productoDAO.eliminarProducto(producto.getId());
+
+        Producto eliminado = productoDAO.obtenerProductoPorId(producto.getId());
+        assertNull(eliminado);
     }
 
     /**
-     * Permite probar el filtrado de productos por categoría en una compra.
-     *
-     * @throws PersistenciaException Se lanza en caso de error al filtrar los
-     * productos.
+     * Se verifica que se lance excepción al eliminar un producto inexistente.
      */
     @Test
-    public void testFiltrarPorCategoria() throws PersistenciaException {
-        Compra compra1 = new Compra();
-        compraDAO.agregarCompra(compra1);
-        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", compra1, 6.0));
-        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", compra1, 6.0));
-        productoDAO.agregarProducto(new Producto("Leche", "Alimentos", compra1, 10.0));
+    public void testEliminarProducto_NoExiste() throws PersistenciaException {
+        assertNull(productoDAO.eliminarProducto(99999L));
+    }
 
-        List<Producto> productosFiltrados = productoDAO.filtrarPorCategoriaYCompraId("Higiene Personal", compra1.getId());
+    /**
+     * Se verifica que el método filtrarPorCategoriaYCompraId filtre
+     * correctamente.
+     */
+    @Test
+    public void testFiltrarPorCategoriaYCompraId() throws PersistenciaException {
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
 
-        assertNotNull(productosFiltrados);
-        assertEquals(2, productosFiltrados.size());
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        productoDAO.agregarProducto(new Producto("Papel", "Higiene Personal", false, compra, 6.0));
+        productoDAO.agregarProducto(new Producto("Jabón", "Higiene Personal", false, compra, 3.0));
+        productoDAO.agregarProducto(new Producto("Leche", "Alimentos", false, compra, 1.0));
+
+        List<Producto> filtrados = productoDAO.filtrarPorCategoriaYCompraId("Higiene Personal", compra.getId());
+        Long compraID = compra.getId();
+
+        assertNotNull(filtrados);
+        assertEquals(2, filtrados.size());
+        assertTrue(filtrados.stream().allMatch(p -> p.getCategoria().equals("Higiene Personal")));
+        assertTrue(filtrados.stream().allMatch(p -> p.getCompra().getId().equals(compraID)));
+    }
+
+    /**
+     * Se verifica que se retorne una lista vacía al filtrar por una categoría
+     * inexistente.
+     */
+    @Test
+    public void testFiltrarPorCategoriaYCompraId_CategoriaInexistente() throws PersistenciaException {
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        List<Producto> filtrados = productoDAO.filtrarPorCategoriaYCompraId("Categoria Inexistente", compra.getId());
+
+        assertNotNull(filtrados);
+        assertTrue(filtrados.isEmpty());
+    }
+
+    /**
+     * Se verifica que se maneje correctamente un intento de filtrar productos con categoría nula.
+     */
+    @Test
+    public void testFiltrarPorCategoriaYCompraId_CategoriaNula() throws PersistenciaException {
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+        
+        List<Producto> resultado = productoDAO.filtrarPorCategoriaYCompraId(null, compra.getId());
+        assertTrue(resultado.isEmpty());
     }
 
 }
