@@ -1,10 +1,10 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 ProyectoListaCompraPersistencia,com.mycompany.proyectolistacomprapersistencia,ProyectoListaCompraPersistencia,7,0,0,0,3,0,2,0,2,0
-ProyectoListaCompraPersistencia,Entidades,Cliente,23,47,0,0,11,19,6,10,6,10
-ProyectoListaCompraPersistencia,Entidades,Compra,19,35,0,2,9,13,5,7,5,6
-ProyectoListaCompraPersistencia,Entidades,Producto,47,31,0,0,20,13,9,6,9,6
+ProyectoListaCompraPersistencia,Entidades,Cliente,31,39,0,0,15,15,8,8,8,8
+ProyectoListaCompraPersistencia,Entidades,Compra,16,38,0,2,8,14,4,8,4,7
+ProyectoListaCompraPersistencia,Entidades,Producto,12,66,0,0,6,27,3,12,3,12
 ProyectoListaCompraPersistencia,Exceptions,PersistenciaException,18,5,0,0,8,2,4,1,4,1
 ProyectoListaCompraPersistencia,Conexion,Conexion,46,30,9,7,15,10,7,6,2,3
 ProyectoListaCompraPersistencia,DAOs,ClienteDAO,81,119,7,1,22,33,5,6,1,6
-ProyectoListaCompraPersistencia,DAOs,ProductoDAO,172,169,25,7,41,55,18,7,2,7
-ProyectoListaCompraPersistencia,DAOs,CompraDAO,107,83,5,1,29,24,5,5,2,5
+ProyectoListaCompraPersistencia,DAOs,ProductoDAO,93,248,20,12,22,74,14,11,0,9
+ProyectoListaCompraPersistencia,DAOs,CompraDAO,65,125,3,3,18,35,3,7,1,6

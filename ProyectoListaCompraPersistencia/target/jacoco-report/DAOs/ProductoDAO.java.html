@@ -141,7 +141,7 @@ public class ProductoDAO implements IProductoDAO {
 <span class="fc" id="L141">            tx = em.getTransaction();</span>
 <span class="fc" id="L142">            tx.begin();</span>
 <span class="fc" id="L143">            productoEliminado = em.find(Producto.class, id);</span>
-<span class="pc bpc" id="L144" title="1 of 2 branches missed.">            if (productoEliminado != null) {</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if (productoEliminado != null) {</span>
 <span class="fc" id="L145">                em.remove(productoEliminado); // Elimina el producto si existe</span>
             }
 <span class="fc" id="L147">            tx.commit();</span>
@@ -193,17 +193,17 @@ public class ProductoDAO implements IProductoDAO {
      */
     @Override
     public List&lt;Producto&gt; obtenerProductosPorCompraId(Long compraId) throws PersistenciaException {
-<span class="nc" id="L196">        EntityManager em = null;</span>
+<span class="fc" id="L196">        EntityManager em = null;</span>
         try {
-<span class="nc" id="L198">            em = conexion.crearConexion();</span>
-<span class="nc" id="L199">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.compra.id = :compraId&quot;);</span>
-<span class="nc" id="L200">            query.setParameter(&quot;compraId&quot;, compraId);</span>
-<span class="nc" id="L201">            return query.getResultList();</span>
+<span class="fc" id="L198">            em = conexion.crearConexion();</span>
+<span class="fc" id="L199">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.compra.id = :compraId&quot;);</span>
+<span class="fc" id="L200">            query.setParameter(&quot;compraId&quot;, compraId);</span>
+<span class="fc" id="L201">            return query.getResultList();</span>
 <span class="nc" id="L202">        } catch (Exception e) {</span>
 <span class="nc" id="L203">            throw new PersistenciaException(&quot;Error al obtener los productos por ID de compra: &quot; + e.getMessage(), e);</span>
         } finally {
-<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (em != null) {</span>
-<span class="nc" id="L206">                em.close();</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L206">                em.close();</span>
             }
         }
     }
@@ -221,25 +221,25 @@ public class ProductoDAO implements IProductoDAO {
      */
     @Override
     public Producto obtenerProductoPorCaracteristicas(String nombre, String categoria, boolean comprado, Double cantidad, Long compraId) throws PersistenciaException {
-<span class="nc" id="L224">        EntityManager em = null;</span>
+<span class="fc" id="L224">        EntityManager em = null;</span>
         try {
-<span class="nc" id="L226">            em = conexion.crearConexion();</span>
-<span class="nc" id="L227">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.nombre = :nombre AND p.categoria = :categoria &quot;</span>
+<span class="fc" id="L226">            em = conexion.crearConexion();</span>
+<span class="fc" id="L227">            Query query = em.createQuery(&quot;SELECT p FROM Producto p WHERE p.nombre = :nombre AND p.categoria = :categoria &quot;</span>
                     + &quot;AND p.comprado = :comprado AND p.cantidad = :cantidad AND p.compra.id = :compraId&quot;);
-<span class="nc" id="L229">            query.setParameter(&quot;nombre&quot;, nombre);</span>
-<span class="nc" id="L230">            query.setParameter(&quot;categoria&quot;, categoria);</span>
-<span class="nc" id="L231">            query.setParameter(&quot;comprado&quot;, comprado);</span>
-<span class="nc" id="L232">            query.setParameter(&quot;cantidad&quot;, cantidad);</span>
-<span class="nc" id="L233">            query.setParameter(&quot;compraId&quot;, compraId);</span>
-<span class="nc" id="L234">            List&lt;Producto&gt; resultados = query.getResultList();</span>
+<span class="fc" id="L229">            query.setParameter(&quot;nombre&quot;, nombre);</span>
+<span class="fc" id="L230">            query.setParameter(&quot;categoria&quot;, categoria);</span>
+<span class="fc" id="L231">            query.setParameter(&quot;comprado&quot;, comprado);</span>
+<span class="fc" id="L232">            query.setParameter(&quot;cantidad&quot;, cantidad);</span>
+<span class="fc" id="L233">            query.setParameter(&quot;compraId&quot;, compraId);</span>
+<span class="fc" id="L234">            List&lt;Producto&gt; resultados = query.getResultList();</span>
 
             // Retornamos el primer producto encontrado o null si no hay coincidencias
-<span class="nc bnc" id="L237" title="All 2 branches missed.">            return resultados.isEmpty() ? null : resultados.get(0);</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">            return resultados.isEmpty() ? null : resultados.get(0);</span>
 <span class="nc" id="L238">        } catch (Exception e) {</span>
 <span class="nc" id="L239">            throw new PersistenciaException(&quot;Error al obtener el producto por características: &quot; + e.getMessage(), e);</span>
         } finally {
-<span class="nc bnc" id="L241" title="All 2 branches missed.">            if (em != null) {</span>
-<span class="nc" id="L242">                em.close();</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">            if (em != null) {</span>
+<span class="fc" id="L242">                em.close();</span>
             }
         }
     }

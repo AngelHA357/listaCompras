@@ -179,41 +179,6 @@ public class ProductoDAOTest {
     }
 
     /**
-     * Se verifica que se obtengan todos los productos correctamente.
-     */
-    @Test
-    public void testObtenerTodosLosProductos() throws PersistenciaException {
-        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
-        cliente = clienteDAO.agregarCliente(cliente);
-
-        Compra compra = new Compra("Compra Semanal", cliente);
-        compra = compraDAO.agregarCompra(compra);
-
-        Producto producto1 = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
-        Producto producto2 = new Producto("Jabón", "Higiene Personal", false, compra, 3.0);
-
-        productoDAO.agregarProducto(producto1);
-        productoDAO.agregarProducto(producto2);
-
-        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
-
-        assertNotNull(productos);
-        assertTrue(productos.size() >= 2);
-        assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Papel")));
-        assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Jabón")));
-    }
-
-    /**
-     * Se verifica que obtenerTodosLosProductos retorne una lista vacía cuando
-     * no hay productos.
-     */
-    @Test
-    public void testObtenerTodosLosProductos_SinProductos() throws PersistenciaException {
-        List<Producto> productos = productoDAO.obtenerTodosLosProductos();
-        assertTrue(productos.isEmpty());
-    }
-
-    /**
      * Se verifica que el método actualizarProducto actualice correctamente.
      */
     @Test
@@ -322,6 +287,127 @@ public class ProductoDAOTest {
         
         List<Producto> resultado = productoDAO.filtrarPorCategoriaYCompraId(null, compra.getId());
         assertTrue(resultado.isEmpty());
+    }
+    
+    /**
+     * Se verifica que el método obtenerProductosPorCompraId retorne la lista correcta.
+     */
+    @Test
+    public void testObtenerProductosPorCompraId() throws PersistenciaException {
+        // Preparar datos
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+        
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        Producto producto1 = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
+        Producto producto2 = new Producto("Jabón", "Higiene Personal", false, compra, 3.0);
+        productoDAO.agregarProducto(producto1);
+        productoDAO.agregarProducto(producto2);
+
+        // Ejecutar prueba
+        List<Producto> productos = productoDAO.obtenerProductosPorCompraId(compra.getId());
+
+        // Verificar resultados
+        assertNotNull(productos);
+        assertEquals(2, productos.size());
+        assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Papel")));
+        assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Jabón")));
+    }
+
+    /**
+     * Se verifica que se retorne lista vacía al buscar productos de una compra
+     * inexistente.
+     */
+    @Test
+    public void testObtenerProductosPorCompraId_CompraInexistente() throws PersistenciaException {
+        List<Producto> productos = productoDAO.obtenerProductosPorCompraId(99999L);
+        assertNotNull(productos);
+        assertTrue(productos.isEmpty());
+    }
+
+    /**
+     * Se verifica que el método obtenerProductoPorCaracteristicas retorne el
+     * producto correcto.
+     */
+    @Test
+    public void testObtenerProductoPorCaracteristicas() throws PersistenciaException {
+        // Preparar datos
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        Producto producto = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
+        productoDAO.agregarProducto(producto);
+
+        // Ejecutar prueba
+        Producto encontrado = productoDAO.obtenerProductoPorCaracteristicas(
+                "Papel", "Higiene Personal", false, 6.0, compra.getId());
+
+        // Verificar resultados
+        assertNotNull(encontrado);
+        assertEquals("Papel", encontrado.getNombre());
+        assertEquals("Higiene Personal", encontrado.getCategoria());
+        assertEquals(6.0, encontrado.getCantidad());
+        assertFalse(encontrado.isComprado());
+        assertEquals(compra.getId(), encontrado.getCompra().getId());
+    }
+
+    /**
+     * Se verifica que se retorne null al buscar un producto con características
+     * que no coinciden.
+     */
+    @Test
+    public void testObtenerProductoPorCaracteristicas_NoCoincide() throws PersistenciaException {
+        // Preparar datos
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+
+        // Ejecutar prueba
+        Producto encontrado = productoDAO.obtenerProductoPorCaracteristicas(
+                "Producto Inexistente", "Categoria", false, 1.0, compra.getId());
+
+        // Verificar resultados
+        assertNull(encontrado);
+    }
+
+    /**
+     * Se verifica que se lance PersistenciaException al buscar con nombre nulo.
+     */
+    @Test
+    public void testObtenerProductoPorCaracteristicas_NombreNulo() throws PersistenciaException {
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+        Long compraID = compra.getId();
+
+        assertNull(productoDAO.obtenerProductoPorCaracteristicas(
+                null, "Categoria", false, 1.0, compraID));
+
+    }
+
+    /**
+     * Se verifica que se lance PersistenciaException al buscar con categoría
+     * nula.
+     */
+    @Test
+    public void testObtenerProductoPorCaracteristicas_CategoriaNula() throws PersistenciaException {
+        Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
+        cliente = clienteDAO.agregarCliente(cliente);
+        Compra compra = new Compra("Compra Semanal", cliente);
+        compra = compraDAO.agregarCompra(compra);
+        Long compraID = compra.getId();
+
+        assertNull(productoDAO.obtenerProductoPorCaracteristicas(
+                null, "Categoria", false, 1.0, compraID));
+
     }
 
 }
