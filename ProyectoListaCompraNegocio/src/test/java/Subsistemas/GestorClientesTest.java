@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
-package PruebasMock;
+package Subsistemas;
 
 import Conversiones.ClientesConversiones;
 import DAOs.ClienteDAO;
@@ -11,8 +7,6 @@ import DTOs.ClienteDTO;
 import Entidades.Cliente;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
-import Subsistemas.GestorClientes;
-import Subsistemas.IGestorClientes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -29,13 +23,16 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta - 245345 .
+ * @author Víctor Encinas - 244821 , José Armenta - 247641 , José Huerta -
+ * 245345 .
  */
 public class GestorClientesTest {
 
+    public GestorClientesTest() {
+    }
     private IClienteDAO clienteDAOMock;
     private IGestorClientes gestorClientes;
-    ClientesConversiones conversionesMock;
+    private ClientesConversiones conversionesMock;
 
     @BeforeAll
     public static void setUpClass() {
@@ -66,21 +63,16 @@ public class GestorClientesTest {
     @Test
     public void testAgregarCliente() throws PersistenciaException {
         try {
-            // Se crea un ClienteDTO de prueba
             ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
 
-            // Se simula la conversión de ClienteDTO a Cliente
             Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
             when(conversionesMock.convertirDTOAEntidad(any(ClienteDTO.class))).thenReturn(cliente);
             when(conversionesMock.convertirEntidadADTO(any(Cliente.class))).thenReturn(clienteDTO);
 
-            // Se simula que el DAO retorna un Cliente al agregar
             when(clienteDAOMock.agregarCliente(any(Cliente.class))).thenReturn(cliente);
 
-            // Se llama al método bajo prueba
             ClienteDTO resultadoDTO = gestorClientes.agregarCliente(clienteDTO);
 
-            // Se verifican las interacciones con los mocks
             verify(conversionesMock, times(1)).convertirDTOAEntidad(clienteDTO);
             verify(conversionesMock, times(1)).convertirEntidadADTO(cliente);
             verify(clienteDAOMock, times(1)).agregarCliente(cliente);
@@ -128,7 +120,7 @@ public class GestorClientesTest {
         String usuario = "toribio";
         String contrasenia = "ABCD1234";
 
-       ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
+        ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
 
         // Se simula que el DAO encuentra el cliente por usuario y contraseña

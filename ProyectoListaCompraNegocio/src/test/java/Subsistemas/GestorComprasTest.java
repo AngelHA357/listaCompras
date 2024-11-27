@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
-package PruebasMock;
+package Subsistemas;
 
 import Conversiones.CompraConversiones;
 import DAOs.CompraDAO;
@@ -13,9 +9,6 @@ import Entidades.Cliente;
 import Entidades.Compra;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
-import Subsistemas.GestorCompras;
-import Subsistemas.IGestorCompras;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,9 +35,12 @@ import static org.mockito.Mockito.when;
  */
 public class GestorComprasTest {
 
+    public GestorComprasTest() {
+    }
+
     private IGestorCompras gestorCompras;
     private ICompraDAO compraDAOMock;
-    CompraConversiones conversionesMock;
+    private CompraConversiones conversionesMock;
 
     @BeforeAll
     public static void setUpClass() {
@@ -249,7 +245,6 @@ public class GestorComprasTest {
         verify(compraDAOMock, never()).eliminarCompra(idInexistente);
     }
 
-    
     /**
      * Se verifica que se obtenga una compra existente por su nombre y cliente.
      *
@@ -328,5 +323,4 @@ public class GestorComprasTest {
         assertThrows(NegocioException.class, ()
                 -> gestorCompras.obtenerCompraPorNombreYCliente("Compra Test", 1L));
     }
-
 }

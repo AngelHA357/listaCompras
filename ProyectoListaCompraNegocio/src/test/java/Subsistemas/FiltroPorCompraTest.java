@@ -1,4 +1,4 @@
-package PruebasMock;
+package Subsistemas;
 
 import Conversiones.CompraConversiones;
 import Conversiones.ProductosConversiones;
@@ -11,10 +11,6 @@ import Entidades.Compra;
 import Entidades.Producto;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
-import Subsistemas.FiltroPorCompra;
-import Subsistemas.GestorCompras;
-import Subsistemas.IFiltroPorCompra;
-import Subsistemas.IGestorCompras;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -41,6 +37,9 @@ import static org.mockito.Mockito.when;
  * 245345 .
  */
 public class FiltroPorCompraTest {
+
+    public FiltroPorCompraTest() {
+    }
 
     private IFiltroPorCompra filtroCompra;
     private ICompraDAO compraDAOMock;
@@ -133,5 +132,4 @@ public class FiltroPorCompraTest {
 
         verify(productoDAOMock, never()).obtenerProductosPorCompraId(compraIdInexistente);
     }
-
 }

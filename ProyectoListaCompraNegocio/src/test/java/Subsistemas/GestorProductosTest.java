@@ -1,4 +1,5 @@
-package PruebasMock;
+
+package Subsistemas;
 
 import Conversiones.ProductosConversiones;
 import DAOs.IProductoDAO;
@@ -34,7 +35,10 @@ import static org.mockito.Mockito.when;
  * 245345 .
  */
 public class GestorProductosTest {
-
+    
+    public GestorProductosTest() {
+    }
+    
     private IGestorProductos gestorProductos;
     private IProductoDAO productoDAOMock;
     private ProductosConversiones conversionesMock;
