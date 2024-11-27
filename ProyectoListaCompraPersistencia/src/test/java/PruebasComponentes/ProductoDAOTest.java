@@ -294,7 +294,6 @@ public class ProductoDAOTest {
      */
     @Test
     public void testObtenerProductosPorCompraId() throws PersistenciaException {
-        // Preparar datos
         Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
         cliente = clienteDAO.agregarCliente(cliente);
         
@@ -306,10 +305,8 @@ public class ProductoDAOTest {
         productoDAO.agregarProducto(producto1);
         productoDAO.agregarProducto(producto2);
 
-        // Ejecutar prueba
         List<Producto> productos = productoDAO.obtenerProductosPorCompraId(compra.getId());
 
-        // Verificar resultados
         assertNotNull(productos);
         assertEquals(2, productos.size());
         assertTrue(productos.stream().anyMatch(p -> p.getNombre().equals("Papel")));
@@ -333,7 +330,6 @@ public class ProductoDAOTest {
      */
     @Test
     public void testObtenerProductoPorCaracteristicas() throws PersistenciaException {
-        // Preparar datos
         Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
         cliente = clienteDAO.agregarCliente(cliente);
 
@@ -343,11 +339,9 @@ public class ProductoDAOTest {
         Producto producto = new Producto("Papel", "Higiene Personal", false, compra, 6.0);
         productoDAO.agregarProducto(producto);
 
-        // Ejecutar prueba
         Producto encontrado = productoDAO.obtenerProductoPorCaracteristicas(
                 "Papel", "Higiene Personal", false, 6.0, compra.getId());
 
-        // Verificar resultados
         assertNotNull(encontrado);
         assertEquals("Papel", encontrado.getNombre());
         assertEquals("Higiene Personal", encontrado.getCategoria());
@@ -362,18 +356,15 @@ public class ProductoDAOTest {
      */
     @Test
     public void testObtenerProductoPorCaracteristicas_NoCoincide() throws PersistenciaException {
-        // Preparar datos
         Cliente cliente = new Cliente("Juan", "Pérez", "López", "juanpl", "pass123");
         cliente = clienteDAO.agregarCliente(cliente);
 
         Compra compra = new Compra("Compra Semanal", cliente);
         compra = compraDAO.agregarCompra(compra);
 
-        // Ejecutar prueba
         Producto encontrado = productoDAO.obtenerProductoPorCaracteristicas(
                 "Producto Inexistente", "Categoria", false, 1.0, compra.getId());
 
-        // Verificar resultados
         assertNull(encontrado);
     }
 
