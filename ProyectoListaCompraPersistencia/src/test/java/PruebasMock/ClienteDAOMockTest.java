@@ -8,6 +8,7 @@ import Conexion.IConexion;
 import DAOs.ClienteDAO;
 import Entidades.Cliente;
 import Exceptions.PersistenciaException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -16,10 +17,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -98,7 +96,7 @@ public class ClienteDAOMockTest {
     }
 
     @Test
-    public void testAgregarCliente_UsuarioNulo() throws PersistenciaException {
+    public void testAgregarCliente_UsuarioNulo() {
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", null, "ABCD1234");
 
         doThrow(new IllegalArgumentException("Usuario no puede ser nulo"))
@@ -112,7 +110,7 @@ public class ClienteDAOMockTest {
     }
 
     @Test
-    public void testAgregarCliente_UsuarioVacio() throws PersistenciaException {
+    public void testAgregarCliente_UsuarioVacio() {
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "", "ABCD1234");
 
         doThrow(new IllegalArgumentException("Usuario no puede estar vacío"))
@@ -126,7 +124,7 @@ public class ClienteDAOMockTest {
     }
 
     @Test
-    public void testAgregarCliente_ErrorPersistencia() throws PersistenciaException {
+    public void testAgregarCliente_ErrorPersistencia() {
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", "toribio", "ABCD1234");
 
         doThrow(new PersistenceException("Error al persistir"))
@@ -158,6 +156,17 @@ public class ClienteDAOMockTest {
     }
 
     @Test
+    public void testObtenerClientePorId_NoExiste() throws PersistenciaException {
+        Long clienteId = 999L;
+        when(mockEntityManager.find(Cliente.class, clienteId)).thenReturn(null);
+
+        Cliente resultado = clienteDAO.obtenerClientePorId(clienteId);
+
+        assertNull(resultado);
+        verify(mockEntityManager).find(Cliente.class, clienteId);
+    }
+
+    @Test
     public void testObtenerTodosLosClientes() throws PersistenciaException {
         List<Cliente> clientesEsperados = Arrays.asList(
                 new Cliente("Cliente 1", "Apellido 1", "Apellido 1", "usuario1", "pass1"),
@@ -179,6 +188,32 @@ public class ClienteDAOMockTest {
 
         verify(mockEntityManager).createQuery("SELECT c FROM Cliente c");
         verify(mockQuery).getResultList();
+    }
+
+    @Test
+    public void testObtenerTodosLosClientes_ListaVacia() throws PersistenciaException {
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Cliente c")).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
+
+        List<Cliente> resultado = clienteDAO.obtenerTodosLosClientes();
+
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+
+        verify(mockEntityManager).createQuery("SELECT c FROM Cliente c");
+        verify(mockQuery).getResultList();
+    }
+
+    @Test
+    public void testObtenerTodosLosClientes_ErrorConsulta() {
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Cliente c")).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenThrow(new PersistenceException("Error en consulta"));
+
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.obtenerTodosLosClientes();
+        });
     }
 
     @Test
@@ -241,7 +276,95 @@ public class ClienteDAOMockTest {
     public void testObtenerClientePorUsuarioYContrasena_ContraseniaNula() {
         assertThrows(PersistenciaException.class, () -> {
             clienteDAO.obtenerClientePorUsuarioYContrasena("usuario", null);
-
         });
+    }
+
+    @Test
+    public void testObtenerClientePorUsuarioYContrasena_ContraseniaVacia() {
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.obtenerClientePorUsuarioYContrasena("usuario", "");
+        });
+    }
+
+    @Test
+    public void testActualizarCliente() throws PersistenciaException {
+        Cliente cliente = new Cliente("Pedro", "Ruiz", "Díaz", "pedro", "789XYZ");
+        cliente.setId(1L);
+
+        when(mockEntityManager.merge(any(Cliente.class))).thenReturn(cliente);
+        when(mockEntityManager.find(eq(Cliente.class), anyLong())).thenReturn(cliente);
+
+        Cliente resultado = clienteDAO.actualizarCliente(cliente);
+
+        assertNotNull(resultado);
+        assertEquals("Pedro", resultado.getNombre());
+        assertEquals("Ruiz", resultado.getApellidoPaterno());
+
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).merge(any(Cliente.class));
+        verify(mockEntityManager).find(eq(Cliente.class), anyLong());
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    public void testActualizarCliente_ErrorPersistencia() {
+        Cliente cliente = new Cliente("Luis", "Torres", "Gómez", "luis", "ABC987");
+        cliente.setId(1L);
+
+        when(mockEntityManager.merge(any(Cliente.class)))
+                .thenThrow(new PersistenceException("Error al actualizar"));
+
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.actualizarCliente(cliente);
+        });
+
+        verify(mockTransaction).rollback();
+    }
+
+    @Test
+    public void testEliminarCliente() throws PersistenciaException {
+        Long clienteId = 1L;
+        Cliente cliente = new Cliente("Sofia", "Vega", "Castro", "sofia", "123SOF");
+        cliente.setId(clienteId);
+
+        when(mockEntityManager.find(Cliente.class, clienteId)).thenReturn(cliente);
+
+        Cliente resultado = clienteDAO.eliminarCliente(clienteId);
+
+        assertNotNull(resultado);
+        assertEquals(clienteId, resultado.getId());
+        assertEquals("Sofia", resultado.getNombre());
+
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).remove(cliente);
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    public void testEliminarCliente_NoExiste() throws PersistenciaException {
+        Long clienteId = 999L;
+        when(mockEntityManager.find(Cliente.class, clienteId)).thenReturn(null);
+
+        Cliente resultado = clienteDAO.eliminarCliente(clienteId);
+
+        assertNull(resultado);
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    public void testEliminarCliente_ErrorPersistencia() {
+        Long clienteId = 1L;
+        Cliente cliente = new Cliente("Maria", "López", "Ruiz", "maria", "456MLR");
+        cliente.setId(clienteId);
+
+        when(mockEntityManager.find(Cliente.class, clienteId)).thenReturn(cliente);
+        doThrow(new PersistenceException("Error al eliminar"))
+                .when(mockEntityManager).remove(any(Cliente.class));
+
+        assertThrows(PersistenciaException.class, () -> {
+            clienteDAO.eliminarCliente(clienteId);
+        });
+
+        verify(mockTransaction).rollback();
     }
 }

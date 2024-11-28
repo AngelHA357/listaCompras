@@ -1,4 +1,3 @@
-
 package Subsistemas;
 
 import Conversiones.ProductosConversiones;
@@ -8,8 +7,6 @@ import DTOs.ProductoDTO;
 import Entidades.Producto;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
-import Subsistemas.GestorProductos;
-import Subsistemas.IGestorProductos;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -35,10 +32,10 @@ import static org.mockito.Mockito.when;
  * 245345 .
  */
 public class GestorProductosTest {
-    
+
     public GestorProductosTest() {
     }
-    
+
     private IGestorProductos gestorProductos;
     private IProductoDAO productoDAOMock;
     private ProductosConversiones conversionesMock;
@@ -291,4 +288,83 @@ public class GestorProductosTest {
         verify(conversionesMock, never()).entidadADTO(any(), anyBoolean());
     }
 
+    @Test
+    public void testAgregarProducto_NombreVacio() {
+        ProductoDTO productoDTO = new ProductoDTO("", "Categoria A", false, null, 5.0);
+
+        assertThrows(NegocioException.class, () -> {
+            gestorProductos.agregarProducto(productoDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarProducto_CantidadCero() {
+        ProductoDTO productoDTO = new ProductoDTO("Producto Test", "Categoria A", false, null, 0.0);
+
+        assertThrows(NegocioException.class, () -> {
+            gestorProductos.agregarProducto(productoDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarProducto_CantidadNegativa() {
+        ProductoDTO productoDTO = new ProductoDTO("Producto Test", "Categoria A", false, null, -1.0);
+
+        assertThrows(NegocioException.class, () -> {
+            gestorProductos.agregarProducto(productoDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarProducto_ErrorPersistencia() throws PersistenciaException {
+        ProductoDTO productoDTO = new ProductoDTO("Producto Test", "Categoria A", false, null, 5.0);
+        Producto producto = new Producto("Producto Test", "Categoria A", false, null, 5.0);
+
+        when(conversionesMock.dtoAEntidad(any(ProductoDTO.class))).thenReturn(producto);
+        when(productoDAOMock.agregarProducto(any(Producto.class))).thenThrow(new PersistenciaException("Error de conexión"));
+
+        assertThrows(NegocioException.class, () -> {
+            gestorProductos.agregarProducto(productoDTO);
+        });
+    }
+
+    @Test
+    public void testObtenerProductoPorId_ErrorPersistencia() throws PersistenciaException {
+        when(productoDAOMock.obtenerProductoPorId(anyLong())).thenThrow(new PersistenciaException("Error de conexión"));
+
+        assertThrows(NegocioException.class, () -> {
+            gestorProductos.obtenerProductoPorId(1L);
+        });
+
+        verify(productoDAOMock, times(1)).obtenerProductoPorId(1L);
+    }
+
+    @Test
+    public void testActualizarProducto_ErrorPersistencia() throws PersistenciaException {
+        ProductoDTO productoDTO = new ProductoDTO("Producto Test", "Categoria A", false, null, 5.0);
+        productoDTO.setId(1L);
+
+        Producto productoExistente = new Producto("Producto Test", "Categoria A", false, null, 5.0);
+        productoExistente.setId(1L);
+
+        when(productoDAOMock.obtenerProductoPorId(1L)).thenReturn(productoExistente);
+
+        Producto productoActualizado = new Producto("Producto Test", "Categoria A", false, null, 5.0);
+        productoActualizado.setId(1L);
+        when(conversionesMock.dtoAEntidad(productoDTO)).thenReturn(productoActualizado);
+
+        when(productoDAOMock.actualizarProducto(any(Producto.class)))
+                .thenThrow(new PersistenciaException("Error al actualizar en la base de datos"));
+
+        NegocioException thrown = assertThrows(
+                NegocioException.class,
+                () -> gestorProductos.actualizarProducto(productoDTO)
+        );
+
+        assertEquals("Error al actualizar el producto", thrown.getMessage());
+
+        verify(productoDAOMock).obtenerProductoPorId(1L);
+        verify(conversionesMock).dtoAEntidad(productoDTO);
+        verify(productoDAOMock).actualizarProducto(any(Producto.class));
+    }
 }

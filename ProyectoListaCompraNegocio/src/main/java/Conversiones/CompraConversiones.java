@@ -22,6 +22,11 @@ public class CompraConversiones {
         this.productosConversiones = new ProductosConversiones();
         this.clientesConversiones = new ClientesConversiones();
     }
+    
+    public CompraConversiones(ProductosConversiones productosConversiones, ClientesConversiones clientesConversiones) {
+        this.productosConversiones = productosConversiones;
+        this.clientesConversiones = clientesConversiones;
+    }
 
     public Compra dtoAEntidad(CompraDTO compraDTO) {
         if (compraDTO == null) {

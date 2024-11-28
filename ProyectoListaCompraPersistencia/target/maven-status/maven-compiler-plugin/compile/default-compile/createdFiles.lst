@@ -4,7 +4,6 @@ DAOs\IProductoDAO.class
 Conexion\Conexion.class
 Conexion\IConexion.class
 Entidades\Cliente.class
-com\mycompany\proyectolistacomprapersistencia\ProyectoListaCompraPersistencia.class
 DAOs\CompraDAO.class
 DAOs\ProductoDAO.class
 Entidades\Compra.class

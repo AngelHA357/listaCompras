@@ -17,17 +17,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doAnswer;
@@ -294,24 +290,20 @@ public class ProductoDAOMockTest {
 
     @Test
     public void testObtenerProductosPorCompraId() throws PersistenciaException {
-        // Datos de prueba
         Long compraId = 1L;
         List<Producto> productosEsperados = Arrays.asList(
                 new Producto("Papel", "Higiene Personal", false, new Compra(), 6.0),
                 new Producto("Jabón", "Higiene Personal", false, new Compra(), 3.0)
         );
 
-        // Configurar el mock para Query
         Query mockQuery = mock(Query.class);
         when(mockEntityManager.createQuery("SELECT p FROM Producto p WHERE p.compra.id = :compraId"))
                 .thenReturn(mockQuery);
         when(mockQuery.setParameter("compraId", compraId)).thenReturn(mockQuery);
         when(mockQuery.getResultList()).thenReturn(productosEsperados);
 
-        // Ejecutar el método
         List<Producto> resultado = productoDAO.obtenerProductosPorCompraId(compraId);
 
-        // Verificaciones
         assertNotNull(resultado);
         assertEquals(2, resultado.size());
         verify(mockEntityManager).createQuery("SELECT p FROM Producto p WHERE p.compra.id = :compraId");
@@ -323,20 +315,166 @@ public class ProductoDAOMockTest {
     public void testObtenerProductosPorCompraId_CompraInexistente() throws PersistenciaException {
         Long compraIdInexistente = 99999L;
 
-        // Configurar el mock para Query con lista vacía
         Query mockQuery = mock(Query.class);
         when(mockEntityManager.createQuery("SELECT p FROM Producto p WHERE p.compra.id = :compraId"))
                 .thenReturn(mockQuery);
         when(mockQuery.setParameter("compraId", compraIdInexistente)).thenReturn(mockQuery);
         when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
 
-        // Ejecutar el método
         List<Producto> resultado = productoDAO.obtenerProductosPorCompraId(compraIdInexistente);
 
-        // Verificaciones
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());
         verify(mockEntityManager).createQuery(anyString());
         verify(mockQuery).setParameter("compraId", compraIdInexistente);
+    }
+
+    @Test
+    public void testAgregarProductoTransacciones() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+
+        when(mockEntityManager.getTransaction()).thenReturn(null);
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.agregarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager).close();
+
+        when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
+        when(mockTransaction.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("Error simulado"))
+                .when(mockEntityManager).persist(any(Producto.class));
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.agregarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager, times(2)).close();
+    }
+
+    @Test
+    public void testAgregarProductoTransaccionNull() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+        when(mockEntityManager.getTransaction()).thenReturn(null);
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.agregarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    public void testAgregarProductoTransaccionInactiva() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+        when(mockTransaction.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("Error de prueba"))
+                .when(mockEntityManager).persist(any(Producto.class));
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.agregarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    public void testAgregarProductoVerificaCondicionesTransaccion() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+
+        when(mockEntityManager.getTransaction()).thenReturn(null);
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.agregarProducto(producto)
+        );
+
+        when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
+        when(mockTransaction.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("Error de prueba"))
+                .when(mockEntityManager).persist(any(Producto.class));
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.agregarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager, times(2)).close();
+    }
+
+    @Test
+    public void testActualizarProductoTransaccionNull() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+        when(mockEntityManager.getTransaction()).thenReturn(null);
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.actualizarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    public void testActualizarProductoTransaccionInactiva() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+        when(mockTransaction.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("Error de prueba"))
+                .when(mockEntityManager).merge(any(Producto.class));
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.actualizarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    public void testActualizarProductoVerificaCondicionesTransaccion() {
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+
+        when(mockEntityManager.getTransaction()).thenReturn(null);
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.actualizarProducto(producto)
+        );
+
+        when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
+        when(mockTransaction.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("Error de prueba"))
+                .when(mockEntityManager).merge(any(Producto.class));
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.actualizarProducto(producto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager, times(2)).close();
+    }
+
+    @Test
+    public void testEliminarProductoVerificaCondicionesTransaccion() {
+        Long idProducto = 1L;
+        Producto producto = new Producto("Test", "Categoría", false, new Compra(), 1.0);
+        when(mockEntityManager.find(eq(Producto.class), anyLong())).thenReturn(producto);
+
+        when(mockEntityManager.getTransaction()).thenReturn(null);
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.eliminarProducto(idProducto)
+        );
+
+        when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
+        when(mockTransaction.isActive()).thenReturn(false);
+        doThrow(new RuntimeException("Error de prueba"))
+                .when(mockEntityManager).remove(any(Producto.class));
+
+        assertThrows(PersistenciaException.class, ()
+                -> productoDAO.eliminarProducto(idProducto)
+        );
+
+        verify(mockTransaction, never()).rollback();
+        verify(mockEntityManager, times(2)).close();
     }
 }

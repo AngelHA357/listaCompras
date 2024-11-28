@@ -1,4 +1,5 @@
 PruebasComponentes\CompraTest.class
+Conexion\ConexionTest.class
 PruebasComponentes\CompraDAOTest.class
 PruebasComponentes\ProductoDAOTest.class
 PruebasMock\CompraMockTest.class

@@ -8,30 +8,25 @@ import Conexion.IConexion;
 import DAOs.CompraDAO;
 import Entidades.Cliente;
 import Entidades.Compra;
+import Entidades.Producto;
 import Exceptions.PersistenciaException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
-/**
- *
- * @author JoseH
- */
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import javax.persistence.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *
+ * @author JoseH
+ */
 public class CompraDAOMockTest {
 
     @Mock
@@ -262,4 +257,146 @@ public class CompraDAOMockTest {
             compraDAO.obtenerCompraPorNombreYCliente("", clienteId);
         });
     }
+
+    @Test
+    public void testEliminarCompra() throws PersistenciaException {
+        Long compraId = 1L;
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente.setId(1L);
+        Compra compra = new Compra("Compra Test", cliente);
+        compra.setId(compraId);
+
+        when(mockEntityManager.find(Compra.class, compraId)).thenReturn(compra);
+
+        compraDAO.eliminarCompra(compraId);
+
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).find(Compra.class, compraId);
+        verify(mockEntityManager).remove(compra);
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    public void testObtenerComprasPorCliente() throws PersistenciaException {
+        Long clienteId = 1L;
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente.setId(clienteId);
+        List<Compra> comprasEsperadas = Arrays.asList(
+                new Compra("Compra 1", cliente),
+                new Compra("Compra 2", cliente)
+        );
+
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId"))
+                .thenReturn(mockQuery);
+        when(mockQuery.setParameter("clienteId", clienteId)).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(comprasEsperadas);
+
+        List<Compra> resultado = compraDAO.obtenerComprasPorCliente(clienteId);
+
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+
+        verify(mockEntityManager).createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId");
+        verify(mockQuery).setParameter("clienteId", clienteId);
+        verify(mockQuery).getResultList();
+    }
+
+    @Test
+    public void testObtenerComprasPorCliente_SinCompras() throws PersistenciaException {
+        Long clienteId = 1L;
+        List<Compra> comprasVacias = new ArrayList<>();
+
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId"))
+                .thenReturn(mockQuery);
+        when(mockQuery.setParameter("clienteId", clienteId)).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(comprasVacias);
+
+        List<Compra> resultado = compraDAO.obtenerComprasPorCliente(clienteId);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+
+        verify(mockEntityManager).createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId");
+        verify(mockQuery).setParameter("clienteId", clienteId);
+        verify(mockQuery).getResultList();
+    }
+
+    @Test
+    public void testObtenerComprasPorCliente_ErrorConsulta() {
+        Long clienteId = 1L;
+
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Compra c WHERE c.cliente.id = :clienteId"))
+                .thenReturn(mockQuery);
+        when(mockQuery.setParameter("clienteId", clienteId)).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenThrow(new PersistenceException("Error en consulta"));
+
+        assertThrows(PersistenciaException.class, () -> {
+            compraDAO.obtenerComprasPorCliente(clienteId);
+        });
+    }
+
+    @Test
+    public void testEliminarCompra_CompraInexistente() throws PersistenciaException {
+        Long compraId = 999L;
+
+        when(mockEntityManager.find(Compra.class, compraId)).thenReturn(null);
+
+        compraDAO.eliminarCompra(compraId);
+
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).find(Compra.class, compraId);
+        verify(mockEntityManager, never()).remove(any(Compra.class));
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    public void testEliminarCompra_ErrorPersistencia() {
+        Long compraId = 1L;
+        Cliente cliente = new Cliente("Nombre", "Apellido1", "Apellido2", "Usuario", "Contraseña");
+        cliente.setId(1L);
+        Compra compra = new Compra("Compra Test", cliente);
+        compra.setId(compraId);
+
+        when(mockEntityManager.find(Compra.class, compraId)).thenReturn(compra);
+        doThrow(new PersistenceException("Error al eliminar"))
+                .when(mockEntityManager).remove(any(Compra.class));
+
+        assertThrows(PersistenciaException.class, () -> {
+            compraDAO.eliminarCompra(compraId);
+        });
+
+        verify(mockTransaction).rollback();
+    }
+
+    @Test
+    public void testObtenerCompraPorNombreYCliente_ErrorConsulta() {
+        Long clienteId = 1L;
+        String nombreCompra = "Compra Test";
+
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Compra c WHERE c.nombre = :nombre AND c.cliente.id = :clienteId"))
+                .thenReturn(mockQuery);
+        when(mockQuery.setParameter("nombre", nombreCompra)).thenReturn(mockQuery);
+        when(mockQuery.setParameter("clienteId", clienteId)).thenReturn(mockQuery);
+        when(mockQuery.getSingleResult()).thenThrow(new PersistenceException("Error en consulta"));
+
+        assertThrows(PersistenciaException.class, () -> {
+            compraDAO.obtenerCompraPorNombreYCliente(nombreCompra, clienteId);
+        });
+    }
+
+    @Test
+    public void testObtenerTodasLasCompras_ErrorConsulta() {
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery("SELECT c FROM Compra c")).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenThrow(new PersistenceException("Error en consulta"));
+
+        assertThrows(PersistenciaException.class, () -> {
+            compraDAO.obtenerTodasLasCompras();
+        });
+    }
+
 }

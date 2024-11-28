@@ -7,6 +7,8 @@ import DTOs.ClienteDTO;
 import Entidades.Cliente;
 import Exceptions.NegocioException;
 import Exceptions.PersistenciaException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -123,7 +125,6 @@ public class GestorClientesTest {
         ClienteDTO clienteDTO = new ClienteDTO("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
         Cliente cliente = new Cliente("Victor Humberto", "Encinas", "Guzmán", usuario, contrasenia);
 
-        // Se simula que el DAO encuentra el cliente por usuario y contraseña
         when(clienteDAOMock.obtenerClientePorUsuarioYContrasena(usuario, contrasenia)).thenReturn(cliente);
         when(conversionesMock.convertirEntidadADTO(cliente)).thenReturn(clienteDTO);
 
@@ -133,7 +134,6 @@ public class GestorClientesTest {
         assertEquals(usuario, clienteObtenido.getUsuario());
         assertEquals(contrasenia, clienteObtenido.getContrasenia());
 
-        // Se verifican las interacciones con los mocks
         verify(clienteDAOMock, times(1)).obtenerClientePorUsuarioYContrasena(usuario, contrasenia);
         verify(conversionesMock, times(1)).convertirEntidadADTO(cliente);
     }
@@ -185,4 +185,71 @@ public class GestorClientesTest {
             gestorClientes.encontrarClientePorUsuarioYContrasena(usuario, contrasenia);
         });
     }
+
+    @Test
+    public void testAgregarCliente_NombreVacio() {
+        ClienteDTO clienteDTO = new ClienteDTO("", "Encinas", "Guzmán", "toribio", "ABCD1234");
+
+        assertThrows(NegocioException.class, () -> {
+            gestorClientes.agregarCliente(clienteDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarCliente_ApellidoPaternoVacio() {
+        ClienteDTO clienteDTO = new ClienteDTO("Victor", "", "Guzmán", "toribio", "ABCD1234");
+
+        assertThrows(NegocioException.class, () -> {
+            gestorClientes.agregarCliente(clienteDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarCliente_ApellidoMaternoVacio() {
+        ClienteDTO clienteDTO = new ClienteDTO("Victor", "Encinas", "", "toribio", "ABCD1234");
+
+        assertThrows(NegocioException.class, () -> {
+            gestorClientes.agregarCliente(clienteDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarCliente_ContraseniaVacia() {
+        ClienteDTO clienteDTO = new ClienteDTO("Victor", "Encinas", "Guzmán", "toribio", "");
+
+        assertThrows(NegocioException.class, () -> {
+            gestorClientes.agregarCliente(clienteDTO);
+        });
+    }
+
+    @Test
+    public void testAgregarCliente_UsuarioExistente() throws PersistenciaException {
+        ClienteDTO clienteDTO = new ClienteDTO("Victor", "Encinas", "Guzmán", "toribio", "ABCD1234");
+        List<Cliente> clientesExistentes = new ArrayList<>();
+        clientesExistentes.add(new Cliente("Otro", "Usuario", "Existente", "toribio", "otra123"));
+
+        when(clienteDAOMock.obtenerTodosLosClientes()).thenReturn(clientesExistentes);
+
+        assertThrows(NegocioException.class, () -> {
+            gestorClientes.agregarCliente(clienteDTO);
+        });
+
+        verify(clienteDAOMock, times(1)).obtenerTodosLosClientes();
+    }
+
+    @Test
+    public void testAgregarCliente_ErrorPersistencia() throws PersistenciaException, NegocioException {
+        ClienteDTO clienteDTO = new ClienteDTO("Victor", "Encinas", "Guzmán", "toribio", "ABCD1234");
+        Cliente cliente = new Cliente("Victor", "Encinas", "Guzmán", "toribio", "ABCD1234");
+
+        when(clienteDAOMock.obtenerTodosLosClientes()).thenThrow(new PersistenciaException("Error de conexión"));
+        when(conversionesMock.convertirDTOAEntidad(any(ClienteDTO.class))).thenReturn(cliente);
+
+        ClienteDTO resultado = gestorClientes.agregarCliente(clienteDTO);
+        assertNull(resultado);
+
+        verify(clienteDAOMock, times(1)).obtenerTodosLosClientes();
+    }
+    
+    
 }

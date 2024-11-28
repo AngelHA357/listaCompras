@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: Conexion.ConexionTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.411 s - in Conexion.ConexionTest

@@ -12,7 +12,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>com.mycompany.proyectolistacomprapersistencia.ProyectoListaCompraPersistencia</exec.mainClass>
         <junit.jupiter.version>5.6.0</junit.jupiter.version>
     </properties>
 
@@ -23,6 +22,20 @@
                 <artifactId>maven-surefire-plugin</artifactId> 
                 <version>2.22.0</version> 
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -88,6 +101,10 @@
                         <param>PruebasComponentes.CompraDAOTest</param>
                         <param>PruebasComponentes.CompraTest</param>
                         <param>PruebasComponentes.ProductoDAOTest</param>
+                        <param>PruebasMock.ClienteDAOMockTest</param>
+                        <param>PruebasMock.CompraDAOMockTest</param>
+                        <param>PruebasMock.CompraMockTest</param>
+                        <param>PruebasMock.ProductoDAOMockTest</param>
                         <param>*</param>
                     </targetTests>
                     <verbose>true</verbose>

@@ -19,6 +19,10 @@ public class ProductosConversiones {
     public ProductosConversiones() {
         this.clientesConversiones = new ClientesConversiones();
     }
+    
+    public ProductosConversiones(ClientesConversiones clientesConversiones) {
+        this.clientesConversiones = clientesConversiones;
+    }
 
     public Producto dtoAEntidad(ProductoDTO dto) {
         if (dto == null) {

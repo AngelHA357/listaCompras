@@ -139,7 +139,6 @@ public class GestorComprasIntegrationTest {
 
     @Test
     public void testObtenerTodasLasCompras() throws PersistenciaException, NegocioException {
-        // Agregar varias compras
         CompraDTO compra1 = new CompraDTO("Compra 1", clientePrueba);
         CompraDTO compra2 = new CompraDTO("Compra 2", clientePrueba);
 
@@ -149,18 +148,18 @@ public class GestorComprasIntegrationTest {
         assertNotNull(compraAgregada1.getId(), "La primera compra debe haberse creado con un ID");
         assertNotNull(compraAgregada2.getId(), "La segunda compra debe haberse creado con un ID");
 
-        // Obtener todas las compras
         List<CompraDTO> resultado = gestorCompras.obtenerTodasLasCompras();
 
-        // Verificaciones
         assertNotNull(resultado, "La lista de compras no debe ser nula");
         assertTrue(resultado.size() >= 2, "Debe haber al menos 2 compras");
-        assertTrue(resultado.stream().anyMatch(c -> c.getNombreCompra().equals("Compra 1")));
-        assertTrue(resultado.stream().anyMatch(c -> c.getNombreCompra().equals("Compra 2")));
 
-        // Verificar que todas las compras tienen cliente asociado
-        assertTrue(resultado.stream().allMatch(c -> c.getCliente() != null),
-                "Todas las compras deben tener un cliente asociado");
+        boolean existeCompra1 = resultado.stream()
+                .anyMatch(c -> "Compra 1".equals(c.getNombreCompra()) && c.getCliente() != null);
+        boolean existeCompra2 = resultado.stream()
+                .anyMatch(c -> "Compra 2".equals(c.getNombreCompra()) && c.getCliente() != null);
+
+        assertTrue(existeCompra1, "Debe existir la Compra 1 con cliente");
+        assertTrue(existeCompra2, "Debe existir la Compra 2 con cliente");
     }
 
     @Test

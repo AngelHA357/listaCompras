@@ -38,11 +38,11 @@ public class ProductoDAO implements IProductoDAO {
 <span class="fc" id="L38">            em.persist(producto); // Inserta el producto en la base de datos</span>
 <span class="fc" id="L39">            tx.commit();</span>
 <span class="fc" id="L40">            return em.find(Producto.class, producto.getId());</span>
-<span class="nc" id="L41">        } catch (Exception e) {</span>
-<span class="nc bnc" id="L42" title="All 4 branches missed.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
-<span class="nc" id="L43">                tx.rollback(); // Deshacer la transacción en caso de error</span>
+<span class="fc" id="L41">        } catch (Exception e) {</span>
+<span class="fc bfc" id="L42" title="All 4 branches covered.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
+<span class="fc" id="L43">                tx.rollback(); // Deshacer la transacción en caso de error</span>
             }
-<span class="nc" id="L45">            throw new PersistenciaException(&quot;Error al agregar el producto: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L45">            throw new PersistenciaException(&quot;Error al agregar el producto: &quot; + e.getMessage(), e);</span>
         } finally {
 <span class="pc bpc" id="L47" title="1 of 2 branches missed.">            if (em != null) {</span>
 <span class="fc" id="L48">                em.close();</span>
@@ -112,11 +112,11 @@ public class ProductoDAO implements IProductoDAO {
 <span class="fc" id="L112">            em.merge(producto); // Actualiza el producto</span>
 <span class="fc" id="L113">            tx.commit();</span>
 <span class="fc" id="L114">            return em.find(Producto.class, producto.getId());</span>
-<span class="nc" id="L115">        } catch (Exception e) {</span>
-<span class="nc bnc" id="L116" title="All 4 branches missed.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
-<span class="nc" id="L117">                tx.rollback(); // Deshacer la transacción en caso de error</span>
+<span class="fc" id="L115">        } catch (Exception e) {</span>
+<span class="fc bfc" id="L116" title="All 4 branches covered.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
+<span class="fc" id="L117">                tx.rollback(); // Deshacer la transacción en caso de error</span>
             }
-<span class="nc" id="L119">            throw new PersistenciaException(&quot;Error al actualizar el producto: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L119">            throw new PersistenciaException(&quot;Error al actualizar el producto: &quot; + e.getMessage(), e);</span>
         } finally {
 <span class="pc bpc" id="L121" title="1 of 2 branches missed.">            if (em != null) {</span>
 <span class="fc" id="L122">                em.close();</span>
@@ -145,11 +145,11 @@ public class ProductoDAO implements IProductoDAO {
 <span class="fc" id="L145">                em.remove(productoEliminado); // Elimina el producto si existe</span>
             }
 <span class="fc" id="L147">            tx.commit();</span>
-<span class="nc" id="L148">        } catch (Exception e) {</span>
-<span class="nc bnc" id="L149" title="All 4 branches missed.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
-<span class="nc" id="L150">                tx.rollback(); // Deshacer la transacción en caso de error</span>
+<span class="fc" id="L148">        } catch (Exception e) {</span>
+<span class="fc bfc" id="L149" title="All 4 branches covered.">            if (tx != null &amp;&amp; tx.isActive()) {</span>
+<span class="fc" id="L150">                tx.rollback(); // Deshacer la transacción en caso de error</span>
             }
-<span class="nc" id="L152">            throw new PersistenciaException(&quot;Error al eliminar el producto: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L152">            throw new PersistenciaException(&quot;Error al eliminar el producto: &quot; + e.getMessage(), e);</span>
         } finally {
 <span class="pc bpc" id="L154" title="1 of 2 branches missed.">            if (em != null) {</span>
 <span class="fc" id="L155">                em.close();</span>
