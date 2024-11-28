@@ -79,28 +79,28 @@ public class panelListaProductos extends javax.swing.JPanel {
      * Permite llenar la tabla con las listas de productos que tiene una compra.
      */
     private void mostrarListaProductos() throws NegocioException {
-    tblListaProductos.setModel(modelo);
-    modelo.setRowCount(0);
-    
-    try {
-        List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId());
-        
-        // Si la lista no es null y tiene elementos, los agregamos a la tabla
-        if (listaProductoCliente != null && !listaProductoCliente.isEmpty()) {
-            listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado()}));
-        }
-        // Si la lista está vacía, simplemente dejamos la tabla vacía (no es un error)
-        
-    } catch (Exception e) {
-        // Si ocurre algún error que no sea relacionado con lista vacía, lo registramos
-        Logger.getLogger(panelListaProductos.class.getName()).log(Level.INFO, 
-            "La compra {0} no tiene productos asociados - Esto es normal para compras nuevas", 
-            compra.getId());
-    }
+        tblListaProductos.setModel(modelo);
+        modelo.setRowCount(0);
 
-    realizarAccionCheckbox();
-    aplicarColorFilas();
-}
+        try {
+            List<ProductoDTO> listaProductoCliente = filtroCompra.obtenerProductosFiltrarPorCompra(compra.getId());
+
+            // Si la lista no es null y tiene elementos, los agregamos a la tabla
+            if (listaProductoCliente != null && !listaProductoCliente.isEmpty()) {
+                listaProductoCliente.forEach(p -> modelo.addRow(new Object[]{p.getNombre(), p.getCantidad(), p.getCategoria(), p.isComprado()}));
+            }
+            // Si la lista está vacía, simplemente dejamos la tabla vacía (no es un error)
+
+        } catch (Exception e) {
+            // Si ocurre algún error que no sea relacionado con lista vacía, lo registramos
+            Logger.getLogger(panelListaProductos.class.getName()).log(Level.INFO,
+                    "La compra {0} no tiene productos asociados - Esto es normal para compras nuevas",
+                    compra.getId());
+        }
+
+        realizarAccionCheckbox();
+        aplicarColorFilas();
+    }
 
     /**
      * Permite que el checkBox cambie el estado de producto como comprado.
@@ -117,18 +117,18 @@ public class panelListaProductos extends javax.swing.JPanel {
                         productoBuscar.setCantidad(Double.valueOf(modelo.getValueAt(row, 1).toString()));
                         productoBuscar.setCategoria(modelo.getValueAt(row, 2).toString());
                         productoBuscar.setComprado(false);
-                        
+
                         ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
-                        
+
                         productoSelec.setComprado(comprado);
                         productoSelec.setCompra(compra);
                         try {
                             gestorProductos.actualizarProducto(productoSelec);
                         } catch (NegocioException ex) {
-                            Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                            System.out.println(ex.getMessage());
                         }
                     } catch (NegocioException ex) {
-                        Logger.getLogger(panelListaProductos.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println(ex.getMessage());
                     }
                 }
             }
@@ -214,11 +214,11 @@ public class panelListaProductos extends javax.swing.JPanel {
                     if (filaSeleccionada != -1) {
                         try {
                             Object[] datosFila = new Object[tblListaProductos.getColumnCount()];
-                            
+
                             for (int i = 0; i < tblListaProductos.getColumnCount(); i++) {
                                 datosFila[i] = tblListaProductos.getValueAt(filaSeleccionada, i);
                             }
-                            
+
                             ProductoDTO productoBuscar = new ProductoDTO();
                             productoBuscar.setNombre(datosFila[0].toString());
                             productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
@@ -226,7 +226,7 @@ public class panelListaProductos extends javax.swing.JPanel {
                             productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
                             ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
                             productoSelec.setCompra(compra);
-                            
+
                             panelDatosProducto actualizarDatosProducto = new panelDatosProducto(menuInicio, compra, productoSelec, true);
                             menuInicio.mostrarPanel(actualizarDatosProducto);
                         } catch (NegocioException ex) {
@@ -441,7 +441,7 @@ public class panelListaProductos extends javax.swing.JPanel {
                     productoBuscar.setCantidad(Double.valueOf(datosFila[1].toString()));
                     productoBuscar.setCategoria(datosFila[2].toString());
                     productoBuscar.setComprado(Boolean.parseBoolean(datosFila[3].toString()));
-                    
+
                     ProductoDTO productoSelec = gestorProductos.obtenerProductoPorCaracteristicas(productoBuscar.getNombre(), productoBuscar.getCategoria(), productoBuscar.isComprado(), productoBuscar.getCantidad(), compra.getId());
                     gestorProductos.eliminarProducto(productoSelec.getId());
                     mostrarListaProductos();

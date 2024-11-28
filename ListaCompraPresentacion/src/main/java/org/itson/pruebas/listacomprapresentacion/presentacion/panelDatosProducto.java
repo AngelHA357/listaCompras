@@ -221,30 +221,49 @@ public class panelDatosProducto extends javax.swing.JPanel {
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         Validadores validador = new Validadores();
         if (validarCamposLlenos()) {
-            if (validador.validarCantidad(txtCantidad.getText())) {
+            if (validador.validarLongitudNombreProducto(txtNombre.getText())) {
+                if (validador.validarCantidad(txtCantidad.getText())) {
+                    if (validador.validarDecimalesCantidad(txtCantidad.getText())) {
+                        if (validador.validarRangoCantidad(Double.parseDouble(txtCantidad.getText()))) {
+                            if (validador.validarLongitudCategoriaProducto(txtCategoría.getText())) {
+                                if (validador.validarCategoria(txtCategoría.getText())) {
+                                    try {
+                                        if (isUpdating) {
+                                            try {
+                                                actualizarDatos();
+                                            } catch (NegocioException ex) {
+                                                Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        } else {
+                                            try {
+                                                guardarProducto();
+                                            } catch (NegocioException ex) {
+                                                Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        }
 
-                try {
-                    if (isUpdating) {
-                        try {
-                            actualizarDatos();
-                        } catch (NegocioException ex) {
-                            Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                                        panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
+                                        menuInicio.mostrarPanel(agregarProducto);
+                                    } catch (NegocioException ex) {
+                                        Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(this, "Los caracteres especiales no estan permitidos para la categoria", "Categoría inválida", JOptionPane.ERROR_MESSAGE);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(this, "La cantidad de caracteres en la categoría no puede ser mayor a 50", "Longitud de categoría inválida", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Ingrese un valor numérico mayor a 0 y menor que 10,000 en la cantidad.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        try {
-                            guardarProducto();
-                        } catch (NegocioException ex) {
-                            Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        JOptionPane.showMessageDialog(this, "No se permiten mas de dos valores decimales.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
                     }
-                    
-                    panelListaProductos agregarProducto = new panelListaProductos(menuInicio, compra);
-                    menuInicio.mostrarPanel(agregarProducto);
-                } catch (NegocioException ex) {
-                    Logger.getLogger(panelDatosProducto.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ingrese un valor numérico válido en la cantidad.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Ingrese un valor numérico válido en la cantidad.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La cantidad de caracteres en el nombre no puede ser mayor a 50", "Longitud de nombre inválida", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnAgregarProductoActionPerformed

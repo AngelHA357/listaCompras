@@ -72,4 +72,27 @@ public class Validadores {
 
         return matcher.matches();
     }
+
+    public boolean validarRangoCantidad(double cantidad) {
+        return cantidad > 0 && cantidad <= 9999.99;
+    }
+
+    public boolean validarDecimalesCantidad(String cantidad) {
+        Pattern patron = Pattern.compile("^\\d+(\\.\\d{0,2})?$");
+        return patron.matcher(cantidad).matches();
+    }
+
+    public boolean validarLongitudNombreProducto(String nombre) {
+        return nombre != null && nombre.length() >= 1 && nombre.length() <= 50;
+    }
+    
+    public boolean validarLongitudCategoriaProducto(String nombre) {
+        return nombre != null && nombre.length() <= 50;
+    }
+    
+    public boolean validarCategoria(String categoria) {
+    Pattern patron = Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$");
+    return categoria != null && !categoria.trim().isEmpty() && 
+           patron.matcher(categoria).matches();
+}
 }

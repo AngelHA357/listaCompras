@@ -254,7 +254,7 @@ public class frmInicioSesion extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "El usuario no existe", "Usuario", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NegocioException ex) {
-                    Logger.getLogger(frmInicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex.getMessage());
                     JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
