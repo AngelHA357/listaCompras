@@ -1,4 +1,8 @@
 PruebasComponentes\CompraTest.class
-PruebasComponentes\ClienteDAOTest.class
 PruebasComponentes\CompraDAOTest.class
 PruebasComponentes\ProductoDAOTest.class
+PruebasMock\CompraMockTest.class
+PruebasComponentes\ClienteDAOTest.class
+PruebasMock\CompraDAOMockTest.class
+PruebasMock\ClienteDAOMockTest.class
+PruebasMock\ProductoDAOMockTest.class
