@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PruebasComponentes.ProductoDAOTest" time="0.287" tests="17" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="PruebasComponentes.ProductoDAOTest" time="0.341" tests="17" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,8 +15,9 @@
     <property name="user.country" value="MX"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17.0.12_windows-x64_bin\jdk-17.0.12\bin"/>
-    <property name="sun.java.command" value="C:\Users\victo\AppData\Local\Temp\surefire11116861304921549118\surefirebooter15825752862504769525.jar C:\Users\victo\AppData\Local\Temp\surefire11116861304921549118 2024-11-28T02-51-27_923-jvmRun1 surefire10298890109494518271tmp surefire_02934618781073004626tmp"/>
+    <property name="sun.java.command" value="C:\Users\victo\AppData\Local\Temp\surefire16815343589084242443\surefirebooter758676925330833770.jar C:\Users\victo\AppData\Local\Temp\surefire16815343589084242443 2024-11-28T12-08-35_610-jvmRun1 surefire5161563780519859246tmp surefire_03091721609801082506tmp"/>
     <property name="jdk.debug" value="release"/>
+    <property name="test" value="PruebasComponentes.**.*Test"/>
     <property name="surefire.test.class.path" value="C:\Users\victo\OneDrive\Documents\GitHub\listaCompras\ProyectoListaCompraPersistencia\target\test-classes;C:\Users\victo\OneDrive\Documents\GitHub\listaCompras\ProyectoListaCompraPersistencia\target\classes;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa\2.7.12\org.eclipse.persistence.jpa-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\jakarta.persistence\2.2.3\jakarta.persistence-2.2.3.jar;C:\Users\victo\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\victo\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.core\2.7.12\org.eclipse.persistence.core-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.asm\9.4.0\org.eclipse.persistence.asm-9.4.0.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.antlr\2.7.12\org.eclipse.persistence.antlr-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.jpa.jpql\2.7.12\org.eclipse.persistence.jpa.jpql-2.7.12.jar;C:\Users\victo\.m2\repository\org\eclipse\persistence\org.eclipse.persistence.moxy\2.7.12\org.eclipse.persistence.moxy-2.7.12.jar;C:\Users\victo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\victo\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\victo\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\victo\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\victo\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.0\junit-jupiter-params-5.6.0.jar;C:\Users\victo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\victo\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;C:\Users\victo\.m2\repository\org\mockito\mockito-core\5.14.1\mockito-core-5.14.1.jar;C:\Users\victo\.m2\repository\net\bytebuddy\byte-buddy\1.15.3\byte-buddy-1.15.3.jar;C:\Users\victo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.3\byte-buddy-agent-1.15.3.jar;C:\Users\victo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\victo"/>
@@ -30,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\victo\AppData\Local\Temp\surefire11116861304921549118\surefirebooter15825752862504769525.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\victo\AppData\Local\Temp\surefire16815343589084242443\surefirebooter758676925330833770.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -57,21 +58,21 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testFiltrarPorCategoriaYCompraId" classname="PruebasComponentes.ProductoDAOTest" time="0.038"/>
-  <testcase name="testObtenerProductoPorCaracteristicas_CategoriaNula" classname="PruebasComponentes.ProductoDAOTest" time="0.016"/>
-  <testcase name="testObtenerProductosPorCompraId" classname="PruebasComponentes.ProductoDAOTest" time="0.029"/>
-  <testcase name="testObtenerProductoPorCaracteristicas_NombreNulo" classname="PruebasComponentes.ProductoDAOTest" time="0.015"/>
-  <testcase name="testAgregarProducto_NombreNulo" classname="PruebasComponentes.ProductoDAOTest" time="0.008"/>
+  <testcase name="testFiltrarPorCategoriaYCompraId" classname="PruebasComponentes.ProductoDAOTest" time="0.051"/>
+  <testcase name="testObtenerProductoPorCaracteristicas_CategoriaNula" classname="PruebasComponentes.ProductoDAOTest" time="0.024"/>
+  <testcase name="testObtenerProductosPorCompraId" classname="PruebasComponentes.ProductoDAOTest" time="0.036"/>
+  <testcase name="testObtenerProductoPorCaracteristicas_NombreNulo" classname="PruebasComponentes.ProductoDAOTest" time="0.019"/>
+  <testcase name="testAgregarProducto_NombreNulo" classname="PruebasComponentes.ProductoDAOTest" time="0.01"/>
   <testcase name="testObtenerProductosPorCompraId_CompraInexistente" classname="PruebasComponentes.ProductoDAOTest" time="0.004"/>
-  <testcase name="testFiltrarPorCategoriaYCompraId_CategoriaInexistente" classname="PruebasComponentes.ProductoDAOTest" time="0.014"/>
-  <testcase name="testAgregarProducto_NombreVacio" classname="PruebasComponentes.ProductoDAOTest" time="0.009"/>
-  <testcase name="testActualizarProducto" classname="PruebasComponentes.ProductoDAOTest" time="0.021"/>
-  <testcase name="testFiltrarPorCategoriaYCompraId_CategoriaNula" classname="PruebasComponentes.ProductoDAOTest" time="0.017"/>
-  <testcase name="testObtenerProductoPorId" classname="PruebasComponentes.ProductoDAOTest" time="0.02"/>
-  <testcase name="testEliminarProducto" classname="PruebasComponentes.ProductoDAOTest" time="0.02"/>
+  <testcase name="testFiltrarPorCategoriaYCompraId_CategoriaInexistente" classname="PruebasComponentes.ProductoDAOTest" time="0.024"/>
+  <testcase name="testAgregarProducto_NombreVacio" classname="PruebasComponentes.ProductoDAOTest" time="0.008"/>
+  <testcase name="testActualizarProducto" classname="PruebasComponentes.ProductoDAOTest" time="0.027"/>
+  <testcase name="testFiltrarPorCategoriaYCompraId_CategoriaNula" classname="PruebasComponentes.ProductoDAOTest" time="0.016"/>
+  <testcase name="testObtenerProductoPorId" classname="PruebasComponentes.ProductoDAOTest" time="0.022"/>
+  <testcase name="testEliminarProducto" classname="PruebasComponentes.ProductoDAOTest" time="0.022"/>
   <testcase name="testObtenerProductoPorId_NoExiste" classname="PruebasComponentes.ProductoDAOTest" time="0.004"/>
-  <testcase name="testAgregarProducto" classname="PruebasComponentes.ProductoDAOTest" time="0.023"/>
-  <testcase name="testObtenerProductoPorCaracteristicas" classname="PruebasComponentes.ProductoDAOTest" time="0.024"/>
+  <testcase name="testAgregarProducto" classname="PruebasComponentes.ProductoDAOTest" time="0.025"/>
+  <testcase name="testObtenerProductoPorCaracteristicas" classname="PruebasComponentes.ProductoDAOTest" time="0.026"/>
   <testcase name="testEliminarProducto_NoExiste" classname="PruebasComponentes.ProductoDAOTest" time="0.003"/>
-  <testcase name="testObtenerProductoPorCaracteristicas_NoCoincide" classname="PruebasComponentes.ProductoDAOTest" time="0.021"/>
+  <testcase name="testObtenerProductoPorCaracteristicas_NoCoincide" classname="PruebasComponentes.ProductoDAOTest" time="0.015"/>
 </testsuite>

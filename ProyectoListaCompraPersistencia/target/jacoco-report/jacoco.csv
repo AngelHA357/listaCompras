@@ -5,5 +5,5 @@ ProyectoListaCompraPersistencia,Entidades,Producto,8,70,0,0,4,29,2,13,2,13
 ProyectoListaCompraPersistencia,Exceptions,PersistenciaException,14,9,0,0,6,4,3,2,3,2
 ProyectoListaCompraPersistencia,Conexion,Conexion,18,58,1,15,4,21,1,12,0,5
 ProyectoListaCompraPersistencia,DAOs,ClienteDAO,7,193,3,5,2,53,3,8,0,7
-ProyectoListaCompraPersistencia,DAOs,ProductoDAO,45,296,8,24,10,86,8,17,0,9
+ProyectoListaCompraPersistencia,DAOs,ProductoDAO,36,305,8,24,8,88,8,17,0,9
 ProyectoListaCompraPersistencia,DAOs,CompraDAO,7,183,1,5,2,51,1,9,0,7

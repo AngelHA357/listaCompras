@@ -477,4 +477,81 @@ public class ProductoDAOMockTest {
         verify(mockTransaction, never()).rollback();
         verify(mockEntityManager, times(2)).close();
     }
+
+    @Test
+    public void testObtenerProductoPorIdCierraEntityManager() throws PersistenciaException {
+        Long productoId = 1L;
+
+        productoDAO.obtenerProductoPorId(productoId);
+
+        verify(mockEntityManager, times(1)).close();
+    }
+
+    @Test
+    public void testObtenerTodosLosProductosCierraEntityManager() throws PersistenciaException {
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery(anyString())).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
+
+        productoDAO.obtenerTodosLosProductos();
+
+        verify(mockEntityManager, times(1)).close();
+    }
+
+    @Test
+    public void testFiltrarPorCategoriaYCompraIdCierraEntityManager() throws PersistenciaException {
+        String categoria = "Test";
+        Long compraId = 1L;
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery(anyString())).thenReturn(mockQuery);
+        when(mockQuery.setParameter(anyString(), any())).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
+
+        productoDAO.filtrarPorCategoriaYCompraId(categoria, compraId);
+
+        verify(mockEntityManager, times(1)).close();
+    }
+
+    @Test
+    public void testObtenerProductosPorCompraIdCierraEntityManager() throws PersistenciaException {
+        Long compraId = 1L;
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery(anyString())).thenReturn(mockQuery);
+        when(mockQuery.setParameter(anyString(), any())).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
+
+        productoDAO.obtenerProductosPorCompraId(compraId);
+
+        verify(mockEntityManager, times(1)).close();
+    }
+
+    @Test
+    public void testObtenerProductoPorCaracteristicasCierraEntityManager() throws PersistenciaException {
+        String nombre = "Test";
+        String categoria = "Test";
+        boolean comprado = false;
+        Double cantidad = 1.0;
+        Long compraId = 1L;
+        Query mockQuery = mock(Query.class);
+        when(mockEntityManager.createQuery(anyString())).thenReturn(mockQuery);
+        when(mockQuery.setParameter(anyString(), any())).thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
+
+        productoDAO.obtenerProductoPorCaracteristicas(nombre, categoria, comprado, cantidad, compraId);
+
+        verify(mockEntityManager, times(1)).close();
+    }
+
+    @Test
+    public void testCierreEntityManagerEnCasoDeExcepcion() {
+        Long productoId = 1L;
+        when(mockEntityManager.find(eq(Producto.class), anyLong()))
+                .thenThrow(new RuntimeException("Error de prueba"));
+
+        assertThrows(PersistenciaException.class, () -> {
+            productoDAO.obtenerProductoPorId(productoId);
+        });
+
+        verify(mockEntityManager, times(1)).close();
+    }
 }
