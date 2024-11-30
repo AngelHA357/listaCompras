@@ -96,7 +96,7 @@
                     <timestampedreports>false</timestampedreports>
                     <targetTests>
                      
-             <param>PruebasIntegracion.FiltroPorCategoriaIntegrationTest</param>
+                        <param>PruebasIntegracion.FiltroPorCategoriaIntegrationTest</param>
                         <param>PruebasIntegracion.FiltroPorCompraIntegrationTest</param>
                         <param>PruebasIntegracion.GestorClientesIntegrationTest</param>
                         <param>PruebasIntegracion.GestorComprasIntegrationTest</param>
@@ -106,6 +106,7 @@
                         <param>Subsistemas.GestorClientesTest</param>
                         <param>Subsistemas.GestorComprasTest</param>
                         <param>Subsistemas.GestorProductosTest</param>
+                        <param>ExportadorPDF.ExportadorPDFTest</param>
                         <param>*</param>
                     </targetTests>
                     <verbose>true</verbose>
@@ -150,7 +151,12 @@
             <version>5.14.2</version>
             <scope>test</scope>
         </dependency>
-        
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.13.3</version>
+        </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -162,5 +168,7 @@
             <artifactId>ProyectoListaCompraDTOs</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        
     </dependencies>
 </project>

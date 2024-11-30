@@ -33,9 +33,8 @@ public class ProductoDTO {
         this.compraDTO = compraDTO;
         this.cantidad = cantidad;
     }
-    
-    // Métodos getter y setter
 
+    // Métodos getter y setter
     public Long getId() {
         return id;
     }
