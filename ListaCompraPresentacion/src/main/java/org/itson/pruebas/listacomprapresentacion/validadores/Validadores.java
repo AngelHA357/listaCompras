@@ -85,14 +85,16 @@ public class Validadores {
     public boolean validarLongitudNombreProducto(String nombre) {
         return nombre != null && nombre.length() >= 1 && nombre.length() <= 50;
     }
-    
+
     public boolean validarLongitudCategoriaProducto(String nombre) {
         return nombre != null && nombre.length() <= 50;
     }
-    
+
     public boolean validarCategoria(String categoria) {
-    Pattern patron = Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$");
-    return categoria != null && !categoria.trim().isEmpty() && 
-           patron.matcher(categoria).matches();
-}
+        Pattern patron = Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$");
+        if (categoria.isBlank()) {
+            return true;
+        }
+        return categoria != null && patron.matcher(categoria).matches();
+    }
 }

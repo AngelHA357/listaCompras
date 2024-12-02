@@ -296,23 +296,40 @@ public class frmRegistrarse extends javax.swing.JFrame {
         char[] contrasenaChar = pswContrasena.getPassword();
         String contrasena = new String(contrasenaChar);
 
-        if (validador.validaNombre(nombres) && validador.validaApellido(apellidoPaterno) && validador.validaApellido(apellidoMaterno)
-                && validador.validaUsuario(usuario) && validador.validaContrasena(contrasena)) {
+        if (validador.validaNombre(nombres)) {
+            if (validador.validaApellido(apellidoPaterno)) {
 
-            ClienteDTO cliente = new ClienteDTO(nombres, apellidoPaterno, apellidoMaterno, usuario, contrasena);
-            try {
-                gestorClientes.agregarCliente(cliente);
-            } catch (NegocioException ex) {
-                Logger.getLogger(frmRegistrarse.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this, "Error al registrar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                if (validador.validaApellido(apellidoMaterno)) {
+
+                    if (validador.validaUsuario(usuario)) {
+
+                        if (validador.validaContrasena(contrasena)) {
+
+                            ClienteDTO cliente = new ClienteDTO(nombres, apellidoPaterno, apellidoMaterno, usuario, contrasena);
+                            try {
+                                gestorClientes.agregarCliente(cliente);
+                            } catch (NegocioException ex) {
+                                Logger.getLogger(frmRegistrarse.class.getName()).log(Level.SEVERE, null, ex);
+                                JOptionPane.showMessageDialog(this, "Error al registrar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                            frmInicioSesion inicioSesion = new frmInicioSesion(pantallaInicial);
+                            inicioSesion.setVisible(true);
+                            dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Ingrese una contraseña válida", "Error de datos", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Ingrese un nombre de usuario válido", "Error de datos", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Ingresa correctamente tu segundo apellido(No se permite numeros o caracteres especiales)", "Error de datos", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Ingresa correctamente tu primer apellido(No se permite numeros o caracteres especiales)", "Error de datos", JOptionPane.ERROR_MESSAGE);
             }
-            frmInicioSesion inicioSesion = new frmInicioSesion(pantallaInicial);
-            inicioSesion.setVisible(true);
-            dispose();
-
         } else {
-            JOptionPane.showMessageDialog(this, "Ingresa correctamente los datos", "Error de datos", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingresa correctamente tu nombre (No se permite numeros o caracteres especiales)", "Error de datos", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btnRegistrarseActionPerformed
